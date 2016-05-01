@@ -1,0 +1,8 @@
+{
+  "apps" : [{
+    "name"        : "arcstudio",
+    "script"      : "./server/index.js",
+    "exec_interpreter" : "babel-node",
+    "exec_mode"        : "fork"
+  }]
+}
