@@ -53,6 +53,7 @@ ReactDOM.render(
 					<Route path='client' components={{drawer: DashboardDrawer, main: WorkerPage}}/>
 					<Route path='order' components={{drawer: DashboardDrawer, main: WorkerPage}}/>
 					<Route path='worker/create' components={{drawer: DashboardDrawer, main: CreateEditWorkerPage}}/>
+					<Route path='worker/:id' components={{drawer: DashboardDrawer, main: CreateEditWorkerPage}}/>
 				</Route>
 			</Route>
 		</Router>

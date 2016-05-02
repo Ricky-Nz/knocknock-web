@@ -8,13 +8,42 @@ import IconClose from 'material-ui/svg-icons/navigation/close';
 import { InputBox, AvatarEditor } from '../../widgets';
 
 class CreateEditWorkerPage extends Component {
+	componentDidMount() {
+		if (this.props.params.id) {
+			this.props.getWorkerById(this.props.params.id);
+		}
+	}
+	componentWillReceiveProps(nextProps) {
+		if (!nextProps.uploading&&this.props.uploading) {
+			this.submitData(nextProps.uploadedFile);
+		} else if (this.props.processing&&!nextProps.processing&&nextProps.processSuccess) {
+			this.context.router.goBack();
+		} else if (nextProps.params.id !== this.props.params.id) {
+			this.props.getWorkerById(nextProps.params.id);
+		}
+	}
 	onPasswordChange = (text) => {
 		this.setState({password: text});
 	}
-	onBack = () => {
-		this.context.router.goBack();
-	}
 	onSubmit = () => {
+		const email = this.refs.email.getValue();
+		const password = this.refs.password.getValue();
+		const confirmPassword = this.refs.confirmPassword.getValue();
+		const name = this.refs.name.getValue();
+		const contact = this.refs.contact.getValue();
+
+		if (!email || !password || !confirmPassword || !name || !contact) {
+			return;
+		}
+
+		const avatarFile = this.refs.avatar.getFile();
+		if (avatarFile) {
+			this.props.uploadFile(avatarFile);
+		} else {
+			this.submitData();
+		}
+	}
+	submitData = (avatarUrl) => {
 		const email = this.refs.email.getValue();
 		const password = this.refs.password.getValue();
 		const confirmPassword = this.refs.confirmPassword.getValue();
@@ -29,13 +58,14 @@ class CreateEditWorkerPage extends Component {
 			email,
 			password,
 			name,
-			contact
-		}, this.refs.avatar.getFile());
+			contact,
+			avatarUrl
+		});
 	}
 	render() {
 		return (
 			<div className='flex flex-fill padding position-relative'>
-				<IconButton onClick={this.onBack}>
+				<IconButton onClick={this.context.router.goBack}>
 					<IconClose/>
 				</IconButton>
 				<br/>
@@ -62,6 +92,12 @@ class CreateEditWorkerPage extends Component {
 }
 
 CreateEditWorkerPage.propTypes = {
+	uploadedFile: PropTypes.string,
+	uploading: PropTypes.bool,
+	processing: PropTypes.bool,
+	processSuccess: PropTypes.bool,
+	getWorkerById: PropTypes.func.isRequired,
+	uploadFile: PropTypes.func.isRequired,
 	createWorker: PropTypes.func.isRequired
 };
 
