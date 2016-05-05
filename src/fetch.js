@@ -35,7 +35,8 @@ function fetch({method, path, headers, params, body, attachments}) {
 export default function ({dispatch, actionName, arg, ...args}) {
 	dispatch({
 		type: actionName,
-		running: true
+		running: true,
+		arg
 	});
 
 	fetch(args)
@@ -50,6 +51,7 @@ export default function ({dispatch, actionName, arg, ...args}) {
 			dispatch({
 				type: actionName,
 				running: false,
+				arg,
 				error
 			});
 		});

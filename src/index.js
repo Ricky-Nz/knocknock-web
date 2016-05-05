@@ -16,15 +16,17 @@ injectTapEventPlugin();
 // components
 import { Application, Dashboard, DashboardDrawer } from './app';
 import { LoginPage } from './auth';
-import { WorkerPage, CreateEditWorkerPage } from './user';
+import { UserBrowserPage, CreateEditWorkerPage } from './user';
 
 // reducers
+import { reducers as appReducers } from './app';
 import { reducers as authReducers } from './auth';
 import { reducers as userReducers } from './user';
 
 // create store
 const store = createStore(
 	combineReducers({
+		...appReducers,
 		...authReducers,
 		...userReducers,
 		routing: routerReducer
@@ -48,10 +50,8 @@ ReactDOM.render(
 				<IndexRedirect to='/login'/>
 				<Route path='login' component={LoginPage}/>
 				<Route path='dashboard' component={Dashboard} onEnter={checkSession}>
-					<IndexRedirect to='worker'/>
-					<Route path='worker' components={{drawer: DashboardDrawer, main: WorkerPage}}/>
-					<Route path='client' components={{drawer: DashboardDrawer, main: WorkerPage}}/>
-					<Route path='order' components={{drawer: DashboardDrawer, main: WorkerPage}}/>
+					<IndexRedirect to='browser/worker'/>
+					<Route path='browser/:role' components={{drawer: DashboardDrawer, main: UserBrowserPage}}/>
 					<Route path='worker/create' components={{drawer: DashboardDrawer, main: CreateEditWorkerPage}}/>
 					<Route path='worker/:id' components={{drawer: DashboardDrawer, main: CreateEditWorkerPage}}/>
 				</Route>

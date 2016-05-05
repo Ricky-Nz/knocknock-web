@@ -22,9 +22,9 @@ class DashboardDrawer extends Component {
 				<AppBar title='Title'
 			  	iconElementRight={<IconButton onClick={logOut}><IconExit/></IconButton>}/>
 			  <Menu onChange={this.onNavitage} value={location.pathname}>
-			    <MenuItem value='/dashboard/worker' leftIcon={<IconShip/>}>Workers</MenuItem>
-			    <MenuItem value='/dashboard/client' leftIcon={<IconUser/>}>Users</MenuItem>
-			    <MenuItem value='/dashboard/order' leftIcon={<IconUser/>}>Orders</MenuItem>
+			    <MenuItem value='/dashboard/browser/worker' leftIcon={<IconShip/>}>Workers</MenuItem>
+			    <MenuItem value='/dashboard/browser/client' leftIcon={<IconUser/>}>Users</MenuItem>
+			    <MenuItem value='/dashboard/browser/order' leftIcon={<IconUser/>}>Orders</MenuItem>
 			 	</Menu>
 			</Drawer>
 		);
