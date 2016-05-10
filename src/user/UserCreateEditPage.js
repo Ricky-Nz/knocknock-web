@@ -7,10 +7,10 @@ import IconDone from 'material-ui/svg-icons/action/done';
 import IconClose from 'material-ui/svg-icons/navigation/close';
 import { InputBox, AvatarEditor } from '../../widgets';
 
-class CreateEditWorkerPage extends Component {
+class UserCreateEditPage extends Component {
 	componentDidMount() {
 		if (this.props.params.id) {
-			this.props.getWorkerById(this.props.params.id);
+			this.props.getUser(this.props.params.id);
 		}
 	}
 	componentWillReceiveProps(nextProps) {
@@ -19,7 +19,7 @@ class CreateEditWorkerPage extends Component {
 		} else if (this.props.processing&&!nextProps.processing&&nextProps.processSuccess) {
 			this.context.router.goBack();
 		} else if (nextProps.params.id !== this.props.params.id) {
-			this.props.getWorkerById(nextProps.params.id);
+			this.props.getUser(nextProps.params.id);
 		}
 	}
 	onPasswordChange = (text) => {
@@ -54,7 +54,7 @@ class CreateEditWorkerPage extends Component {
 			return;
 		}
 
-		this.props.createWorker({
+		this.props.submit(this.params.role, this.params.id, {
 			email,
 			password,
 			name,
@@ -91,17 +91,17 @@ class CreateEditWorkerPage extends Component {
 	}
 }
 
-CreateEditWorkerPage.propTypes = {
+UserCreateEditPage.propTypes = {
 	uploadedFile: PropTypes.string,
 	uploading: PropTypes.bool,
 	processing: PropTypes.bool,
 	processSuccess: PropTypes.bool,
-	getWorkerById: PropTypes.func.isRequired,
+	getUser: PropTypes.func.isRequired,
 	uploadFile: PropTypes.func.isRequired,
-	createWorker: PropTypes.func.isRequired
+	submit: PropTypes.func.isRequired
 };
 
-CreateEditWorkerPage.contextTypes = {
+UserCreateEditPage.contextTypes = {
 	router: PropTypes.object
 };
 
@@ -116,4 +116,4 @@ const styles = {
 	}
 };
 
-export default CreateEditWorkerPage;
+export default UserCreateEditPage;

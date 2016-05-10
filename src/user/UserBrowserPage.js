@@ -24,7 +24,9 @@ class WorkerPage extends Component {
 				<Paper className='margin padding-horizontal'>
 					<SearchBar/>
 				</Paper>
-				<PaginationList role={this.props.params.role} bindItem={this.bindItem}/>
+				<Paper className='margin-horizontal'>
+					<PaginationList role={this.props.params.role} bindItem={this.bindItem}/>
+			  </Paper>
 			  <FloatingActionButton style={styles.floatButton} onClick={this.onCreate}>
 			    <ContentAdd/>
 			  </FloatingActionButton>

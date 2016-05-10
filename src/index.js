@@ -16,7 +16,7 @@ injectTapEventPlugin();
 // components
 import { Application, Dashboard, DashboardDrawer } from './app';
 import { LoginPage } from './auth';
-import { UserBrowserPage, CreateEditWorkerPage } from './user';
+import { UserBrowserPage, UserCreateEditPage } from './user';
 
 // reducers
 import { reducers as appReducers } from './app';
@@ -52,8 +52,8 @@ ReactDOM.render(
 				<Route path='dashboard' component={Dashboard} onEnter={checkSession}>
 					<IndexRedirect to='browser/worker'/>
 					<Route path='browser/:role' components={{drawer: DashboardDrawer, main: UserBrowserPage}}/>
-					<Route path='worker/create' components={{drawer: DashboardDrawer, main: CreateEditWorkerPage}}/>
-					<Route path='worker/:id' components={{drawer: DashboardDrawer, main: CreateEditWorkerPage}}/>
+					<Route path='edit/:role/:id' components={{drawer: DashboardDrawer, main: UserCreateEditPage}}/>
+					<Route path='edit/:role' components={{drawer: DashboardDrawer, main: UserCreateEditPage}}/>
 				</Route>
 			</Route>
 		</Router>

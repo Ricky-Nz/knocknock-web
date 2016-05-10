@@ -7,32 +7,33 @@ import Pagination from './PaginationContainer';
 
 class PaginationList extends Component {
 	componentDidMount() {
-		this.props.onLoad(this.props.currentPage, this.props.pageSize);
+		this.props.onLoad(this.props.currentPage,
+			this.props.pageSize, this.props.role);
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.currentPage !== this.props.currentPage
-			|| nextProps.pageSize !== this.props.pageSize) {
-			this.props.onLoad(nextProps.currentPage, nextProps.pageSize);
+			|| nextProps.pageSize !== this.props.pageSize
+			|| nextProps.role !== this.props.role) {
+			this.props.onLoad(nextProps.currentPage,
+				nextProps.pageSize, nextProps.role);
 		}
 	}
 	render() {
-		const {datas, onLoad, bindItem} = this.props;
+		const {datas, bindItem} = this.props;
 
 		return (
 			<div className='flex flex-fill'>
 				<List className='scroll'>
 					{datas&&datas.map((data, index) => bindItem(data, index))}
 				</List>
-				<Paper className='margin-horizontal'>
-					<Pagination/>
-				</Paper>
+				<Pagination/>
 			</div>
 		);
 	}
 }
 
 PaginationList.propTypes = {
-	role: PropTypes.oneOf(['worker']),
+	role: PropTypes.oneOf(['worker', 'client', 'admin']),
 	currentPage: PropTypes.number.isRequired,
 	pageSize: PropTypes.number.isRequired,
 	datas: PropTypes.array,

@@ -1,10 +1,12 @@
 import { ACTION_NAVIGATE, ACTION_PAGINATION_FETCH } from '../actions';
 
-export default function (pagination = {
+const defaultConfig = {
 	currentPage: 1,
-	totalPage: 1,
+	totalPage: 0,
 	pageSize: 5
-}, {type, running, arg, error, data}) {
+};
+
+export default function (pagination = defaultConfig, {type, running, arg, error, data}) {
 	switch(type) {
 		case ACTION_NAVIGATE:
 			return {...pagination, currentPage: data.page,
@@ -15,6 +17,8 @@ export default function (pagination = {
 			} else {
 				return pagination;
 			}
+		case '@@router/LOCATION_CHANGE':
+			return defaultConfig;
 		default:
 			return pagination;
 	}

@@ -10,6 +10,8 @@ export default function (array = [], {type, running, arg, error, data}) {
 			} else {
 				return array;
 			}
+		case '@@router/LOCATION_CHANGE':
+			return [];
 		default:
 			return array;
 	}

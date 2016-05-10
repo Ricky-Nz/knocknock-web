@@ -1,3 +1,4 @@
-export * from './createWorker';
+export * from './createUser';
+export * from './updateUser';
 export * from './uploadFile';
-export * from './getWorkerById';
+export * from './getUser';

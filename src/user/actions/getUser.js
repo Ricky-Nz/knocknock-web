@@ -1,16 +1,16 @@
 import fetch from '../../fetch';
 
-export const ACTION_GET_USER_BY_ID = 'ACTION_GET_USER_BY_ID';
+export const ACTION_GET_USER = 'ACTION_GET_USER';
 
-export function getWorkerById(id) {
+export function getUser(id, role) {
 	return (dispatch, getState) => {
 		const { token } = getState();
 		
 		fetch({
 			dispatch,
-			actionName: ACTION_GET_USER_BY_ID,
+			actionName: ACTION_GET_USER,
 			method: 'GET',
-			path: `/user/worker/${id}`,
+			path: `/user/${role}/${id}`,
 			headers: {
 				'x-access-token': token
 			}

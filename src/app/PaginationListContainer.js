@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { getWorker } from './actions';
+import { getPageData } from './actions';
 import PaginationList from './PaginationList';
 
 const selectCurrentPage = state => state.pagination.currentPage;
@@ -17,13 +17,9 @@ const mapStateToProps = createSelector(
 		({currentPage, pageSize, datas})
 );
 
-const mapActionToProps = (dispatch, {role}) => ({
-	onLoad: (page, pageSize) => {
-		switch(role) {
-			case 'worker':
-				dispatch(getWorker(page, pageSize));
-				break;
-		}
+const mapActionToProps = (dispatch) => ({
+	onLoad: (page, pageSize, role) => {
+		dispatch(getPageData(page, pageSize, role));
 	}
 });
 

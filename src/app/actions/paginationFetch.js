@@ -2,7 +2,7 @@ import fetch from '../../fetch';
 
 export const ACTION_PAGINATION_FETCH = 'ACTION_PAGINATION_FETCH';
 
-export function getWorker(page, pageSize) {
+export function getPageData(page, pageSize, role) {
 	return (dispatch, getState) => {
 		const { token } = getState();
 		
@@ -14,7 +14,7 @@ export function getWorker(page, pageSize) {
 				pageSize
 			},
 			method: 'GET',
-			path: '/user/worker',
+			path: `/user/${role}`,
 			headers: {
 				'x-access-token': token
 			},

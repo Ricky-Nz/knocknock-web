@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { createWorker, uploadFile, getWorkerById } from './actions';
-import CreateEditWorkerPage from './CreateEditWorkerPage';
+import { createUser, uploadFile, getUser, updateUser } from './actions';
+import UserCreateEditPage from './UserCreateEditPage';
 
 const selectUploadedFile = state => state.uploadedFile;
 
@@ -24,12 +24,16 @@ const mapActionToProps = dispatch => ({
 	uploadFile: (avatar) => {
 		dispatch(uploadFile(avatar));
 	},
-	createWorker: (args) => {
-		dispatch(createWorker(args));
+	submit: (role, id, data) => {
+		if (id) {
+			dispatch(updateUser(role, id, data));
+		} else {
+			dispatch(createUser(role, data));
+		}
 	},
-	getWorkerById: (id) => {
-		dispatch(getWorkerById(id));
+	getUser: (id) => {
+		dispatch(getUser(id));
 	}
 });
 
-export default connect(mapStateToProps, mapActionToProps)(CreateEditWorkerPage);
+export default connect(mapStateToProps, mapActionToProps)(UserCreateEditPage);
