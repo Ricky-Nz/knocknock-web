@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
 	entry: [
 		'webpack-dev-server/client?http://0.0.0.0:8080',
-		'./src/index.js'
+		'./src2/index.js'
 	],
 	output: {
 		publicPath: '/',
@@ -17,7 +17,8 @@ module.exports = {
 				exclude: /(node_modules|bower_components)/,
 				loader: 'babel',
 				query: {
-					presets: ['react', 'es2015', 'stage-0']
+					presets: ['react', 'es2015', 'stage-0'],
+					plugins: [path.join(__dirname, 'babelRelayPlugin')]
 				}
 			}
 		]

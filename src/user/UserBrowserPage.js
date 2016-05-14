@@ -7,14 +7,16 @@ import { PaginationList, SearchBar } from '../app';
 
 class WorkerPage extends Component {
 	onCreate = () => {
-		this.context.router.push('/dashboard/worker/create');
+		this.context.router.push(`/dashboard/edit/${this.props.params.role}`);
 	}
 	bindItem = (data, index) => {
 		switch(this.props.params.role) {
 			case 'worker':
+			case 'client':
+			case 'admin':
 				return (
 					<WorkerListItem key={index} {...data}
-						onClick={() => this.context.router.push(`/dashboard/worker/${data.id}`)}/>
+						onClick={() => this.context.router.push(`/dashboard/edit/${this.props.params.role}/${data.id}`)}/>
 				)
 		}
 	}

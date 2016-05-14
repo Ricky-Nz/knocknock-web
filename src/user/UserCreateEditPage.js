@@ -54,7 +54,7 @@ class UserCreateEditPage extends Component {
 			return;
 		}
 
-		this.props.submit(this.params.role, this.params.id, {
+		this.props.submit(this.props.params.role, this.props.params.id, {
 			email,
 			password,
 			name,
@@ -70,7 +70,7 @@ class UserCreateEditPage extends Component {
 				</IconButton>
 				<br/>
 				<Paper className='flex padding scroll' style={styles.container}>
-					<Subheader>CREATE NEW WORKER</Subheader>
+					<Subheader>{`CREATE NEW ${this.props.params.role}`}</Subheader>
 					<AvatarEditor ref='avatar'/>
 					<InputBox ref='email' floatingLabelText='Email'
 						verify='email' errorText='invalid email address'/>
