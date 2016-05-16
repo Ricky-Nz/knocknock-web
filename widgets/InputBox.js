@@ -24,6 +24,7 @@ class InputBox extends Component {
 		if (this.props.verify) {
 			let verify = this.props.verify;
 			switch (verify) {
+				case 'price': verify = /^0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*$/; break;
 				case 'postalcode': verify = /^[0-9]{6,6}$/; break;
 				case 'notempty': verify = /^(?!\s*$).+/; break;
 				case 'phonenumber': verify = /^[0-9]{8,8}$/; break;

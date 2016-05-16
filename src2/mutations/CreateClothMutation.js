@@ -5,11 +5,8 @@ export default class CreateClothMutation extends Relay.Mutation {
 		return Relay.QL`mutation{createLaundryCloth}`;
 	}
 	getVariables() {
-		console.log(11);
 		console.log(this.props);
-		return {
-			nameCn: ''
-		};
+		return this.props;
 	}
 	getFatQuery() {
 		return Relay.QL`
