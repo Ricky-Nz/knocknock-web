@@ -20,6 +20,7 @@ class ClothEditDialog extends Component {
 		const discount = this.refs.discount.getValue();
 
 		Relay.Store.commitUpdate(new CreateClothMutation({
+			viewer: this.props.viewer,
 			nameEn,
 			nameCn,
 			washPrice,
@@ -76,6 +77,7 @@ export default Relay.createContainer(ClothEditDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
+				${CreateClothMutation.getFragment('viewer')}
 				laundryCloth(id: $id) @skip(if: $skipLoad) {
 					id
 					nameCn

@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
-import Paper from 'material-ui/Paper';
-import { UserList, PaginationBar } from './components';
-import { SearchBar } from './widgets';
+import { UserList } from './components';
 
 class UserPanelComponent extends Component {
 	onNavigate = (params) => {
@@ -20,18 +17,7 @@ class UserPanelComponent extends Component {
 		console.log(this.props.viewer.users);
 		return (
 			<div className='flex flex-fill'>
-				<Paper zDepth={2}>
-					<Toolbar>
-						<ToolbarGroup className='padding-horizontal' firstChild={true}>
-	          	<ToolbarTitle text={this.props.params.role}/>
-	          	<SearchBar onSearch={this.onSearch}/>
-	          </ToolbarGroup>
-	          <ToolbarGroup className='padding-horizontal' lastChild={true}>
-	          	<PaginationBar limit={limit} cursor={cursor} reverse={reverse}
-	          		onNavigate={this.onNavigate} pageInfo={this.props.viewer.users.pageInfo}/>
-	          </ToolbarGroup>
-					</Toolbar>
-				</Paper>
+
 				<div className='flex flex-fill scroll padding'>
 					<UserList users={this.props.viewer.users}/>
 				</div>

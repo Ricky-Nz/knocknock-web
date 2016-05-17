@@ -19,7 +19,9 @@ class LaundryClothPanelComponent extends Component {
 
 		return (
 			<div className='flex flex-fill position-relative'>
-				<ClothList laundryClothes={this.props.viewer.laundryClothes}/>
+				<div className='flex flex-fill scroll padding'>
+					<ClothList laundryClothes={this.props.viewer.laundryClothes}/>
+				</div>
 				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
 				<ClothEditDialog open={open} selectId={selectId} viewer={this.props.viewer}
 					handleClose={this.handleClose}/>
@@ -47,10 +49,10 @@ export const LaundryClothPanel = Relay.createContainer(LaundryClothPanelComponen
 		viewer: () => Relay.QL`
 			fragment on Viewer {
 				laundryClothes(search: $search, first: $limit, after: $cursor) @skip(if: $reverse) {
-					${ClothList.getFragment('laundryClothes')}
+					${ClothList.getFragment('laundryClothes', {test:'test'})}
 				}
 				laundryClothes(search: $search, last: $limit, before: $cursor) @include(if: $reverse) {
-					${ClothList.getFragment('laundryClothes')}
+					${ClothList.getFragment('laundryClothes', {test:'test'})}
 				}
 				${ClothEditDialog.getFragment('viewer')}
 			}

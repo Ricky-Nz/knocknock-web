@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import Relay from 'react-relay';
+import { List } from 'material-ui/List';
 import ClothListItem from './ClothListItem';
 
 class ClothList extends Component {
 	render() {
 		return (
-			<div>
-			</div>
+			<List>
+				{
+					this.props.laundryClothes.edges.map(({node}, index) =>
+						<ClothListItem key={index} laundryCloth={node}/>)
+				}
+			</List>
 		);
 	}
 }
