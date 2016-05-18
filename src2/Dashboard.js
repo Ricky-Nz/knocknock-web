@@ -9,7 +9,7 @@ import IconShip from 'material-ui/svg-icons/maps/local-shipping';
 import IconUser from 'material-ui/svg-icons/action/supervisor-account';
 import { SearchBar } from './widgets';
 
-export class Dashboard extends Component {
+class Dashboard extends Component {
 	onNavitage = (e, value) => {
 		if (value !== this.props.location.pathname) {
 			this.context.router.push({
@@ -49,3 +49,5 @@ const styles = {
 		marginLeft: 256
 	}
 };
+
+export default Dashboard;

@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import { UserList } from './components';
+import Paper from 'material-ui/Paper';
+import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
+import { SearchBar } from './widgets';
+import { UserList, PaginationBar } from './components';
 
 class UserPanelComponent extends Component {
 	onNavigate = (params) => {
@@ -14,10 +17,11 @@ class UserPanelComponent extends Component {
 	}
 	render() {
 		const { limit, cursor, reverse } = this.props.relay.variables;
-		console.log(this.props.viewer.users);
+
 		return (
 			<div className='flex flex-fill'>
-
+				<PaginationBar pageInfo={this.props.viewer.users.pageInfo}
+					limit={limit} cursor={cursor} reverse={reverse} onNavigate={() => console.log(1)}/>
 				<div className='flex flex-fill scroll padding'>
 					<UserList users={this.props.viewer.users}/>
 				</div>
@@ -39,25 +43,11 @@ export const UserPanel = Relay.createContainer(UserPanelComponent, {
 		search: null
 	},
 	fragments: {
-		viewer: () => Relay.QL`
-			fragment on Viewer {
-				users(role: $role, search: $search, first: $limit, after: $cursor) @skip(if: $reverse) {
-					${UserList.getFragment('users')}
-					pageInfo {
-						startCursor
-		        endCursor
-		        hasNextPage
-		        hasPreviousPage
-					}
-				}
-				users(role: $role, search: $search, last: $limit, before: $cursor) @include(if: $reverse) {
-					${UserList.getFragment('users')}
-					pageInfo {
-						startCursor
-		        endCursor
-		        hasNextPage
-		        hasPreviousPage
-					}
+		users: () => Relay.QL`
+			fragment on UserConnection {
+				${UserList.getFragment('users')}
+				pageInfo {
+					${PaginationBar.getFragment('pageInfo')}
 				}
 			}
 		`

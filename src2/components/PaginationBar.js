@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Relay from 'react-relay';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
@@ -46,8 +47,6 @@ class PaginationBar extends Component {
 	}
 	render() {
 		const { limit, cursor, reverse, pageInfo } = this.props;
-		console.log(pageInfo);
-
 		const canBack = (!reverse&&!cursor)||(reverse&&!pageInfo.hasPreviousPage);
 		const canNext = (reverse&&!cursor)||(!reverse&&!pageInfo.hasNextPage);
 
@@ -68,10 +67,11 @@ class PaginationBar extends Component {
 }
 
 PaginationBar.propTypes = {
-	onNavigate: PropTypes.func.isRequired,
-	limit: PropTypes.number.isRequired,
+	limit: PropTypes.string,
 	cursor: PropTypes.string,
-	reverse: PropTypes.bool
+	reverse: PropTypes.bool,
+	pageInfo: PropTypes.object.isRequired,
+	onNavigate: PropTypes.func.isRequired
 };
 
 export default PaginationBar;
