@@ -18,12 +18,13 @@ const prepareParams = (params, {location}) => {
 };
 
 class ClothPage extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {open: false, selectId: null};
-	}
+	state = {open: false}
 	onAdd = () => {
-		this.setState({open: true, selectId: null});
+		this.setState({open: true});
+	}
+	onItemClick = (id) => {
+		this.setState({open: true});
+		this.props.relay.setVariables({selectId: id.__dataID__});
 	}
 	handleClose = () => {
 		this.setState({open: false});
@@ -37,16 +38,16 @@ class ClothPage extends Component {
 					<PaginationSearchTitle location={this.props.location}
 						pagination={this.props.viewer.clothPage.pagination}/>
 					<div className='flex flex-fill scroll'>
-						<List>
+						<List ref='test'>
 							{
 								this.props.viewer.clothPage.datas.map((cloth, index) =>
-									<ClothListItem key={index} cloth={cloth}/>)
+									<ClothListItem key={index} cloth={cloth} onClick={this.onItemClick}/>)
 							}
 						</List>
 					</div>
 				</div>
 				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
-				<ClothDialog open={open} selectId={selectId} viewer={this.props.viewer}
+				<ClothDialog ref='dialog' open={open} cloth={this.props.viewer.cloth||null}
 					clothPage={this.props.viewer.clothPage} handleClose={this.handleClose}/>
 			</div>
 		);
@@ -64,8 +65,15 @@ const styles = {
 const component = Relay.createContainer(ClothPage, {
 	initialVariables: {
 		search: null,
+		selectId: null,
 		page: 1,
 		limit: 10
+	},
+	prepareVariables: (initial) => {
+		return {
+			...initial,
+			fetchCloth: initial.selectId !== null
+		};
 	},
 	fragments: {
 		viewer: () => Relay.QL`
@@ -79,7 +87,9 @@ const component = Relay.createContainer(ClothPage, {
 					}
 					${ClothDialog.getFragment('clothPage')}
 				}
-				${ClothDialog.getFragment('viewer')}
+				cloth(id: $selectId) @include(if: $fetchCloth) {
+					${ClothDialog.getFragment('cloth')}
+				}
 			}
 		`
 	}

@@ -9,7 +9,7 @@ export default class CreateClothMutation extends Relay.Mutation {
 		`
 	}
 	getMutation() {
-		return Relay.QL`mutation{ createLaundryCloth }`;
+		return Relay.QL`mutation{ createCloth }`;
 	}
   getFiles() {
     return {
@@ -22,7 +22,7 @@ export default class CreateClothMutation extends Relay.Mutation {
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateLaundryClothPayload @relay(pattern: true) {
+			fragment on CreateClothPayload {
 				clothPage {
 					id
 					pagination{

@@ -32,7 +32,7 @@ class InputBox extends Component {
 				case 'email': verify = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; break;
 			}
 			
-			if (!this.state.value.match(verify)) {
+			if (!this.state.value.toString().match(verify)) {
 				this.setState({showError: true});
 				return null;
 			}
