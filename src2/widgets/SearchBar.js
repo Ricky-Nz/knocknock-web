@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 
 class SearchBar extends Component {
+	state = {
+		value: ''
+	};
 	onChange = (event) => {
 		if (this.pennding) {
 			clearTimeout(this.pennding);
@@ -13,10 +16,11 @@ class SearchBar extends Component {
 			this.props.onSearch(value);
 			this.pennding = null;
 		}, 500);
+		this.setState({value})
 	}
 	render() {
 		return (
-			<TextField hintText='search' onChange={this.onChange}/>
+			<TextField value={this.state.value} hintText='search' onChange={this.onChange}/>
 		);
 	}
 }

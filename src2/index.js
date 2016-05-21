@@ -9,6 +9,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import Dashboard from './Dashboard';
 import UserPage from './UserPage';
+import ClothPage from './ClothPage';
 
 // Needed for onTouchTap
 // Check this repo:
@@ -35,6 +36,8 @@ ReactROM.render(
 			<Route path='dashboard' component={Dashboard}>
 				<Route path='user/:role' component={UserPage.component}
 					queries={UserPage.queries} prepareParams={UserPage.prepareParams}/>
+				<Route path='product/laundry' component={ClothPage.component}
+					queries={ClothPage.queries} prepareParams={ClothPage.prepareParams}/>
 			</Route>
 		</Route>
 	</Router>,

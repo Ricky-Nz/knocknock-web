@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
-import { SearchBar } from './widgets';
-import { UserList, SearchTitlebar, PaginationBar } from './components';
+import { List } from 'material-ui/List';
+import { AddFloatButton } from './widgets';
+import { PaginationSearchTitle, UserListItem } from './components';
 import { preparePageParams } from './common';
 
 const queries = {
@@ -22,58 +23,51 @@ const prepareParams = (params, {location}) => {
 };
 
 class UserPage extends Component {
-	onNavigate = (params) => {
-		this.context.router.push({
-			pathname: 'dashboard/user/client',
-			query: Object.assign({}, this.props.location.query, params)
-		});
-	}
-	onSearch = (text) => {
-		this.context.router.push({
-			pathname: 'dashboard/user/client',
-			query: Object.assign({},
-				this.props.location.query, {search: text})
-		});
-	}
 	render() {
-		const { limit, cursor, reverse } = this.props.location.query;
-
 		return (
-			<div className='flex flex-fill padding'>
-				<SearchTitlebar onSearch={this.onSearch} lastChild={
-		    	<PaginationBar limit={limit} cursor={cursor} reverse={reverse}
-		    		pageInfo={this.props.viewer.users.pageInfo} onNavigate={this.onNavigate}/>}/>
-				<div className='flex flex-fill scroll'>
-					<UserList users={this.props.viewer.users}/>
+			<div className='flex flex-fill position-relative'>
+				<div className='flex flex-fill padding'>
+					<PaginationSearchTitle location={this.props.location}
+						pagination={this.props.viewer.userPage.pagination}/>
+					<div className='flex flex-fill scroll'>
+						<List>
+							{
+								this.props.viewer.userPage.datas.map((user, index) =>
+									<UserListItem key={index} user={user}/>)
+							}
+						</List>
+					</div>
 				</div>
+				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
 			</div>
 		);
 	}
 }
 
-UserPage.contextTypes = {
-	router: PropTypes.object
+const styles = {
+	floatButton: {
+		position: 'absolute',
+		right: 48,
+		bottom: 48
+	}
 };
 
 const component = Relay.createContainer(UserPage, {
 	initialVariables: {
 		role: null,
-		reverse: true,
 		search: null,
-		limit: 0,
-		cursor: null
+		page: 1,
+		limit: 10
 	},
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				id
-				users(role:$role, search: $search, first: $limit, after: $cursor) @skip(if: $reverse) {
-					${UserList.getFragment('users')}
-					pageInfo {
-						startCursor
-						endCursor
-						hasNextPage
-						hasPreviousPage
+				userPage(role:$role, search: $search, page: $page, limit: $limit) {
+					pagination {
+						${PaginationSearchTitle.getFragment('pagination')}
+					}
+					datas {
+						${UserListItem.getFragment('user')}
 					}
 				}
 			}
@@ -86,3 +80,4 @@ export default {
 	queries,
 	prepareParams
 };
+

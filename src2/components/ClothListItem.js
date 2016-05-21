@@ -4,17 +4,17 @@ import { ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 
-const ClothListItem = ({laundryCloth, onClick}) => (
+const ClothListItem = ({cloth, onClick}) => (
 	<Paper className='half-margin'>
-		<ListItem leftAvatar={<Avatar src={laundryCloth.imageUrl}/>}
-			primaryText={laundryCloth.nameEn} secondaryText={laundryCloth.nameCn} onClick={onClick}/>
+		<ListItem leftAvatar={<Avatar src={cloth.imageUrl}/>}
+			primaryText={cloth.nameEn} secondaryText={cloth.nameCn} onClick={onClick}/>
 	</Paper>
 );
 
 export default Relay.createContainer(ClothListItem, {
 	fragments: {
-		laundryCloth: () => Relay.QL`
-			fragment on LaundryCloth {
+		cloth: () => Relay.QL`
+			fragment on Cloth {
 				id
 				nameCn
 				nameEn

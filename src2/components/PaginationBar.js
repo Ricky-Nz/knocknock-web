@@ -10,45 +10,40 @@ import IconRight from 'material-ui/svg-icons/navigation/chevron-right';
 
 class PaginationBar extends Component {
 	onPageSizeChange = (event, key, value) => {
-		const { limit, cursor, reverse } = this.props;
 		this.props.onNavigate({
 			limit: value,
-			cursor,
-			reverse
+			page: 1
 		});
 	}
 	onNext = () => {
-		const { limit, pageInfo } = this.props;
 		this.props.onNavigate({
-			limit,
-			cursor: pageInfo.endCursor
+			page: this.props.pagination.page + 1,
+			limit: this.props.pagination.limit
 		});
 	}
 	onPrevious = () => {
-		const { limit, pageInfo } = this.props;
 		this.props.onNavigate({
-			limit,
-			cursor: pageInfo.startCursor,
-			reverse: true
+			page: this.props.pagination.page - 1,
+			limit: this.props.pagination.limit
 		});
 	}
 	onLast = () => {
-		const { limit } = this.props;
 		this.props.onNavigate({
-			limit,
-			reverse: true
+			page: this.props.pagination.totalPage,
+			limit: this.props.pagination.limit
 		});
 	}
 	onFist = () => {
-		const { limit } = this.props;
 		this.props.onNavigate({
-			limit
+			page: 1,
+			limit: this.props.pagination.limit
 		});
 	}
 	render() {
-		const { limit, cursor, reverse, pageInfo } = this.props;
-		const canBack = (!reverse&&!cursor)||(reverse&&!pageInfo.hasPreviousPage);
-		const canNext = (reverse&&!cursor)||(!reverse&&!pageInfo.hasNextPage);
+		const { page, limit, totalPage } = this.props.pagination;
+		console.log(this.props.pagination);
+		const canBack = page > 1;
+		const canNext = page < totalPage;
 
 		return (
 			<div className='flex flex-row flex-align-center'>
@@ -57,22 +52,28 @@ class PaginationBar extends Component {
 		      <MenuItem value={25} primaryText='25' />
 		      <MenuItem value={50} primaryText='50' />
 		    </DropDownMenu>
-				<IconButton disabled={canBack} onClick={this.onFist}><IconFirst/></IconButton>
-				<IconButton disabled={canBack} onClick={this.onPrevious}><IconLeft/></IconButton>
-				<IconButton disabled={canNext} onClick={this.onNext}><IconRight/></IconButton>
-				<IconButton disabled={canNext} onClick={this.onLast}><IconLast/></IconButton>
+				<IconButton disabled={!canBack} onClick={this.onFist}><IconFirst/></IconButton>
+				<IconButton disabled={!canBack} onClick={this.onPrevious}><IconLeft/></IconButton>
+				<IconButton disabled={!canNext} onClick={this.onNext}><IconRight/></IconButton>
+				<IconButton disabled={!canNext} onClick={this.onLast}><IconLast/></IconButton>
 			</div>
 		);
 	}
 }
 
 PaginationBar.propTypes = {
-	limit: PropTypes.string,
-	cursor: PropTypes.string,
-	reverse: PropTypes.bool,
-	pageInfo: PropTypes.object.isRequired,
 	onNavigate: PropTypes.func.isRequired
 };
 
-export default PaginationBar;
+export default Relay.createContainer(PaginationBar, {
+	fragments: {
+		pagination: () => Relay.QL`
+			fragment on Pagination {
+				page
+				limit
+				totalPage
+			}
+		`
+	}
+});
 
