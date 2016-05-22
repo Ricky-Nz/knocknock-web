@@ -27,7 +27,7 @@ export default class UpdateClothMutation extends Relay.Mutation {
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on UpdateClothPayload {
+			fragment on UpdateClothPayload @relay(pattern: true) {
 				cloth
 			}
 		`;
@@ -36,7 +36,7 @@ export default class UpdateClothMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-      	'cloth': this.props.id
+      	'cloth': this.props.cloth.id
       }
     }];
 	}

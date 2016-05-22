@@ -23,15 +23,7 @@ export default class CreateClothMutation extends Relay.Mutation {
 	getFatQuery() {
 		return Relay.QL`
 			fragment on CreateClothPayload {
-				clothPage {
-					id
-					pagination{
-						totalPage
-						limit
-						page
-					}
-					datas
-				}
+				clothPage
 			}
 		`;
 	}

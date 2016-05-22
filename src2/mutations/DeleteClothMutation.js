@@ -6,6 +6,11 @@ export default class DeleteClothMutation extends Relay.Mutation {
 			fragment on ClothPagination {
 				id
 			}
+		`,
+		cloth: () => Relay.QL`
+			fragment on Cloth {
+				id
+			}
 		`
 	}
 	getMutation() {
@@ -13,23 +18,24 @@ export default class DeleteClothMutation extends Relay.Mutation {
 	}
 	getVariables() {
 		return {
-			id: this.props.id
+			id: this.props.cloth.id
 		};
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateClothPayload @relay(pattern: true) {
-				deletedId
+			fragment on DeleteClothPayload @relay(pattern: true) {
+				clothPage{
+					datas
+				}
 			}
 		`;
 	}
   getConfigs() {
     return [{
-      type: 'NODE_DELETE',
-      parentName: 'clothPage',
-      parentID: this.props.clothPage.id,
-      connectionName: 'datas',
-      deletedIDFieldName: 'deletedId'
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+      	'clothPage': this.props.clothPage.id
+      }
     }];
 	}
 }
