@@ -2,8 +2,8 @@ import Relay from 'react-relay';
 
 export default class CreateClothMutation extends Relay.Mutation {
 	static fragments = {
-		clothPage: () => Relay.QL`
-			fragment on ClothPagination {
+		viewer: () => Relay.QL`
+			fragment on Viewer {
 				id
 			}
 		`
@@ -17,13 +17,13 @@ export default class CreateClothMutation extends Relay.Mutation {
     };
   }
 	getVariables() {
-		const { clothPage, file, ...variables } = this.props;
+		const { viewer, file, ...variables } = this.props;
 		return variables;
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateClothPayload {
-				clothPage
+			fragment on CreateClothPayload @relay(pattern: true) {
+				clothes
 			}
 		`;
 	}
@@ -31,7 +31,7 @@ export default class CreateClothMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-      	'clothPage': this.props.clothPage.id
+      	'clothes': this.props.viewer.id
       }
     }];
 	}

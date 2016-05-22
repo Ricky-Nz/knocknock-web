@@ -1,13 +1,6 @@
 import Relay from 'react-relay';
 
 export default class UpdateClothMutation extends Relay.Mutation {
-	static fragments = {
-		cloth: () => Relay.QL`
-			fragment on Cloth {
-				id
-			}
-		`
-	}
 	getMutation() {
 		return Relay.QL`mutation{ updateCloth }`;
 	}
@@ -19,11 +12,8 @@ export default class UpdateClothMutation extends Relay.Mutation {
   	}
   }
 	getVariables() {
-		const {cloth, file, ...args} = this.props;
-		return {
-			...args,
-			id: cloth.id
-		};
+		const {file, ...args} = this.props;
+		return args;
 	}
 	getFatQuery() {
 		return Relay.QL`
@@ -36,7 +26,7 @@ export default class UpdateClothMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-      	'cloth': this.props.cloth.id
+      	'cloth': this.props.id
       }
     }];
 	}

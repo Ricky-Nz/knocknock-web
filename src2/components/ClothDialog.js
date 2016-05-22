@@ -127,25 +127,30 @@ ClothDialog.propTypes = {
 };
 
 export default Relay.createContainer(ClothDialog, {
+	initialVariables: {
+		id: null
+	},
+	prepareVariables: (preVariables) => {
+		return {
+			...preVariables,
+			fetchCloth: preVariables.id !== null
+		};
+	},
 	fragments: {
-		cloth: () => Relay.QL`
-			fragment on Cloth {
-				${UpdateClothMutation.getFragment('cloth')}
-				nameCn
-				nameEn
-				washPrice
-				dryCleanPrice
-				ironPrice
-				washPriceDiscount
-				dryCleanPriceDiscount
-				ironPriceDiscount
-				special
-				imageUrl
-			}
-		`,
-		clothPage: () => Relay.QL`
-			fragment on ClothPagination {
-				${CreateClothMutation.getFragment('clothPage')}
+		viewer: () => Relay.QL`
+			fragment on Viewer {
+				cloth(id: $id) @include(if: $fetchCloth) {
+					nameCn
+					nameEn
+					washPrice
+					dryCleanPrice
+					ironPrice
+					washPriceDiscount
+					dryCleanPriceDiscount
+					ironPriceDiscount
+					special
+					imageUrl
+				}
 			}
 		`
 	}
