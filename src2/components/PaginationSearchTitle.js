@@ -18,12 +18,16 @@ class PaginationSearchTitle extends Component {
 		});
 	}
 	render() {
+		const { first, after } = this.props;
+		const { hasNextPage, endCursor, startCursor } = this.props.connection.pageInfo;
+
 		return (
 			<Paper className='margin-bottom'>
 				<div className='flex flex-row flex-space-between padding-horizontal'>
 					<SearchBar ref='search' onSearch={this.onSearch}/>
-					<PaginationBar pagination={this.props.pagination}
-						onNavigate={this.onNavigate}/>
+					<PaginationBar startCursor={startCursor} endCursor={endCursor}
+						hasNextPage={hasNextPage} first={first} after={after}
+						onNavigate={this.props.onNavigate}/>
 				</div>
 			</Paper>
 		);
@@ -31,18 +35,20 @@ class PaginationSearchTitle extends Component {
 }
 
 PaginationSearchTitle.propTypes = {
-	location: PropTypes.object.isRequired
-};
-
-PaginationSearchTitle.contextTypes = {
-	router: PropTypes.object.isRequired
+	first: PropTypes.number.isRequired,
+	after: PropTypes.string,
+	onNavigate: PropTypes.func.isRequired
 };
 
 export default Relay.createContainer(PaginationSearchTitle, {
 	fragments: {
-		pagination: () => Relay.QL`
-			fragment on Pagination {
-				${PaginationBar.getFragment('pagination')}
+		connection: () => Relay.QL`
+			fragment on UserConnection {
+				pageInfo {
+	        hasNextPage
+	        endCursor
+	        startCursor
+				}
 			}
 		`
 	}

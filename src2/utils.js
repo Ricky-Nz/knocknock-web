@@ -1,7 +1,7 @@
 export const preparePageParams = (location) => {
 	return {
-		limit: parseInt(location.query.limit||10),
-		page: parseInt(location.query.page||1),
+		first: parseInt(location.query.first||10),
+		after: location.query.after||null,
 		search: location.query.search||null
 	};
 };

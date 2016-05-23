@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { CreateCategoryMutation, UpdateCategoryMutation } from '../mutations';
+import { CategoryCreateMutation, CategoryUpdateMutation } from '../mutations';
 
 class CategoryDialog extends Component {
 	state = {
@@ -21,7 +21,7 @@ class CategoryDialog extends Component {
 
 		let mutation;
 		if (!category) {
-			mutation = new CreateCategoryMutation({
+			mutation = new CategoryCreateMutation({
 				viewer: this.props.viewer,
 				nameEn,
 				nameCn
@@ -39,7 +39,7 @@ class CategoryDialog extends Component {
 				return this.props.handleClose();
 			}
 
-			mutation = new UpdateCategoryMutation({
+			mutation = new CategoryUpdateMutation({
 				id: category.id,
 				...update
 			});
@@ -88,7 +88,7 @@ export default Relay.createContainer(CategoryDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				${CreateCategoryMutation.getFragment('viewer')}
+				${CategoryCreateMutation.getFragment('viewer')}
 			}
 		`
 	}

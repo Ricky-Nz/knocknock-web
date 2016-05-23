@@ -4,7 +4,6 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import { CategoryTab, ClothTab } from './components';
 import { AddFloatButton } from './widgets';
-import { preparePageParams } from './common';
 
 const queries = {
 	viewer: () => Relay.QL`
@@ -12,10 +11,6 @@ const queries = {
 			viewer
 		}
 	`
-};
-
-const prepareParams = (params, {location}) => {
-	return preparePageParams(location);
 };
 
 class ClothPage extends Component {
@@ -63,7 +58,6 @@ const component = Relay.createContainer(ClothPage, {
 
 export default {
 	component,
-	queries,
-	prepareParams
+	queries
 };
 

@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import CategorySelectMenu from './CategorySelectMenu';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { CreateClothMutation, UpdateClothMutation } from '../mutations';
+import { ClothCreateMutation, ClothUpdateMutation } from '../mutations';
 
 class ClothDialog extends Component {
 	state = {
@@ -40,7 +40,7 @@ class ClothDialog extends Component {
 		}
 
 		if (!cloth) {
-			Relay.Store.commitUpdate(new CreateClothMutation({
+			Relay.Store.commitUpdate(new ClothCreateMutation({
 				viewer: this.props.viewer,
 				categoryId: this.state.selectedCagetoryId,
 				file,
@@ -81,7 +81,7 @@ class ClothDialog extends Component {
 				return;
 			}
 
-			Relay.Store.commitUpdate(new UpdateClothMutation({
+			Relay.Store.commitUpdate(new ClothUpdateMutation({
 				id: cloth.id,
 				file,
 				categoryId: this.state.selectedCagetoryId,
@@ -175,7 +175,7 @@ export default Relay.createContainer(ClothDialog, {
 					special
 					imageUrl
 				}
-				${CreateClothMutation.getFragment('viewer')}
+				${ClothCreateMutation.getFragment('viewer')}
 			}
 		`
 	}

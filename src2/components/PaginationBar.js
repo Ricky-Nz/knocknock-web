@@ -11,69 +11,53 @@ import IconRight from 'material-ui/svg-icons/navigation/chevron-right';
 class PaginationBar extends Component {
 	onPageSizeChange = (event, key, value) => {
 		this.props.onNavigate({
-			limit: value,
-			page: 1
+			first: value
 		});
 	}
 	onNext = () => {
 		this.props.onNavigate({
-			page: this.props.pagination.page + 1,
-			limit: this.props.pagination.limit
+			first: this.props.first,
+			after: this.props.endCursor
 		});
 	}
 	onPrevious = () => {
-		this.props.onNavigate({
-			page: this.props.pagination.page - 1,
-			limit: this.props.pagination.limit
-		});
+
 	}
 	onLast = () => {
-		this.props.onNavigate({
-			page: this.props.pagination.totalPage,
-			limit: this.props.pagination.limit
-		});
+
 	}
 	onFist = () => {
 		this.props.onNavigate({
-			page: 1,
-			limit: this.props.pagination.limit
+			first: this.props.first
 		});
 	}
 	render() {
-		const { page, limit, totalPage } = this.props.pagination;
-		console.log(this.props.pagination);
-		const canBack = page > 1;
-		const canNext = page < totalPage;
+		const { first, after, hasNextPage } = this.props;
 
 		return (
 			<div className='flex flex-row flex-align-center'>
-		    <DropDownMenu value={limit} onChange={this.onPageSizeChange}>
+		    <DropDownMenu value={first} onChange={this.onPageSizeChange}>
 		      <MenuItem value={10} primaryText='10' />
 		      <MenuItem value={25} primaryText='25' />
 		      <MenuItem value={50} primaryText='50' />
 		    </DropDownMenu>
-				<IconButton disabled={!canBack} onClick={this.onFist}><IconFirst/></IconButton>
-				<IconButton disabled={!canBack} onClick={this.onPrevious}><IconLeft/></IconButton>
-				<IconButton disabled={!canNext} onClick={this.onNext}><IconRight/></IconButton>
-				<IconButton disabled={!canNext} onClick={this.onLast}><IconLast/></IconButton>
+				<IconButton disabled={!after} onClick={this.onFist}><IconFirst/></IconButton>
+				<IconButton disabled={!after} onClick={this.onPrevious}><IconLeft/></IconButton>
+				<IconButton disabled={!hasNextPage} onClick={this.onNext}><IconRight/></IconButton>
+				<IconButton disabled={!hasNextPage} onClick={this.onLast}><IconLast/></IconButton>
 			</div>
 		);
 	}
 }
 
 PaginationBar.propTypes = {
+	first: PropTypes.number,
+	after: PropTypes.string,
+	startCursor: PropTypes.string,
+	endCursor: PropTypes.string,
+	hasNextPage: PropTypes.bool,
 	onNavigate: PropTypes.func.isRequired
 };
 
-export default Relay.createContainer(PaginationBar, {
-	fragments: {
-		pagination: () => Relay.QL`
-			fragment on Pagination {
-				page
-				limit
-				totalPage
-			}
-		`
-	}
-});
+export default PaginationBar;
 
