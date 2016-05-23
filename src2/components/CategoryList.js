@@ -4,28 +4,22 @@ import CategoryListItem from './CategoryListItem';
 import { List } from 'material-ui/List';
 
 class CategoryList extends Component {
-	onItemClick = (category) => {
-
-	}
-	onDelete = (category) => {
-
-	}
 	render() {
-		let clothCategories = this.props.viewer.clothCategories;
+		let edges = this.props.connection.edges;
 		const search = this.props.search;
 
 		if (search) {
-			clothCategories = clothCategories.filter(({nameCn, nameEn}) =>
-				(nameCn&&(nameCn.indexOf(search) >= 0)
-					|| nameEn&&(nameEn.indexOf(search) >= 0)));
+			edges = edges.filter(({node}) =>
+				(node.nameCn&&(node.nameCn.indexOf(search) >= 0)
+					|| node.nameEn&&(node.nameEn.indexOf(search) >= 0)));
 		}
 
 		return (
 			<List>
 				{
-					clothCategories.map((category, index) =>
-						<CategoryListItem key={index} category={category}
-							onClick={this.onItemClick} onDelete={this.onItemDelete}/>)
+					edges.map(({node}, index) =>
+						<CategoryListItem key={index} category={node}
+							onAction={this.props.onAction}/>)
 				}
 			</List>
 		);
@@ -33,17 +27,20 @@ class CategoryList extends Component {
 }
 
 CategoryList.propTypes = {
-	search: PropTypes.string
+	search: PropTypes.string,
+	onAction: PropTypes.func.isRequired
 };
 
 export default Relay.createContainer(CategoryList, {
 	fragments: {
-		viewer: () => Relay.QL`
-			fragment on Viewer {
-				clothCategories {
-					nameCn
-					nameEn
-					${CategoryListItem.getFragment('category')}
+		connection: () => Relay.QL`
+			fragment on ClothCategoryConnection {
+				edges {
+					node {
+						nameCn
+						nameEn
+						${CategoryListItem.getFragment('category')}
+					}
 				}
 			}
 		`

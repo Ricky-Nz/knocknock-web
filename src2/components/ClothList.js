@@ -4,38 +4,25 @@ import ClothListItem from './ClothListItem';
 import { List } from 'material-ui/List';
 
 class ClothList extends Component {
-	onItemClick = (category) => {
-		Relay.Store.commitUpdate(new DeleteClothMutation({
-			clothPage: this.props.viewer.clothPage,
-			cloth: item
-		}), {onSuccess: this.onSuccess, onFailure: this.onFailure})
-	}
-	onDelete = (category) => {
-		this.setState({open: true});
-		this.props.relay.setVariables({selectId: item.id});
-	}
-	onSuccess = () => {
-
-	}
-	onFailure = () => {
-
-	}
 	render() {
-		let clothes = this.props.viewer.clothes;
-		const search = this.props.search;
+		let edges = this.props.connection.edges;
+		const { search, categoryId, onAction } = this.props;
+
+		if (categoryId) {
+			edges = edges.filter(({node}) => node.categoryId === categoryId);
+		}
 
 		if (search) {
-			clothes = clothes.filter(({nameCn, nameEn}) =>
-				(nameCn&&(nameCn.indexOf(search) >= 0)
-					|| nameEn&&(nameEn.indexOf(search) >= 0)));
+			edges = edges.filter(({node}) =>
+				(node.nameCn&&(node.nameCn.indexOf(search) >= 0)
+					|| node.nameEn&&(node.nameEn.indexOf(search) >= 0)));
 		}
 
 		return (
 			<List>
 				{
-					clothes.map((cloth, index) =>
-						<ClothListItem key={index} cloth={cloth}
-							onClick={this.onItemClick} onDelete={this.onItemDelete}/>)
+					edges.map(({node}, index) =>
+						<ClothListItem key={index} cloth={node} onAction={onAction}/>)
 				}
 			</List>
 		);
@@ -43,17 +30,22 @@ class ClothList extends Component {
 }
 
 ClothList.propTypes = {
-	search: PropTypes.string
+	search: PropTypes.string,
+	categoryId: PropTypes.string,
+	onAction: PropTypes.func.isRequired
 };
 
 export default Relay.createContainer(ClothList, {
 	fragments: {
-		viewer: () => Relay.QL`
-			fragment on Viewer {
-				clothes {
-					nameCn
-					nameEn
-					${ClothListItem.getFragment('cloth')}
+		connection: () => Relay.QL`
+			fragment on ClothConnection {
+				edges {
+					node {
+						nameCn
+						nameEn
+						categoryId
+						${ClothListItem.getFragment('cloth')}
+					}
 				}
 			}
 		`

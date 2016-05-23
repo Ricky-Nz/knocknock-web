@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class CreateClothMutation extends Relay.Mutation {
+export default class CreateCategoryMutation extends Relay.Mutation {
 	static fragments = {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
@@ -9,23 +9,18 @@ export default class CreateClothMutation extends Relay.Mutation {
 		`
 	}
 	getMutation() {
-		return Relay.QL`mutation{ createCloth }`;
+		return Relay.QL`mutation{ createCategory }`;
 	}
-  getFiles() {
-    return {
-      file: this.props.file,
-    };
-  }
 	getVariables() {
-		const { viewer, file, ...variables } = this.props;
+		const { viewer, ...variables } = this.props;
 		return variables;
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateClothPayload @relay(pattern: true) {
-				clothEdge
-				viewer {
-					clothes
+			fragment on CreateCategoryPayload @relay(pattern: true) {
+				categoryEdge
+				viewer{
+					categories
 				}
 			}
 		`;
@@ -35,8 +30,8 @@ export default class CreateClothMutation extends Relay.Mutation {
       type: 'RANGE_ADD',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'clothes',
-      edgeName: 'clothEdge',
+      connectionName: 'categories',
+      edgeName: 'categoryEdge',
       rangeBehaviors: {
         '': 'append'
       }

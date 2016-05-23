@@ -19,16 +19,20 @@ export default class DeleteClothMutation extends Relay.Mutation {
 	getFatQuery() {
 		return Relay.QL`
 			fragment on DeleteClothPayload @relay(pattern: true) {
-				clothes
+        deletedId,
+        viewer {
+          clothes
+        }
 			}
 		`;
 	}
   getConfigs() {
     return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-      	'clothes': this.props.viewer.id
-      }
+      type: 'NODE_DELETE',
+      parentName: 'viewer',
+      parentID: this.props.viewer.id,
+      connectionName: 'clothes',
+      deletedIDFieldName: 'deletedId',
     }];
 	}
 }

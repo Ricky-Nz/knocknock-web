@@ -3,14 +3,25 @@ import Relay from 'react-relay';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
+import CategorySelectMenu from './CategorySelectMenu';
 import { InputBox, DropZone, Toast } from '../widgets';
 import { CreateClothMutation, UpdateClothMutation } from '../mutations';
 
 class ClothDialog extends Component {
 	state = {
-		submitting: false
+		submitting: false,
+		selectedCagetoryId: null
+	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.clothId !== this.props.clothId) {
+			this.props.relay.setVariables({id: nextProps.clothId||null});
+		}
 	}
 	onComfirm = () => {
+		if (!this.state.selectedCagetoryId) {
+			return;
+		}
+
 		const nameEn = this.refs.nameEn.getValue();
 		const nameCn = this.refs.nameCn.getValue();
 		const washPrice = this.refs.washPrice.getValue();
@@ -19,7 +30,7 @@ class ClothDialog extends Component {
 		const discount = this.refs.discount.getValue();
 		const file = this.refs.dropzone.getFile();
 
-		const cloth = this.props.cloth;
+		const cloth = this.props.viewer.cloth;
 
 		if (!nameEn || !nameCn || !washPrice || !ironPrice
 			|| !dryCleanPrice || !discount) {
@@ -30,7 +41,8 @@ class ClothDialog extends Component {
 
 		if (!cloth) {
 			Relay.Store.commitUpdate(new CreateClothMutation({
-				clothPage: this.props.clothPage,
+				viewer: this.props.viewer,
+				categoryId: this.state.selectedCagetoryId,
 				file,
 				nameEn,
 				nameCn,
@@ -39,8 +51,7 @@ class ClothDialog extends Component {
 				dryCleanPrice,
 				washPriceDiscount: discount,
 				ironPriceDiscount: discount,
-				dryCleanPriceDiscount: discount,
-				limit: 10
+				dryCleanPriceDiscount: discount
 			}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		} else {
 			let update = {};
@@ -71,8 +82,9 @@ class ClothDialog extends Component {
 			}
 
 			Relay.Store.commitUpdate(new UpdateClothMutation({
-				cloth,
+				id: cloth.id,
 				file,
+				categoryId: this.state.selectedCagetoryId,
 				...update
 			}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		}
@@ -88,17 +100,24 @@ class ClothDialog extends Component {
 	  var error = transaction.getError() || new Error('Mutation failed.');
 	  this.refs.toast.show(JSON.stringify(error));
 	}
+	onSelectCategory = (categoryId) => {
+		this.setState({selectedCagetoryId: categoryId});
+	}
 	render() {
-		const { handleClose, open, cloth } = this.props;
+		const cloth = this.props.viewer.cloth;
+		const { handleClose, open } = this.props;
+		const { submitting, selectedCagetoryId } = this.state;
 
 		return (
-      <Dialog title={cloth?cloth.nameEn:'New Item'} modal={false} open={open}
+      <Dialog title={cloth?`${cloth.nameEn} (${cloth.nameCn})`:'New Item'} modal={false} open={open}
         actions={[
 		      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
-		      this.state.submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={this.state.submitting} primary={true} onTouchTap={this.onComfirm}/>
+		      submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={this.state.submitting} primary={true} onTouchTap={this.onComfirm}/>
 		    ]} onRequestClose={handleClose}>
-			    <div className='flex flex-row'>
+			    <div className='flex flex-row flex-fill scroll'>
 				    <div className='flex margin-right'>
+				    	<CategorySelectMenu connection={this.props.viewer.categories}
+				    		selectId={selectedCagetoryId} onSelect={this.onSelectCategory}/>
 			        <InputBox ref='nameEn' value={cloth&&cloth.nameEn} floatingLabelText='English Name'
 			        	verify='notempty' errorText='english name can not be empty'/>
 			        <InputBox ref='nameCn' value={cloth&&cloth.nameEn} floatingLabelText='Chinese Name'
@@ -123,7 +142,8 @@ class ClothDialog extends Component {
 
 ClothDialog.propTypes = {
 	handleClose: PropTypes.func.isRequired,
-	open: PropTypes.bool.isRequired
+	open: PropTypes.bool.isRequired,
+	clothId: PropTypes.string 
 };
 
 export default Relay.createContainer(ClothDialog, {
@@ -139,7 +159,11 @@ export default Relay.createContainer(ClothDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
+				categories(first: 1000) {
+					${CategorySelectMenu.getFragment('connection')}
+				}
 				cloth(id: $id) @include(if: $fetchCloth) {
+					id
 					nameCn
 					nameEn
 					washPrice
@@ -151,6 +175,7 @@ export default Relay.createContainer(ClothDialog, {
 					special
 					imageUrl
 				}
+				${CreateClothMutation.getFragment('viewer')}
 			}
 		`
 	}
