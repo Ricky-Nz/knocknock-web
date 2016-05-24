@@ -5,3 +5,5 @@ export { default as ClothUpdateMutation } from './ClothUpdateMutation';
 export { default as CategoryCreateMutation } from './CategoryCreateMutation';
 export { default as CategoryUpdateMutation } from './CategoryUpdateMutation';
 export { default as CategoryDeleteMutation } from './CategoryDeleteMutation';
+
+export { default as UserCreateMutation } from './UserCreateMutation';

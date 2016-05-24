@@ -8,8 +8,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import Dashboard from './Dashboard';
-import UserPage from './UserPage';
-import ClothPage from './ClothPage';
+import UserBrowserPage from './UserBrowserPage';
+import UserDetailPage from './UserDetailPage';
+import ClothBrowserPage from './ClothBrowserPage';
 
 // Needed for onTouchTap
 // Check this repo:
@@ -34,10 +35,12 @@ ReactROM.render(
 		environment={Relay.Store}>
 		<Route path='/' component={App}>
 			<Route path='dashboard' component={Dashboard}>
-				<Route path='user/:role' component={UserPage.component}
-					queries={UserPage.queries} prepareParams={UserPage.prepareParams}/>
-				<Route path='product/laundry' component={ClothPage.component}
-					queries={ClothPage.queries} prepareParams={ClothPage.prepareParams}/>
+				<Route path='user/:role' component={UserBrowserPage.component}
+					queries={UserBrowserPage.queries} prepareParams={UserBrowserPage.prepareParams}/>
+				<Route path='user/:role/:id' component={UserDetailPage.component}
+					queries={UserDetailPage.queries} prepareParams={UserDetailPage.prepareParams}/>
+				<Route path='product/laundry' component={ClothBrowserPage.component}
+					queries={ClothBrowserPage.queries} prepareParams={ClothBrowserPage.prepareParams}/>
 			</Route>
 		</Route>
 	</Router>,

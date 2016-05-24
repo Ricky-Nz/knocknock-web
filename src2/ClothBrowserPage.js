@@ -13,7 +13,7 @@ const queries = {
 	`
 };
 
-class ClothPage extends Component {
+class ClothBrowserPage extends Component {
 	state = {
 		slideIndex: 0
 	}
@@ -45,7 +45,7 @@ class ClothPage extends Component {
 	}
 }
 
-const component = Relay.createContainer(ClothPage, {
+const component = Relay.createContainer(ClothBrowserPage, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {

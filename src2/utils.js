@@ -1,7 +1,15 @@
-export const preparePageParams = (location) => {
-	return {
-		first: parseInt(location.query.first||10),
-		after: location.query.after||null,
-		search: location.query.search||null
-	};
+export const preparePageParams = ({query}) => {
+	if (query.first) {
+		return {
+			first: parseInt(query.first||5),
+			after: query.after||null,
+			search: query.search||null
+		};
+	} else {
+		return {
+			last: parseInt(query.last||5),
+			before: query.before||null,
+			search: query.search||null
+		};
+	}
 };
