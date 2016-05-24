@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import Relay from 'react-relay';
 import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
 import IconClear from 'material-ui/svg-icons/content/clear';
 import IconDone from 'material-ui/svg-icons/action/done';
+import Subheader from 'material-ui/Subheader';
+import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import { InputBox } from '../widgets';
+import AddressList from './AddressList';
+import AddressDialog from './AddressDialog';
 
 class UserDetailTab extends Component {
 	state = {
-		editMode: false
+		editMode: false,
+		showDialog: false,
+		selectAddress: null
 	}
 	onEdit = () => {
 		this.setState({editMode: true});
@@ -17,38 +25,71 @@ class UserDetailTab extends Component {
 	onExitEdit = () => {
 		this.setState({editMode: false});
 	}
+	onNewAddress = () => {
+		this.setState({
+			selectAddress: null,
+			showDialog: true
+		});
+	}
+	onAddressAction = (address, action) => {
+		switch(action) {
+			case 'EDIT':
+				this.setState({
+					selectAddress: address,
+					showDialog: true
+				});
+				break;
+			case 'DELETE':
+				break;
+		}
+	}
+	handleDialogClose = () => {
+		this.setState({showDialog: false});
+	}
 	render() {
-		const editMode = this.state.editMode;
+		const { editMode, showDialog, selectAddress } = this.state;
 		const { email, name, contact, emailVerified, contactVerified, avatarUrl } = this.props.user;
 
 		return (
-			<div className='flex flex-fill position-relative'>
+			<div className='flex flex-fill'>
 				<div className='flex scroll padding'>
-					<div className='flex flex-row'>
-						<div className='padding'>
-							<Avatar src={avatarUrl} size={100}/>
+					<Paper>
+						<div className='position-relative'>
+							<div className='flex flex-row'>
+								<div className='padding'>
+									<Avatar src={avatarUrl} size={100}/>
+								</div>
+								<div className='flex flex-fill margin-left'>
+					        <InputBox ref='email' value={email} disabled={!editMode} floatingLabelText='Email'
+					        	verify='email' errorText='please enter a valid email address'/>
+					        <InputBox ref='name' value={name} disabled={!editMode} floatingLabelText='Name'/>
+					        <InputBox ref='contact' value={contact} disabled={!editMode} floatingLabelText='Contact'/>
+								</div>
+							</div>
+							{editMode?
+								<div className='flex flex-row' style={styles.floatBottomRight}>
+									<IconButton onClick={this.onExitEdit}>
+									  <IconClear/>
+									</IconButton>
+									<IconButton style={styles.marginLeft}>
+									  <IconDone/>
+									</IconButton>
+								</div> :
+								<IconButton style={styles.floatBottomRight} onClick={this.onEdit}>
+								  <IconEditor/>
+								</IconButton>
+							}
 						</div>
-						<div className='flex flex-fill margin-left'>
-			        <InputBox ref='email' value={email} disabled={!editMode} floatingLabelText='Email'
-			        	verify='email' errorText='please enter a valid email address'/>
-			        <InputBox ref='name' value={name} disabled={!editMode} floatingLabelText='Name'/>
-			        <InputBox ref='contact' value={contact} disabled={!editMode} floatingLabelText='Contact'/>
-						</div>
+					</Paper>
+					<div className='flex flex-row flex-space-between flex-align-center padding-vertical'>
+						<Subheader>ADDRESSES</Subheader>
+						<RaisedButton label='Add' onClick={this.onNewAddress}/>
 					</div>
+					<AddressList connection={this.props.user.addresses}
+						onAction={this.onAddressAction}/>
 				</div>
-				{editMode?
-					<div className='flex flex-row' style={styles.floatBottomRight}>
-						<FloatingActionButton onClick={this.onExitEdit}>
-						  <IconClear/>
-						</FloatingActionButton>
-						<FloatingActionButton style={styles.marginLeft}>
-						  <IconDone/>
-						</FloatingActionButton>
-					</div> :
-					<FloatingActionButton style={styles.floatBottomRight} onClick={this.onEdit}>
-					  <IconEditor/>
-					</FloatingActionButton>
-				}
+				<AddressDialog open={showDialog} user={this.props.user}
+					address={selectAddress} handleClose={this.handleDialogClose}/>
 			</div>
 		);
 	}
@@ -57,11 +98,11 @@ class UserDetailTab extends Component {
 const styles = {
 	floatBottomRight: {
 		position: 'absolute',
-		right: 24,
-		bottom: 24
+		right: 8,
+		bottom: 8
 	},
 	marginLeft: {
-		marginLeft: 24
+		marginLeft: 8
 	}
 };
 
@@ -77,6 +118,10 @@ export default Relay.createContainer(UserDetailTab, {
 				avatarUrl
 				emailVerified
 				contactVerified
+				addresses(first:100) {
+					${AddressList.getFragment('connection')}
+				}
+				${AddressDialog.getFragment('user')}
 			}
 		`
 	}

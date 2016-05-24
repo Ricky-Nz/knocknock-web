@@ -6,4 +6,8 @@ export { default as CategoryCreateMutation } from './CategoryCreateMutation';
 export { default as CategoryUpdateMutation } from './CategoryUpdateMutation';
 export { default as CategoryDeleteMutation } from './CategoryDeleteMutation';
 
+export { default as AddressCreateMutation } from './AddressCreateMutation';
+export { default as AddressUpdateMutation } from './AddressUpdateMutation';
+export { default as AddressDeleteMutation } from './AddressDeleteMutation';
+
 export { default as UserCreateMutation } from './UserCreateMutation';
