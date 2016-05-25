@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconNavBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { AddFloatButton } from './widgets';
-import { PaginationSearchTitle, UserList, UserDialog } from './components';
+import { OrderList, PaginationSearchTitle } from './components';
 import { preparePageParams } from './utils';
 
 const queries = {
@@ -15,18 +17,22 @@ const queries = {
 
 const prepareParams = (params, {location}) => {
 	return {
-		role: params.role,
 		...preparePageParams(location)
 	};
 };
 
-class UserBrowserPage extends Component {
-	state = {
-		dialogShow: false
+class OrderBrowserPage extends Component {
+	onBack = () => {
+		this.context.router.goBack();
 	}
-	onItemClick = (user) => {
+	onAddNew = () => {
 		this.context.router.push({
-			pathname: `/dashboard/user/${this.props.params.role}/${user.id}`
+			pathname: `/dashboard/order/new`
+		});
+	}
+	onItemClick = (order) => {
+		this.context.router.push({
+			pathname: `/dashboard/order/${order.id}`
 		});
 	}
 	onNavigate = (pagination) => {
@@ -38,36 +44,27 @@ class UserBrowserPage extends Component {
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
 	}
-	onAdd = () => {
-		this.setState({dialogShow: true});
-	}
-	handleClose = () => {
-		this.setState({dialogShow: false});
-	}
 	render() {
-		const { role } = this.props.params;
 		const { first, after, last, before } = this.props.relay.variables;
 
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill padding'>
-					<PaginationSearchTitle pageInfo={this.props.viewer.users.pageInfo}
+					<PaginationSearchTitle pageInfo={this.props.viewer.orders.pageInfo}
 						first={first} after={after} last={last} before={before}
 						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
 					<div className='flex flex-fill scroll'>
-						<UserList connection={this.props.viewer.users}
+						<OrderList connection={this.props.viewer.orders}
 							onItemClick={this.onItemClick}/>
 					</div>
 				</div>
-				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
-				<UserDialog role={role} open={this.state.dialogShow}
-				 handleClose={this.handleClose} viewer={this.props.viewer}/>
+				<AddFloatButton style={styles.floatButton} onClick={this.onAddNew}/>
 			</div>
 		);
 	}
 }
 
-UserBrowserPage.contextTypes = {
+OrderBrowserPage.contextTypes = {
 	router: PropTypes.object.isRequired
 };
 
@@ -79,9 +76,9 @@ const styles = {
 	}
 };
 
-const component = Relay.createContainer(UserBrowserPage, {
+const component = Relay.createContainer(OrderBrowserPage, {
 	initialVariables: {
-		role: null,
+		userId: null,
 		search: null,
 		first: 0,
 		last: 0,
@@ -95,31 +92,28 @@ const component = Relay.createContainer(UserBrowserPage, {
 		}
 	},
 	fragments: {
-		viewer: (variables) => {
-			return Relay.QL`
-				fragment on Viewer {
-					users(role:$role,search:$search,first:$first,after:$after) @skip(if: $reverse) {
-						${UserList.getFragment('connection')}
-						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
-						}
+		viewer: () => Relay.QL`
+			fragment on Viewer {
+				orders(userId:$userId,search:$search,first:$first,after:$after) @skip(if: $reverse) {
+					${OrderList.getFragment('connection')}
+					pageInfo {
+					  hasNextPage
+					  hasPreviousPage
+					  endCursor
+					  startCursor
 					}
-					users(role:$role,search:$search,last:$last,before:$before) @include(if: $reverse) {
-						${UserList.getFragment('connection')}
-						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
-						}
-					}
-					${UserDialog.getFragment('viewer')}
 				}
-			`;
-		}
+				orders(userId:$userId,search:$search,last:$last,before:$before) @include(if: $reverse) {
+					${OrderList.getFragment('connection')}
+					pageInfo {
+					  hasNextPage
+					  hasPreviousPage
+					  endCursor
+					  startCursor
+					}
+				}
+			}
+		`
 	}
 });
 

@@ -5,17 +5,11 @@ import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 
 const UserListItem = ({user, onClick}) => (
-	<Paper style={styles.container}>
+	<Paper className='margin-vertical'>
 		<ListItem leftAvatar={<Avatar src={user.avatarUrl}/>}
 			primaryText={user.email} secondaryText={user.contact} onClick={() => onClick(user)}/>
 	</Paper>
 );
-
-const styles = {
-	container: {
-		margin: 8
-	}
-};
 
 export default Relay.createContainer(UserListItem, {
 	fragments: {

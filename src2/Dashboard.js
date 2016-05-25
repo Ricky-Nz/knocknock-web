@@ -7,6 +7,9 @@ import IconButton from 'material-ui/IconButton';
 import IconExit from 'material-ui/svg-icons/action/exit-to-app';
 import IconShip from 'material-ui/svg-icons/maps/local-shipping';
 import IconUser from 'material-ui/svg-icons/action/supervisor-account';
+import IconTimer from 'material-ui/svg-icons/device/access-alarm';
+import IconStore from 'material-ui/svg-icons/action/store';
+import IconOrder from 'material-ui/svg-icons/notification/event-note';
 import { SearchBar } from './widgets';
 
 class Dashboard extends Component {
@@ -29,10 +32,10 @@ class Dashboard extends Component {
 				</div>
 				<Drawer open={true}>
 				  <Menu onChange={this.onNavitage} value={this.props.location.pathname}>
-				    <MenuItem value='/dashboard/user/worker' leftIcon={<IconShip/>}>Workers</MenuItem>
 				    <MenuItem value='/dashboard/user/client' leftIcon={<IconUser/>}>Users</MenuItem>
-				    <MenuItem value='/dashboard/user/admin' leftIcon={<IconUser/>}>Orders</MenuItem>
-				    <MenuItem value='/dashboard/product/laundry' leftIcon={<IconUser/>}>Clothes</MenuItem>
+				    <MenuItem value='/dashboard/orders' leftIcon={<IconOrder/>}>Orders</MenuItem>
+				    <MenuItem value='/dashboard/product/laundry' leftIcon={<IconStore/>}>Clothes</MenuItem>
+				    <MenuItem value='/dashboard/timeslots' leftIcon={<IconTimer/>}>Time Slot</MenuItem>
 				 	</Menu>
 				</Drawer>
 			</div>

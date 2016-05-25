@@ -11,6 +11,9 @@ import Dashboard from './Dashboard';
 import UserBrowserPage from './UserBrowserPage';
 import UserDetailPage from './UserDetailPage';
 import ClothBrowserPage from './ClothBrowserPage';
+import OrderBrowserPage from './OrderBrowserPage';
+import OrderDetailPage from './OrderDetailPage';
+import TimeSlotPage from './TimeSlotPage';
 
 // Needed for onTouchTap
 // Check this repo:
@@ -41,6 +44,14 @@ ReactROM.render(
 					queries={UserDetailPage.queries} prepareParams={UserDetailPage.prepareParams}/>
 				<Route path='product/laundry' component={ClothBrowserPage.component}
 					queries={ClothBrowserPage.queries} prepareParams={ClothBrowserPage.prepareParams}/>
+				<Route path='order/new' component={OrderDetailPage.component}
+					queries={OrderDetailPage.queries} prepareParams={OrderDetailPage.prepareParams}/>
+				<Route path='order/:userId/:orderId' component={OrderDetailPage.component}
+					queries={OrderDetailPage.queries} prepareParams={OrderDetailPage.prepareParams}/>
+				<Route path='orders' component={OrderBrowserPage.component}
+					queries={OrderBrowserPage.queries} prepareParams={OrderBrowserPage.prepareParams}/>
+				<Route path='timeslots' component={TimeSlotPage.component}
+					queries={TimeSlotPage.queries} prepareParams={TimeSlotPage.prepareParams}/>
 			</Route>
 		</Route>
 	</Router>,
