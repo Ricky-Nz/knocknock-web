@@ -40,7 +40,7 @@ class OrderDetailPage extends Component {
 		return (
 			<div className='flex flex-fill'>
 			  <AppBar title={order?order.id:'New Order'}
-			    iconElementLeft={<IconButton><IconBack/></IconButton>}
+			    iconElementLeft={<IconButton onClick={this.onBack}><IconBack/></IconButton>}
 			    iconElementRight={<IconButton><IconDone/></IconButton>}/>
 				<div className='flex flex-fill padding scroll margin'>
 					{!userId&&<UserInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectUser}/>}

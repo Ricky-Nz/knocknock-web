@@ -51,9 +51,11 @@ class UserBrowserPage extends Component {
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill padding'>
-					<PaginationSearchTitle pageInfo={this.props.viewer.users.pageInfo}
-						first={first} after={after} last={last} before={before}
-						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+					<div className='padding'>
+						<PaginationSearchTitle pageInfo={this.props.viewer.users.pageInfo}
+							first={first} after={after} last={last} before={before}
+							onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+					</div>
 					<div className='flex flex-fill scroll'>
 						<UserList connection={this.props.viewer.users}
 							onItemClick={this.onItemClick}/>

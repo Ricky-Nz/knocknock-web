@@ -11,3 +11,4 @@ export { default as AddressUpdateMutation } from './AddressUpdateMutation';
 export { default as AddressDeleteMutation } from './AddressDeleteMutation';
 
 export { default as UserCreateMutation } from './UserCreateMutation';
+export { default as UserUpdateMutation } from './UserUpdateMutation';

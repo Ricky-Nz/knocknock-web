@@ -14,7 +14,7 @@ const AddressListItem = ({address, onAction}) => (
 		<ListItem leftIcon={<IconBuilding/>}
 			primaryText={`${address.address}, ${address.postalCode}`} secondaryText={`Tel: ${address.contact}`}
 			rightIconButton={
-			  <IconMenu onChange={(event, value) => onAction(category, value)}
+			  <IconMenu onChange={(event, value) => onAction(address, value)}
 			  	iconButtonElement={<IconButton touch={true}><IconMoreVert/></IconButton>}>
 			    <MenuItem value='EDIT'>Edit</MenuItem>
 			    <MenuItem value='DELETE'>Delete</MenuItem>
