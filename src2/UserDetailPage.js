@@ -61,7 +61,7 @@ class UserDetailPage extends Component {
 	      </Paper>
 	      <div className='flex flex-fill position-relative'>
 	      	{contentView}
-					<FloatingActionButton backgroundColor='white'
+					<FloatingActionButton
 						style={styles.floatBack} onClick={this.onBack}>
 					  <IconNavBack/>
 					</FloatingActionButton>

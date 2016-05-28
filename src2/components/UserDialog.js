@@ -14,11 +14,13 @@ class UserDialog extends Component {
 	onComfirm = () => {
 		const email = this.refs.email.getValue();
 		const password = this.refs.password.getValue();
+		const confirmPassword = this.refs.confirmPassword.getValue();
 		const name = this.refs.name.getValue();
 		const contact = this.refs.contact.getValue();
 		const file = this.refs.dropzone.getFile();
 
-		if (!email || !password) {
+		if (!email || !password || !confirmPassword
+			|| !name || !contact) {
 			return;
 		}
 
@@ -42,9 +44,12 @@ class UserDialog extends Component {
 	  var error = transaction.getError() || new Error('Mutation failed.');
 	  console.log(error);
 	}
+	onPasswordChange = (value) => {
+		this.setState({password: value});
+	}
 	render() {
 		const { role, handleClose, open } = this.props;
-		const { submitting } = this.state;
+		const { submitting, password } = this.state;
 
 		return (
       <Dialog title={`New ${role}`} modal={false} open={open}
@@ -58,9 +63,14 @@ class UserDialog extends Component {
 			        <InputBox ref='email' floatingLabelText='Email' fullWidth={true}
 			        	verify='email' errorText='please enter a valid email address'/>
 			        <InputBox ref='password' floatingLabelText='Password' fullWidth={true}
-			        	verify='password' errorText='password must contains at least 8 character'/>
-			        <InputBox ref='name' floatingLabelText='Name' fullWidth={true}/>
-			        <InputBox ref='contact' type='number' floatingLabelText='Contact Number' fullWidth={true}/>
+			        	type='password' verify='password' errorText='password must contains at least 8 character'
+			        	onChange={this.onPasswordChange}/>
+							<InputBox ref='confirmPassword' floatingLabelText='Confirm Password' fullWidth={true}
+			        	type='password' verify={password} errorText='password not match'/>
+			        <InputBox ref='name' floatingLabelText='Name' fullWidth={true}
+			        	verify='notempty' errorText='name can not be empty'/>
+			        <InputBox ref='contact' type='number' floatingLabelText='Contact Number' fullWidth={true}
+			        	verify='notempty' errorText='contact number can not be empty'/>
 		        </div>
 	        </div>
 	        <Toast ref='toast'/>

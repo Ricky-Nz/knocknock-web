@@ -83,12 +83,12 @@ const styles = {
 
 const component = Relay.createContainer(UserBrowserPage, {
 	initialVariables: {
-		role: null,
 		search: null,
 		first: 0,
 		last: 0,
 		after: null,
-		before: null
+		before: null,
+		reverse: false
 	},
 	prepareVariables: (variables) => {
 		return {
@@ -100,7 +100,7 @@ const component = Relay.createContainer(UserBrowserPage, {
 		viewer: (variables) => {
 			return Relay.QL`
 				fragment on Viewer {
-					users(role:$role,search:$search,first:$first,after:$after) @skip(if: $reverse) {
+					users(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 						${UserList.getFragment('connection')}
 						pageInfo {
 			        hasNextPage
@@ -109,7 +109,7 @@ const component = Relay.createContainer(UserBrowserPage, {
 			        startCursor
 						}
 					}
-					users(role:$role,search:$search,last:$last,before:$before) @include(if: $reverse) {
+					users(search:$search,last:$last,before:$before) @include(if: $reverse) {
 						${UserList.getFragment('connection')}
 						pageInfo {
 			        hasNextPage

@@ -83,7 +83,8 @@ const component = Relay.createContainer(OrderBrowserPage, {
 		first: 0,
 		last: 0,
 		after: null,
-		before: null
+		before: null,
+		reverse: false
 	},
 	prepareVariables: (variables) => {
 		return {

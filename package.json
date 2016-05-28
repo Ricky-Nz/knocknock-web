@@ -27,13 +27,14 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "babel-relay-plugin": "^0.8.1",
+    "babel-relay-plugin": "^0.9.0",
     "material-ui": "^0.15.0",
+    "rc-calendar": "^5.5.4",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-dropzone": "^3.4.0",
     "react-motion": "^0.4.3",
-    "react-relay": "^0.8.1",
+    "react-relay": "^0.9.0",
     "react-router": "^2.4.0",
     "react-router-relay": "^0.13.2",
     "react-swipeable-views": "^0.6.2",

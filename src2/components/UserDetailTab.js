@@ -9,7 +9,7 @@ import IconDone from 'material-ui/svg-icons/action/done';
 import Subheader from 'material-ui/Subheader';
 import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { InputBox } from '../widgets';
+import { InputBox, AvatarEditor } from '../widgets';
 import AddressList from './AddressList';
 import AddressDialog from './AddressDialog';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -34,6 +34,7 @@ class UserDetailTab extends Component {
 		const user = this.props.user;
 		const name = this.refs.name.getValue();
 		const contact = this.refs.contact.getValue();
+		const file = this.refs.avatar.getFile();
 
 		if (!user || !contact) return;
 
@@ -45,14 +46,16 @@ class UserDetailTab extends Component {
 			update.contact = contact;
 		}
 
-		if (Object.keys(update).length === 0) {
+		if (Object.keys(update).length === 0 && !file) {
 			return this.setState({editMode: false});
 		}
 
 		Relay.Store.commitUpdate(new UserUpdateMutation({
 			user: this.props.user,
+			file,
 			...update
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
+		this.setState({submitting: true});
 	}
 	onNewAddress = () => {
 		this.setState({
@@ -99,7 +102,7 @@ class UserDetailTab extends Component {
 						<div className='position-relative'>
 							<div className='flex flex-row padding'>
 								<div className='padding'>
-									<Avatar src={avatarUrl} size={100}/>
+									<AvatarEditor ref='avatar' src={avatarUrl} enable={editMode}/>
 								</div>
 								<div className='flex flex-fill margin-left'>
 					        <InputBox value={email} disabled={true} floatingLabelText='Email'
@@ -111,7 +114,7 @@ class UserDetailTab extends Component {
 								</div>
 							</div>
 							{editMode? (
-									submitting ? <CircularProgress size={0.5}/> :
+									submitting ? <CircularProgress style={styles.floatBottomRight} size={0.5}/> :
 										<div className='flex flex-row' style={styles.floatBottomRight}>
 											<IconButton onClick={this.onExitEdit}>
 											  <IconClear/>

@@ -23,8 +23,6 @@ export default class UserCreateMutation extends Relay.Mutation {
 		return variables;
 	}
 	getFatQuery() {
-		console.log('getFatQuery');
-		console.log(this.props);
 		return Relay.QL`
 			fragment on CreateUserPayload @relay(pattern: true) {
 				userEdge
@@ -35,8 +33,6 @@ export default class UserCreateMutation extends Relay.Mutation {
 		`;
 	}
   getConfigs() {
-  	console.log('getConfigs');
-		console.log(this.props);
     return [{
       type: 'RANGE_ADD',
       parentName: 'viewer',
@@ -45,7 +41,9 @@ export default class UserCreateMutation extends Relay.Mutation {
       edgeName: 'userEdge',
       rangeBehaviors: {
         '': 'prepend',
-        'role(client)': 'prepend'
+        'role(client)': 'prepend',
+        'role(worker)': 'prepend',
+        'role(admin)': 'prepend'
       }
     }];
 	}

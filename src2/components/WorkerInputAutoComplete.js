@@ -1,31 +1,31 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import AutoComplete from 'material-ui/AutoComplete';
-import UserMenuItem from './UserMenuItem';
+import WorkerMenuItem from './WorkerMenuItem';
 
-class UserInputAutoComplete extends Component {
+class WorkerInputAutoComplete extends Component {
 	onUpdateInput = (search) => {
 		this.props.relay.setVariables({search});
 	}
 	onNewRequest = (select, index) => {
-		this.props.onSelect(this.props.viewer.users.edges[index].node);
+		this.props.onSelect(this.props.viewer.workers.edges[index].node);
 	}
 	render() {
-		const dataSource = this.props.viewer.users.edges.map(({node}, index) =>
-				({text: node.email, value: <UserMenuItem index={index} user={node}/>}));
+		const dataSource = this.props.viewer.workers.edges.map(({node}, index) =>
+				({text: node.email, value: <WorkerMenuItem index={index} worker={node}/>}));
 
 		return (
-	    <AutoComplete hintText='enter user ID or email' floatingLabelText='Select User'
+	    <AutoComplete hintText='enter worker email' floatingLabelText='Select Worker'
 	      dataSource={dataSource} onUpdateInput={this.onUpdateInput} onNewRequest={this.onNewRequest}/>
 		);
 	}
 }
 
-UserInputAutoComplete.propTypes = {
+WorkerInputAutoComplete.propTypes = {
 	onSelect: PropTypes.func.isRequired
 };
 
-export default Relay.createContainer(UserInputAutoComplete, {
+export default Relay.createContainer(WorkerInputAutoComplete, {
 	initialVariables: {
 		search: null
 	},
@@ -35,12 +35,12 @@ export default Relay.createContainer(UserInputAutoComplete, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				users(search:$search,first:5) {
+				workers(search:$search,first:5) {
 					edges {
 						node {
 							id
 							email
-							${UserMenuItem.getFragment('user')}
+							${WorkerMenuItem.getFragment('worker')}
 						}
 					}
 				}

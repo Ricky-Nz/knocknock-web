@@ -51,8 +51,10 @@ class PaginationBar extends Component {
 			<div className='flex flex-row flex-align-center'>
 		    <DropDownMenu value={first||last} onChange={this.onPageSizeChange}>
 		      <MenuItem value={10} primaryText='10' />
-		      <MenuItem value={25} primaryText='25' />
 		      <MenuItem value={50} primaryText='50' />
+		      <MenuItem value={100} primaryText='100' />
+		      <MenuItem value={200} primaryText='200' />
+		      <MenuItem value={500} primaryText='500' />
 		    </DropDownMenu>
 				<IconButton disabled={disableBack} onClick={this.onFist}><IconFirst/></IconButton>
 				<IconButton disabled={disableBack} onClick={this.onPrevious}><IconLeft/></IconButton>

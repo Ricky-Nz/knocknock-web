@@ -4,3 +4,4 @@ export { default as InputBox } from './InputBox';
 export { default as DropZone } from './DropZone';
 export { default as Toast } from './Toast';
 export { default as AlertDialog } from './AlertDialog';
+export { default as AvatarEditor } from './AvatarEditor';

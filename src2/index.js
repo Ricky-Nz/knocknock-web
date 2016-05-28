@@ -12,8 +12,9 @@ import UserBrowserPage from './UserBrowserPage';
 import UserDetailPage from './UserDetailPage';
 import ClothBrowserPage from './ClothBrowserPage';
 import OrderBrowserPage from './OrderBrowserPage';
-import OrderDetailPage from './OrderDetailPage';
+import OrderCreatePage from './OrderCreatePage';
 import TimeSlotPage from './TimeSlotPage';
+import FactoryPage from './FactoryPage';
 
 // Needed for onTouchTap
 // Check this repo:
@@ -38,20 +39,30 @@ ReactROM.render(
 		environment={Relay.Store}>
 		<Route path='/' component={App}>
 			<Route path='dashboard' component={Dashboard}>
-				<Route path='user/:role' component={UserBrowserPage.component}
-					queries={UserBrowserPage.queries} prepareParams={UserBrowserPage.prepareParams}/>
-				<Route path='user/:role/:id' component={UserDetailPage.component}
-					queries={UserDetailPage.queries} prepareParams={UserDetailPage.prepareParams}/>
-				<Route path='product/laundry' component={ClothBrowserPage.component}
-					queries={ClothBrowserPage.queries} prepareParams={ClothBrowserPage.prepareParams}/>
-				<Route path='order/new' component={OrderDetailPage.component}
-					queries={OrderDetailPage.queries} prepareParams={OrderDetailPage.prepareParams}/>
-				<Route path='order/:userId/:orderId' component={OrderDetailPage.component}
-					queries={OrderDetailPage.queries} prepareParams={OrderDetailPage.prepareParams}/>
-				<Route path='orders' component={OrderBrowserPage.component}
-					queries={OrderBrowserPage.queries} prepareParams={OrderBrowserPage.prepareParams}/>
-				<Route path='timeslots' component={TimeSlotPage.component}
-					queries={TimeSlotPage.queries} prepareParams={TimeSlotPage.prepareParams}/>
+				<Route path='order'>
+					<Route path='active' component={OrderBrowserPage.component}
+						queries={OrderBrowserPage.queries} prepareParams={OrderBrowserPage.prepareParams}/>
+					<Route path='history' component={OrderBrowserPage.component}
+						queries={OrderBrowserPage.queries} prepareParams={OrderBrowserPage.prepareParams}/>
+					<Route path='new' component={OrderCreatePage.component}
+						queries={OrderCreatePage.queries} prepareParams={OrderCreatePage.prepareParams}/>
+					<Route path=':userId/:orderId' component={OrderCreatePage.component}
+						queries={OrderCreatePage.queries} prepareParams={OrderCreatePage.prepareParams}/>
+					<Route path='timeslots' component={TimeSlotPage.component}
+						queries={TimeSlotPage.queries} prepareParams={TimeSlotPage.prepareParams}/>
+				</Route>
+				<Route path='account'>
+					<Route path='factory' component={FactoryPage.component}
+						queries={FactoryPage.queries} prepareParams={FactoryPage.prepareParams}/>
+					<Route path=':role' component={UserBrowserPage.component}
+						queries={UserBrowserPage.queries} prepareParams={UserBrowserPage.prepareParams}/>
+					<Route path=':role/:id' component={UserDetailPage.component}
+						queries={UserDetailPage.queries} prepareParams={UserDetailPage.prepareParams}/>
+				</Route>
+				<Route path='system'>
+					<Route path='laundry' component={ClothBrowserPage.component}
+						queries={ClothBrowserPage.queries} prepareParams={ClothBrowserPage.prepareParams}/>
+				</Route>
 			</Route>
 		</Route>
 	</Router>,

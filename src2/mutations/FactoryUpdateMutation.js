@@ -1,13 +1,13 @@
 import Relay from 'react-relay';
 
-export default class UpdateTimeSlotMutation extends Relay.Mutation {
+export default class UpdateFactoryMutation extends Relay.Mutation {
   getMutation() {
-    return Relay.QL`mutation{updateTimeSlot}`;
+    return Relay.QL`mutation{updateFactory}`;
   }
   getFatQuery() {
     return Relay.QL`
-      fragment on UpdateTimeSlotPayload @relay(pattern: true) {
-        timeSlot
+      fragment on UpdateFactoryPayload @relay(pattern: true) {
+        factory
       }
     `;
   }
@@ -15,7 +15,7 @@ export default class UpdateTimeSlotMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        timeSlot: this.props.id,
+        factory: this.props.id,
       },
     }];
   }

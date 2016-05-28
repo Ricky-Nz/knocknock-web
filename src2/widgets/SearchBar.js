@@ -25,10 +25,9 @@ class SearchBar extends Component {
 		this.setState({value})
 	}
 	render() {
-		console.log('SEARCH RENDER');
 		const { onSearch, delay, ...otherProps } = this.props;
 		return (
-			<TextField autoFocus={true} {...otherProps} value={this.state.value}
+			<TextField name='search' {...otherProps} value={this.state.value}
 				onChange={this.onChange}/>
 		);
 	}

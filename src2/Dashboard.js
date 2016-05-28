@@ -22,6 +22,7 @@ import IconWorker from 'material-ui/svg-icons/maps/local-shipping';
 import IconAdmin from 'material-ui/svg-icons/action/assignment-ind';
 import IconHistory from 'material-ui/svg-icons/action/history';
 import IconDashboard from 'material-ui/svg-icons/action/dashboard';
+import IconFactory from 'material-ui/svg-icons/communication/business';
 import { SearchBar } from './widgets';
 
 class Dashboard extends Component {
@@ -45,19 +46,20 @@ class Dashboard extends Component {
 				<Drawer open={true}>
 				  <Menu onChange={this.onNavitage} value={this.props.location.pathname}>
 				  	<Subheader>Orders</Subheader>
-				  	<MenuItem value='/dashboard/orders' leftIcon={<IconOrder/>}>Active Orders</MenuItem>
-				  	<MenuItem value='/dashboard/historyorders' leftIcon={<IconHistory/>}>History Orders</MenuItem>
+				  	<MenuItem value='/dashboard/order/active' leftIcon={<IconOrder/>}>Active Orders</MenuItem>
+				  	<MenuItem value='/dashboard/order/history' leftIcon={<IconHistory/>}>History Orders</MenuItem>
+				  	<MenuItem value='/dashboard/order/timeslots' leftIcon={<IconTimer/>}>Order Time Slot</MenuItem>
 				  	<Subheader>Account</Subheader>
-				    <MenuItem value='/dashboard/user/client' leftIcon={<IconUser/>}>Users</MenuItem>
-				    <MenuItem value='/dashboard/user/worker' leftIcon={<IconWorker/>}>Workers</MenuItem>
-				    <MenuItem value='/dashboard/user/admin' leftIcon={<IconAdmin/>}>Admins</MenuItem>
+				    <MenuItem value='/dashboard/account/client' leftIcon={<IconUser/>}>User</MenuItem>
+				    <MenuItem value='/dashboard/account/worker' leftIcon={<IconWorker/>}>Worker</MenuItem>
+				    <MenuItem value='/dashboard/account/admin' leftIcon={<IconAdmin/>}>Admin</MenuItem>
+				    <MenuItem value='/dashboard/account/factory' leftIcon={<IconFactory/>}>Factory</MenuItem>
 				    <Subheader>System</Subheader>
 				    <MenuItem value='/dashboard/system/dashboard' leftIcon={<IconDashboard/>}>Dashboard</MenuItem>
 				    <MenuItem value='/dashboard/system/laundry' leftIcon={<IconStore/>}>Clothe</MenuItem>
 				    <MenuItem value='/dashboard/system/promocode' leftIcon={<IconPromoCode/>}>Promo Code</MenuItem>
 				    <MenuItem value='/dashboard/system/voucher' leftIcon={<IconVoucher/>}>Voucher</MenuItem>
 				    <MenuItem value='/dashboard/system/appbanner' leftIcon={<IconPhone/>}>App Banner</MenuItem>
-				    <MenuItem value='/dashboard/system/timeslots' leftIcon={<IconTimer/>}>Order Time Slot</MenuItem>
 				    <MenuItem value='/dashboard/system/feedback' leftIcon={<IconFeedback/>}>User Feedback</MenuItem>
 				    <Subheader>Function</Subheader>
 				    <MenuItem value='/dashboard/function/email' leftIcon={<IconEmail/>}>Send Email</MenuItem>

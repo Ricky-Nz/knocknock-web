@@ -1,23 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import SelectField from 'material-ui/SelectField';
-import AddressMenuItem from './AddressMenuItem';
+import MenuItem from 'material-ui/MenuItem';
 
-class AddressDropdownMenu extends Component {
-	render() {
-		return (
-			<SelectField floatingLabelText='Select Address' value={this.props.selectAddress&&this.props.selectAddress.id} onChange={this.handleChange}>
-				{
-					this.props.user.addresses.edges.map(({node}, index) =>
-							<AddressMenuItem index={index} address={node}/>)
-				}
-      </SelectField>
-		);
-	}
-}
+const AddressDropdownMenu = ({user, select, onSelect, ...props}) => (
+	<SelectField {...props} floatingLabelText='Select Address' value={select} onChange={onSelect}>
+		{
+			user&&user.addresses.edges.map(({node}, index) =>
+					<MenuItem key={index} value={node} primaryText={node.address} secondaryText={node.postalCode}/>)
+		}
+  </SelectField>
+);
 
 AddressDropdownMenu.propTypes = {
-	selectAddress: PropTypes.object
+	select: PropTypes.object,
+	onSelect: PropTypes.func.isRequired
 };
 
 export default Relay.createContainer(AddressDropdownMenu, {
@@ -28,7 +25,8 @@ export default Relay.createContainer(AddressDropdownMenu, {
 					edges {
 						node {
 							id
-							${AddressMenuItem.getFragment('address')}
+							address
+							postalCode
 						}
 					}
 				}

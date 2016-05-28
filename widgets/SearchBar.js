@@ -16,7 +16,7 @@ class SearchBar extends Component {
 	}
 	render() {
 		return (
-			<TextField hintText='search' onChange={this.onChange}/>
+			<TextField name='search' hintText='search' onChange={this.onChange}/>
 		);
 	}
 }
