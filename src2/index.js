@@ -9,6 +9,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import Dashboard from './Dashboard';
 import UserBrowserPage from './UserBrowserPage';
+import WorkerBrowserPage from './WorkerBrowserPage';
 import UserDetailPage from './UserDetailPage';
 import ClothBrowserPage from './ClothBrowserPage';
 import OrderBrowserPage from './OrderBrowserPage';
@@ -54,8 +55,10 @@ ReactROM.render(
 				<Route path='account'>
 					<Route path='factory' component={FactoryPage.component}
 						queries={FactoryPage.queries} prepareParams={FactoryPage.prepareParams}/>
-					<Route path=':role' component={UserBrowserPage.component}
+					<Route path='client' component={UserBrowserPage.component}
 						queries={UserBrowserPage.queries} prepareParams={UserBrowserPage.prepareParams}/>
+					<Route path='worker' component={WorkerBrowserPage.component}
+						queries={WorkerBrowserPage.queries} prepareParams={WorkerBrowserPage.prepareParams}/>
 					<Route path=':role/:id' component={UserDetailPage.component}
 						queries={UserDetailPage.queries} prepareParams={UserDetailPage.prepareParams}/>
 				</Route>

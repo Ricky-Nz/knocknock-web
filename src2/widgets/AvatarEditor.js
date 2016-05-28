@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import Avatar from 'material-ui/Avatar';
 import IconEdit from 'material-ui/svg-icons/image/edit';
 import Dropzone from 'react-dropzone';
-import request from 'superagent';
 
 class AvatarEditor extends Component {
 	state = {}

@@ -8,17 +8,22 @@ import { InputBox, DropZone, Toast } from '../widgets';
 import { ClothCreateMutation, ClothUpdateMutation } from '../mutations';
 
 class ClothDialog extends Component {
-	state = {
-		submitting: false,
-		selectedCagetoryId: null
+	constructor(props) {
+		super(props);
+		this.state = {
+			submitting: false,
+			selectedCategoryId: props.defaultCategoryId
+		};
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.clothId !== this.props.clothId) {
 			this.props.relay.setVariables({id: nextProps.clothId||null});
+		} else if (nextProps.defaultCategoryId !== this.props.defaultCategoryId) {
+			this.setState({selectedCategoryId: nextProps.defaultCategoryId});
 		}
 	}
 	onComfirm = () => {
-		if (!this.state.selectedCagetoryId) {
+		if (!this.state.selectedCategoryId) {
 			return;
 		}
 
@@ -42,7 +47,7 @@ class ClothDialog extends Component {
 		if (!cloth) {
 			Relay.Store.commitUpdate(new ClothCreateMutation({
 				viewer: this.props.viewer,
-				categoryId: this.state.selectedCagetoryId,
+				categoryId: this.state.selectedCategoryId,
 				file,
 				nameEn,
 				nameCn,
@@ -84,7 +89,7 @@ class ClothDialog extends Component {
 			Relay.Store.commitUpdate(new ClothUpdateMutation({
 				id: cloth.id,
 				file,
-				categoryId: this.state.selectedCagetoryId,
+				categoryId: this.state.selectedCategoryId,
 				...update
 			}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		}
@@ -101,12 +106,12 @@ class ClothDialog extends Component {
 	  this.refs.toast.show(JSON.stringify(error));
 	}
 	onSelectCategory = (categoryId) => {
-		this.setState({selectedCagetoryId: categoryId});
+		this.setState({selectedCategoryId: categoryId});
 	}
 	render() {
 		const cloth = this.props.viewer.cloth;
 		const { handleClose, open } = this.props;
-		const { submitting, selectedCagetoryId } = this.state;
+		const { submitting, selectedCategoryId } = this.state;
 
 		return (
       <Dialog title={cloth?`${cloth.nameEn} (${cloth.nameCn})`:'New Item'} modal={false} open={open}
@@ -114,10 +119,10 @@ class ClothDialog extends Component {
 		      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
 		      submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={this.state.submitting} primary={true} onTouchTap={this.onComfirm}/>
 		    ]} onRequestClose={handleClose}>
-			    <div className='flex flex-row flex-fill scroll'>
+			    <div className='flex flex-row scroll'>
 				    <div className='flex margin-right'>
 				    	<CategorySelectMenu connection={this.props.viewer.categories}
-				    		selectId={selectedCagetoryId} onSelect={this.onSelectCategory}/>
+				    		selectId={selectedCategoryId} onSelect={this.onSelectCategory}/>
 			        <InputBox ref='nameEn' value={cloth&&cloth.nameEn} floatingLabelText='English Name'
 			        	verify='notempty' errorText='english name can not be empty'/>
 			        <InputBox ref='nameCn' value={cloth&&cloth.nameEn} floatingLabelText='Chinese Name'
@@ -134,13 +139,13 @@ class ClothDialog extends Component {
 		        <DropZone ref='dropzone' className='flex flex-fill'
 		        	required imageUrl={cloth&&cloth.imageUrl} multiple={false} accept='image/*'/>
 	        </div>
-	        <Toast ref='toast'/>
       </Dialog>
 		);
 	}
 }
 
 ClothDialog.propTypes = {
+	defaultCategoryId: PropTypes.string,
 	handleClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,
 	clothId: PropTypes.string 
@@ -148,7 +153,8 @@ ClothDialog.propTypes = {
 
 export default Relay.createContainer(ClothDialog, {
 	initialVariables: {
-		id: null
+		id: null,
+		fetchCloth: false
 	},
 	prepareVariables: (preVariables) => {
 		return {

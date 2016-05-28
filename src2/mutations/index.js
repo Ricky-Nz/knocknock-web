@@ -13,6 +13,12 @@ export { default as AddressDeleteMutation } from './AddressDeleteMutation';
 export { default as UserCreateMutation } from './UserCreateMutation';
 export { default as UserUpdateMutation } from './UserUpdateMutation';
 
+export { default as WorkerCreateMutation } from './WorkerCreateMutation';
+export { default as WorkerUpdateMutation } from './WorkerUpdateMutation';
+
+export { default as AdminCreateMutation } from './AdminCreateMutation';
+export { default as AdminUpdateMutation } from './AdminUpdateMutation';
+
 export { default as TimeSlotCreateMutation } from './TimeSlotCreateMutation';
 export { default as TimeSlotUpdateMutation } from './TimeSlotUpdateMutation';
 export { default as TimeSlotDeleteMutation } from './TimeSlotDeleteMutation';

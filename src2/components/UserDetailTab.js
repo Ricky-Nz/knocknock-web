@@ -162,7 +162,6 @@ export default Relay.createContainer(UserDetailTab, {
 		user: () => Relay.QL`
 			fragment on User {
 				id
-				role
 				email
 				name
 				contact

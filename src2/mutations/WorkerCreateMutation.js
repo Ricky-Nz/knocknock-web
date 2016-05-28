@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class UserCreateMutation extends Relay.Mutation {
+export default class WorkerCreateMutation extends Relay.Mutation {
 	static fragments = {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
@@ -9,7 +9,7 @@ export default class UserCreateMutation extends Relay.Mutation {
 		`
 	}
 	getMutation() {
-		return Relay.QL`mutation{ createUser }`;
+		return Relay.QL`mutation{ createWorker }`;
 	}
   getFiles() {
   	if (this.props.file) {
@@ -24,10 +24,10 @@ export default class UserCreateMutation extends Relay.Mutation {
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateUserPayload @relay(pattern: true) {
-				userEdge
+			fragment on CreateWorkerPayload @relay(pattern: true) {
+				workerEdge
 				viewer {
-					users
+					workers
 				}
 			}
 		`;
@@ -37,8 +37,8 @@ export default class UserCreateMutation extends Relay.Mutation {
       type: 'RANGE_ADD',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'users',
-      edgeName: 'userEdge',
+      connectionName: 'workers',
+      edgeName: 'workerEdge',
       rangeBehaviors: {
         '': 'prepend'
       }

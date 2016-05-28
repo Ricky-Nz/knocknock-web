@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
-import { PaginationSearchTitle, UserList, UserDialog } from './components';
+import { PaginationSearchTitle, UserList, AccountCreateDialog } from './components';
 import { preparePageParams } from './utils';
 
 const queries = {
@@ -62,8 +62,8 @@ class UserBrowserPage extends Component {
 					</div>
 				</div>
 				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
-				<UserDialog role={role} open={this.state.dialogShow}
-				 handleClose={this.handleClose} viewer={this.props.viewer}/>
+				<AccountCreateDialog role='client' open={this.state.dialogShow}
+					handleClose={this.handleClose} viewer={this.props.viewer}/>
 			</div>
 		);
 	}
@@ -118,7 +118,7 @@ const component = Relay.createContainer(UserBrowserPage, {
 			        startCursor
 						}
 					}
-					${UserDialog.getFragment('viewer')}
+					${AccountCreateDialog.getFragment('viewer')}
 				}
 			`;
 		}

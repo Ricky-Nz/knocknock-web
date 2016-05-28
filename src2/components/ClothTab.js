@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import ClothList from './ClothList';
@@ -8,12 +8,20 @@ import CategorySelectMenu from './CategorySelectMenu';
 import { AddFloatButton, SearchBar } from '../widgets';
 
 class CategoryTab extends Component {
-	state = {
-		alertShow: false,
-		editorShow: false,
-		selected: null,
-		search: null,
-		selectedCategoryId: null
+	constructor(props) {
+		super(props);
+		this.state = {
+			alertShow: false,
+			editorShow: false,
+			selected: null,
+			search: null,
+			selectedCategoryId: props.defaultCategoryId
+		};
+	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.defaultCategoryId !== this.props.defaultCategoryId) {
+			this.setState({selectedCategoryId: nextProps.defaultCategoryId});
+		}
 	}
 	handleEditorClose = () => {
 		this.setState({
@@ -72,7 +80,8 @@ class CategoryTab extends Component {
 						categoryId={selectedCategoryId} onAction={this.onItemAction}/>
 				</div>
 				<ClothDialog viewer={this.props.viewer} clothId={selected&&selected.id}
-					handleClose={this.handleEditorClose} open={editorShow}/>
+					handleClose={this.handleEditorClose} open={editorShow}
+					defaultCategoryId={selectedCategoryId}/>
 				<AddFloatButton style={styles.floatButton} onClick={this.onNewItem}/>
 				<DeleteConfirmDialog viewer={this.props.viewer} open={alertShow}
 	      	handleClose={this.handAlertClose} cloth={selected}/>
@@ -80,6 +89,10 @@ class CategoryTab extends Component {
 		);
 	}
 }
+
+CategoryTab.propTypes = {
+	defaultCategoryId: PropTypes.string
+};
 
 const styles = {
 	floatButton: {

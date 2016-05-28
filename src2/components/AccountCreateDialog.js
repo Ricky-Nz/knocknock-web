@@ -5,9 +5,9 @@ import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import CategorySelectMenu from './CategorySelectMenu';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { UserCreateMutation } from '../mutations';
+import { UserCreateMutation, WorkerCreateMutation, AdminCreateMutation } from '../mutations';
 
-class UserDialog extends Component {
+class AccoutCreateDialog extends Component {
 	state = {
 		submitting: false
 	}
@@ -24,15 +24,29 @@ class UserDialog extends Component {
 			return;
 		}
 
-		Relay.Store.commitUpdate(new UserCreateMutation({
+		const args = {
 			viewer: this.props.viewer,
 			file,
 			email,
 			password,
 			name,
-			contact,
-			role: this.props.role
-		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
+			contact
+		};
+
+		let mutation;
+		switch(this.props.role) {
+			case 'client':
+				mutation = new UserCreateMutation(args);
+				break;
+			case 'worker':
+				mutation = new WorkerCreateMutation(args);
+				break;
+			case 'admin':
+				mutation = new AdminCreateMutation(args);
+				break;
+		}
+
+		Relay.Store.commitUpdate(mutation, {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		this.setState({submitting: true});
 	}
 	onSuccess = () => {
@@ -41,8 +55,6 @@ class UserDialog extends Component {
 	}
 	onFailure = (transaction) => {
 		this.setState({submitting: false});
-	  var error = transaction.getError() || new Error('Mutation failed.');
-	  console.log(error);
 	}
 	onPasswordChange = (value) => {
 		this.setState({password: value});
@@ -58,7 +70,8 @@ class UserDialog extends Component {
 		      submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={submitting} primary={true} onTouchTap={this.onComfirm}/>
 		    ]} onRequestClose={handleClose}>
 			    <div className='flex flex-row flex-fill scroll'>
-		        <DropZone ref='dropzone' style={styles.dropZone} multiple={false} accept='image/*'/>
+		        {(role!=='admin')&&<DropZone ref='dropzone' style={styles.dropZone}
+		        	multiple={false} accept='image/*'/>}
 				    <div className='flex flex-fill margin-left'>
 			        <InputBox ref='email' floatingLabelText='Email' fullWidth={true}
 			        	verify='email' errorText='please enter a valid email address'/>
@@ -79,7 +92,7 @@ class UserDialog extends Component {
 	}
 }
 
-UserDialog.propTypes = {
+AccoutCreateDialog.propTypes = {
 	role: PropTypes.oneOf(['client', 'worker', 'admin']).isRequired,
 	handleClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired
@@ -92,11 +105,13 @@ const styles = {
 	}
 };
 
-export default Relay.createContainer(UserDialog, {
+export default Relay.createContainer(AccoutCreateDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
 				${UserCreateMutation.getFragment('viewer')}
+				${WorkerCreateMutation.getFragment('viewer')}
+				${AdminCreateMutation.getFragment('viewer')}
 			}
 		`
 	}

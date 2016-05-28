@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import CategoryList from './CategoryList';
@@ -44,7 +44,9 @@ class CategoryTab extends Component {
 					selected: category
 				});
 				break;
-			default:
+			case 'VIEW':
+				this.props.onSelectCategory(category);
+				break;
 		}
 	}
 	onSearch = (text) => {
@@ -74,6 +76,10 @@ class CategoryTab extends Component {
 		);
 	}
 }
+
+CategoryTab.propTypes = {
+	onSelectCategory: PropTypes.func.isRequired
+};
 
 const styles = {
 	floatButton: {

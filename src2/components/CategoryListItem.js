@@ -20,7 +20,7 @@ const CategoryListItem = ({category, onAction}) => (
 			    <MenuItem value='DELETE'>Delete</MenuItem>
 			  </IconMenu>
 			}
-			onTouchTap={() => onAction(category)}/>
+			onTouchTap={() => onAction(category, 'VIEW')}/>
 	</Paper>
 );
 

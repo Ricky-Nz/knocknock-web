@@ -15,19 +15,25 @@ const queries = {
 
 class ClothBrowserPage extends Component {
 	state = {
-		slideIndex: 0
+		slideIndex: 0,
+		selectCategoryId: null
 	}
 	tabSelectChange = (value) => {
 		this.setState({slideIndex: value});
+	}
+	onSelectCategory = (category) => {
+		this.setState({slideIndex: 1, selectCategoryId: category.id});	
 	}
 	render() {
 		let contentView;
 		switch(this.state.slideIndex) {
 			case 0:
-				contentView = <CategoryTab viewer={this.props.viewer}/>;
+				contentView = <CategoryTab viewer={this.props.viewer}
+					onSelectCategory={this.onSelectCategory}/>;
 				break;
 			case 1:
-				contentView = <ClothTab viewer={this.props.viewer}/>
+				contentView = <ClothTab viewer={this.props.viewer}
+					defaultCategoryId={this.state.selectCategoryId}/>
 				break;
 		}
 

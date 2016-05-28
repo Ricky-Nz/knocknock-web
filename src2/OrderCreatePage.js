@@ -7,7 +7,7 @@ import DatePicker from 'material-ui/DatePicker';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconNavBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { UserInputAutoComplete, AddressDropdownMenu,
+import { UserInputAutoComplete, AddressDropdownMenu, ClothInputAutoComplete,
 	OrderStatusDropdownMenu, TimeSlotDropdownMenu, WorkerInputAutoComplete } from './components';
 import IconDone from 'material-ui/svg-icons/action/done';
 import IconBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -28,7 +28,8 @@ class OrderCreatePage extends Component {
 			pickupDate: null,
 			status: null,
 			pickupTime: null,
-			pickupWorkerId: null
+			pickupWorkerId: null,
+			clothes: []
 		};
 	}
 	onBack = () => {
@@ -38,7 +39,7 @@ class OrderCreatePage extends Component {
 		this.props.relay.setVariables({userId: user.id});
 	}
 	onSelectWorker = (worker) => {
-		this.props.relay.setVariables({pickupWorkerId: worker.id});	
+		this.setState({pickupWorkerId: worker.id});	
 	}
 	onSelectAddress = (event, index, value) => {
 		this.setState({address: value});
@@ -52,6 +53,9 @@ class OrderCreatePage extends Component {
 	onSelectStatus = (event, index, value) => {
 		this.setState({status: value});
 	}
+	onSelectProduct = (event, index, value) => {
+		this.setState({clothes: [value, ...this.state.clothes]});
+	}
 	render() {
 		const { address, status, pickupTime } = this.state;
 		const useId = this.props.relay.variables.userId;
@@ -60,17 +64,26 @@ class OrderCreatePage extends Component {
 			<div className='flex flex-fill'>
 			  <AppBar title='New Order'
 			    iconElementLeft={<IconButton onClick={this.onBack}><IconBack/></IconButton>}/>
-				<div className='flex flex-fill padding scroll margin'>
-					<UserInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectUser}/>
-					<AddressDropdownMenu user={this.props.viewer.user||null} disabled={!useId}
-						select={address} onSelect={this.onSelectAddress}/>
-					<DatePicker hintText='Select Pickup Date' mode='landscape'
-						onChange={this.onSelectPickupDate}/>
-					<TimeSlotDropdownMenu viewer={this.props.viewer} select={pickupTime}
-						onSelect={this.onSelectPickupTime}/>
-					<OrderStatusDropdownMenu viewer={this.props.viewer} select={status}
-						onSelect={this.onSelectStatus}/>
-					<WorkerInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectWorker}/>
+				<div className='flex flex-fill padding scroll'>
+					<div className='flex flex-row'>
+						<Paper className='flex padding'>
+							<UserInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectUser}/>
+							<AddressDropdownMenu user={this.props.viewer.user||null} disabled={!useId}
+								select={address} onSelect={this.onSelectAddress}/>
+							<DatePicker hintText='Select Pickup Date' mode='landscape'
+								onChange={this.onSelectPickupDate}/>
+							<TimeSlotDropdownMenu viewer={this.props.viewer} select={pickupTime}
+								onSelect={this.onSelectPickupTime}/>
+							<OrderStatusDropdownMenu viewer={this.props.viewer} select={status}
+								onSelect={this.onSelectStatus}/>
+							<WorkerInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectWorker}/>
+						</Paper>
+						<div className='flex flex-fill margin-left'>
+							<Paper className='padding-horizontal'>
+								<ClothInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectProduct}/>
+							</Paper>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
@@ -99,6 +112,7 @@ const component = Relay.createContainer(OrderCreatePage, {
 				${OrderStatusDropdownMenu.getFragment('viewer')}
 				${TimeSlotDropdownMenu.getFragment('viewer')}
 				${WorkerInputAutoComplete.getFragment('viewer')}
+				${ClothInputAutoComplete.getFragment('viewer')}
 				user(id:$userId) @skip(if: $skipFetchUser) {
 					${AddressDropdownMenu.getFragment('user')}
 				}
