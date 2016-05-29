@@ -4,7 +4,8 @@ import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconNavBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { AddFloatButton } from './widgets';
-import { OrderList, PaginationSearchTitle } from './components';
+import { OrderList, PaginationSearchTitle, OrderStatusDropdownMenu,
+	OrderMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete } from './components';
 import { preparePageParams } from './utils';
 
 const queries = {
@@ -44,18 +45,44 @@ class OrderBrowserPage extends Component {
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
 	}
+	onSelectStatus = (status) => {
+		this.props.relay.setVariables({status});
+	}
+	onDataSelectChange = (after, before) => {
+		this.props.relay.setVariables({afterDate: after, beforeDate: before});
+	}
+	onSelectUser = (user) => {
+		this.props.relay.setVariables({userId: user.id});
+	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;
 
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill padding'>
-					<PaginationSearchTitle pageInfo={this.props.viewer.orders.pageInfo}
-						first={first} after={after} last={last} before={before}
-						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
-					<div className='flex flex-fill scroll'>
-						<OrderList connection={this.props.viewer.orders}
-							onItemClick={this.onItemClick}/>
+					<Paper className='flex margin-bottom padding-horizontal'>
+						<PaginationSearchTitle pageInfo={this.props.viewer.orders.pageInfo}
+							first={first} after={after} last={last} before={before}
+							onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+					</Paper>
+					<div className='flex flex-fill flex-row'>
+						<div className='flex'>
+							<Paper>
+								<OrderDateRangeSelector onSelect={this.onDataSelectChange}/>
+								<div className='padding-left'>
+									<UserInputAutoComplete viewer={this.props.viewer}
+										onSelect={this.onSelectUser}/>
+								</div>
+							</Paper>
+							<Paper className='flex scroll margin-top'>
+								<OrderMultiSelectMenu viewer={this.props.viewer}
+									onSelect={this.onSelectStatus}/>
+							</Paper>
+						</div>
+						<div className='flex flex-fill scroll margin-left' style={styles.fix}>
+							<OrderList connection={this.props.viewer.orders}
+								onItemClick={this.onItemClick}/>
+						</div>
 					</div>
 				</div>
 				<AddFloatButton style={styles.floatButton} onClick={this.onAddNew}/>
@@ -71,8 +98,11 @@ OrderBrowserPage.contextTypes = {
 const styles = {
 	floatButton: {
 		position: 'absolute',
-		right: 48,
-		bottom: 48
+		right: 24,
+		bottom: 24
+	},
+	fix: {
+		padding: '0 2'
 	}
 };
 
@@ -80,6 +110,9 @@ const component = Relay.createContainer(OrderBrowserPage, {
 	initialVariables: {
 		userId: null,
 		search: null,
+		status: null,
+		afterDate: null,
+		beforeDate: null,
 		first: 0,
 		last: 0,
 		after: null,
@@ -95,7 +128,7 @@ const component = Relay.createContainer(OrderBrowserPage, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				orders(userId:$userId,search:$search,first:$first,after:$after) @skip(if: $reverse) {
+				orders(userId:$userId,status:$status,afterDate:$afterDate,beforeDate:$beforeDate,search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${OrderList.getFragment('connection')}
 					pageInfo {
 					  hasNextPage
@@ -104,7 +137,7 @@ const component = Relay.createContainer(OrderBrowserPage, {
 					  startCursor
 					}
 				}
-				orders(userId:$userId,search:$search,last:$last,before:$before) @include(if: $reverse) {
+				orders(userId:$userId,status:$status,afterDate:$afterDate,beforeDate:$beforeDate,search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${OrderList.getFragment('connection')}
 					pageInfo {
 					  hasNextPage
@@ -113,6 +146,9 @@ const component = Relay.createContainer(OrderBrowserPage, {
 					  startCursor
 					}
 				}
+				${OrderStatusDropdownMenu.getFragment('viewer')}
+				${OrderMultiSelectMenu.getFragment('viewer')}
+				${UserInputAutoComplete.getFragment('viewer')}
 			}
 		`
 	}

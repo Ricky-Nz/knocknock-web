@@ -12,7 +12,6 @@ export default Relay.createContainer(ClothMenuItem, {
 	fragments: {
 		cloth: () => Relay.QL`
 			fragment on Cloth {
-				id
 				nameCn
 				nameEn
 				imageUrl

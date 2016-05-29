@@ -26,3 +26,5 @@ export { default as TimeSlotDeleteMutation } from './TimeSlotDeleteMutation';
 export { default as FactoryCreateMutation } from './FactoryCreateMutation';
 export { default as FactoryUpdateMutation } from './FactoryUpdateMutation';
 export { default as FactoryDeleteMutation } from './FactoryDeleteMutation';
+
+export { default as OrderCreateMutation } from './OrderCreateMutation';
