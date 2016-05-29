@@ -2,10 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconNavBack from 'material-ui/svg-icons/navigation/arrow-back';
+import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
 import { AddFloatButton } from './widgets';
 import { OrderList, PaginationSearchTitle, OrderStatusDropdownMenu,
-	OrderMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete } from './components';
+	OrderMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete,
+	OrderBulkUpdateDialog } from './components';
 import { preparePageParams } from './utils';
 
 const queries = {
@@ -23,18 +24,30 @@ const prepareParams = (params, {location}) => {
 };
 
 class OrderBrowserPage extends Component {
+	state = {
+		editDialogOpen: false,
+		selectOrders: []
+	}
 	onBack = () => {
 		this.context.router.goBack();
 	}
-	onAddNew = () => {
-		this.context.router.push({
-			pathname: `/dashboard/order/new`
-		});
-	}
-	onItemClick = (order) => {
-		this.context.router.push({
-			pathname: `/dashboard/order/${order.id}`
-		});
+	onOrderAction = (order, action) => {
+		switch(action) {
+			case 'VIEW':
+				break;
+			case 'SELECT':
+				const index = this.state.selectOrders.indexOf(order);
+				if (index >= 0) {
+					this.setState({selectOrders: [...this.state.selectOrders.slice(0, index),
+						...this.state.selectOrders.slice(index + 1)]});
+				} else {
+					this.setState({selectOrders: [...this.state.selectOrders, order]});
+				}
+				break;
+		}
+		// this.context.router.push({
+		// 	pathname: `/dashboard/order/${order.id}`
+		// });
 	}
 	onNavigate = (pagination) => {
 		this.context.router.push({
@@ -54,38 +67,50 @@ class OrderBrowserPage extends Component {
 	onSelectUser = (user) => {
 		this.props.relay.setVariables({userId: user.id});
 	}
+	onHandleEditorClose = () => {
+		this.setState({editDialogOpen: false});
+	}
+	onEdit = () => {
+		this.setState({editDialogOpen: true});	
+	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;
+		const { selectOrders, editDialogOpen } = this.state;
 
 		return (
 			<div className='flex flex-fill position-relative'>
-				<div className='flex flex-fill padding'>
-					<Paper className='flex margin-bottom padding-horizontal'>
-						<PaginationSearchTitle pageInfo={this.props.viewer.orders.pageInfo}
-							first={first} after={after} last={last} before={before}
-							onSearch={this.onSearch} onNavigate={this.onNavigate}/>
-					</Paper>
-					<div className='flex flex-fill flex-row'>
-						<div className='flex'>
-							<Paper>
-								<OrderDateRangeSelector onSelect={this.onDataSelectChange}/>
-								<div className='padding-left'>
-									<UserInputAutoComplete viewer={this.props.viewer}
-										onSelect={this.onSelectUser}/>
-								</div>
-							</Paper>
-							<Paper className='flex scroll margin-top'>
-								<OrderMultiSelectMenu viewer={this.props.viewer}
-									onSelect={this.onSelectStatus}/>
-							</Paper>
-						</div>
-						<div className='flex flex-fill scroll margin-left' style={styles.fix}>
-							<OrderList connection={this.props.viewer.orders}
-								onItemClick={this.onItemClick}/>
-						</div>
+				<div className='flex flex-fill flex-row padding'>
+					<div className='flex'>
+						<Paper>
+							<OrderDateRangeSelector onSelect={this.onDataSelectChange}/>
+							<div className='padding-left'>
+								<UserInputAutoComplete viewer={this.props.viewer}
+									onSelect={this.onSelectUser}/>
+							</div>
+						</Paper>
+						<Paper className='flex scroll margin-top'>
+							<OrderMultiSelectMenu viewer={this.props.viewer}
+								onSelect={this.onSelectStatus}/>
+						</Paper>
+					</div>
+					<div className='flex flex-fill margin-left'>
+						<Paper className='flex margin-bottom padding-horizontal'>
+							<PaginationSearchTitle pageInfo={this.props.viewer.orders.pageInfo}
+								first={first} after={after} last={last} before={before}
+								onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+						</Paper>
+						<OrderList connection={this.props.viewer.orders}
+							onAction={this.onOrderAction} selectMode={true}
+							selects={selectOrders}/>
 					</div>
 				</div>
-				<AddFloatButton style={styles.floatButton} onClick={this.onAddNew}/>
+				{(selectOrders.length>0)&&
+					<FloatingActionButton style={styles.floatButton} onClick={this.onEdit}>
+						<IconEditor/>
+					</FloatingActionButton>
+				}
+				<OrderBulkUpdateDialog open={editDialogOpen}
+					handleClose={this.onHandleEditorClose} selectOrders={selectOrders}/>
 			</div>
 		);
 	}
@@ -100,9 +125,6 @@ const styles = {
 		position: 'absolute',
 		right: 24,
 		bottom: 24
-	},
-	fix: {
-		padding: '0 2'
 	}
 };
 

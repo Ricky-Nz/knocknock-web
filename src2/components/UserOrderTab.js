@@ -9,11 +9,14 @@ class UserOrderTab extends Component {
 			pathname: `/dashboard/order`
 		});
 	}
+	onOrderAction = (order, action) => {
+		
+	}
 	render() {
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex scroll'>
-					<OrderList connection={this.props.user.orders}/>
+					<OrderList connection={this.props.user.orders} onAction={this.onOrderAction}/>
 				</div>
 				<AddFloatButton style={styles.floatButton} onClick={this.onNewOrder}/>
 			</div>

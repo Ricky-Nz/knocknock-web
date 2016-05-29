@@ -21,6 +21,7 @@ export { default as OrderItemListItem } from './OrderItemListItem';
 export { default as OrderMultiSelectMenu } from './OrderMultiSelectMenu';
 export { default as OrderStatusDropdownMenu } from './OrderStatusDropdownMenu';
 export { default as OrderDateRangeSelector } from './OrderDateRangeSelector';
+export { default as OrderBulkUpdateDialog } from './OrderBulkUpdateDialog';
 
 export { default as ClothTab } from './ClothTab';
 export { default as CategoryTab } from './CategoryTab';
