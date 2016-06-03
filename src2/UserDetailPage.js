@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import IconBack from 'material-ui/svg-icons/navigation/arrow-back';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconNavBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -29,7 +32,7 @@ class UserDetailPage extends Component {
 	tabSelectChange = (value) => {
 		this.setState({selectTab: value});
 	}
-	onBack = () => {
+	onNavBack = () => {
 		this.context.router.goBack();
 	}
 	render() {
@@ -51,21 +54,17 @@ class UserDetailPage extends Component {
 
 		return (
 			<div className='flex flex-fill'>
-				<Paper>
-		      <Tabs onChange={this.tabSelectChange} value={this.state.selectTab}>
-		        <Tab label='User Details' value='detail'/>
-		        <Tab label='Order Record' value='order'/>
-		        <Tab label='Deposit Record' value='transaction'/>
-		        <Tab label='User Vouchers' value='voucher'/>
+				<AppBar title={`User: ${this.props.viewer.user.name}`}
+					iconElementLeft={<IconButton onClick={this.onNavBack}><IconBack/></IconButton>}>
+		      <Tabs onChange={this.tabSelectChange} value={this.state.selectTab}
+		      	style={styles.tabBar}>
+		        <Tab label='Detail' value='detail'/>
+		        <Tab label='Record' value='order'/>
+		        <Tab label='Deposit' value='transaction'/>
+		        <Tab label='Voucher' value='voucher'/>
 		      </Tabs>
-	      </Paper>
-	      <div className='flex flex-fill position-relative'>
-	      	{contentView}
-					<FloatingActionButton
-						style={styles.floatBack} onClick={this.onBack}>
-					  <IconNavBack/>
-					</FloatingActionButton>
-	      </div>
+				</AppBar>
+	      {contentView}
 			</div>
 		);
 	}
@@ -80,6 +79,9 @@ const styles = {
 		position: 'absolute',
 		left: 24,
 		bottom: 24
+	},
+	tabBar: {
+		width: 300
 	}
 };
 
@@ -92,6 +94,7 @@ const component = Relay.createContainer(UserDetailPage, {
 			fragment on Viewer {
 				id
 				user(id:$id) {
+					name
 					${UserDetailTab.getFragment('user')}
 					${UserOrderTab.getFragment('user')}
 					${UserTransactionTab.getFragment('user')}

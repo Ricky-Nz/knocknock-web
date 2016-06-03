@@ -34,6 +34,7 @@ class OrderBrowserPage extends Component {
 	onOrderAction = (order, action) => {
 		switch(action) {
 			case 'VIEW':
+				this.context.router.push(`/dashboard/order/${order.userId}/${order.serialNumber}`);
 				break;
 			case 'SELECT':
 				const index = this.state.selectOrders.indexOf(order);
@@ -45,9 +46,6 @@ class OrderBrowserPage extends Component {
 				}
 				break;
 		}
-		// this.context.router.push({
-		// 	pathname: `/dashboard/order/${order.id}`
-		// });
 	}
 	onNavigate = (pagination) => {
 		this.context.router.push({
@@ -109,7 +107,7 @@ class OrderBrowserPage extends Component {
 						<IconEditor/>
 					</FloatingActionButton>
 				}
-				<OrderBulkUpdateDialog open={editDialogOpen}
+				<OrderBulkUpdateDialog viewer={this.props.viewer} open={editDialogOpen}
 					handleClose={this.onHandleEditorClose} selectOrders={selectOrders}/>
 			</div>
 		);
@@ -171,6 +169,7 @@ const component = Relay.createContainer(OrderBrowserPage, {
 				${OrderStatusDropdownMenu.getFragment('viewer')}
 				${OrderMultiSelectMenu.getFragment('viewer')}
 				${UserInputAutoComplete.getFragment('viewer')}
+				${OrderBulkUpdateDialog.getFragment('viewer')}
 			}
 		`
 	}

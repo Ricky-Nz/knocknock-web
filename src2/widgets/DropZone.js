@@ -27,9 +27,9 @@ class DropZoneView extends Component {
 		const preview = (this.state.file&&this.state.file.preview)||imageUrl;
 
 		return (
-		  <DropZone className={className} style={style?{...styles.container, ...style}:styles.container}
+		  <DropZone className={className} style={styles.container}
 		  	multiple={multiple} accept={accept} onDrop={this.onDrop}>
-		    {preview?<img style={styles.img} src={preview}/>:
+		    {preview?<img style={{...style, ...styles.img}} src={preview}/>:
 		    	(this.state.showError?<div style={styles.errorText}>you must select a file</div>
 		    		:<div>Try dropping some files here, or click to select files to upload.</div>)}
 		  </DropZone>

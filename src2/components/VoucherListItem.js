@@ -20,8 +20,6 @@ export default Relay.createContainer(VoucherListItem, {
         value
         title
         expireOn
-        usedOn
-        usedOrderId
 			}
 		`
 	}

@@ -26,7 +26,7 @@ class UserBrowserPage extends Component {
 	}
 	onItemClick = (user) => {
 		this.context.router.push({
-			pathname: `/dashboard/user/${this.props.params.role}/${user.id}`
+			pathname: `/dashboard/account/client/${user.id}`
 		});
 	}
 	onNavigate = (pagination) => {

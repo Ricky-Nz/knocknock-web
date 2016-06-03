@@ -28,10 +28,7 @@ import { SearchBar } from './widgets';
 class Dashboard extends Component {
 	onNavitage = (e, value) => {
 		if (value !== this.props.location.pathname) {
-			this.context.router.push({
-				pathname: value,
-				query: { limit: 10 }
-			});
+			this.context.router.push(value);
 		}
 	}
 	logOut = () => {
@@ -58,7 +55,6 @@ class Dashboard extends Component {
 				    <MenuItem value='/dashboard/system/dashboard' leftIcon={<IconDashboard/>}>Dashboard</MenuItem>
 				    <MenuItem value='/dashboard/system/laundry' leftIcon={<IconStore/>}>Clothe</MenuItem>
 				    <MenuItem value='/dashboard/system/promocode' leftIcon={<IconPromoCode/>}>Promo Code</MenuItem>
-				    <MenuItem value='/dashboard/system/voucher' leftIcon={<IconVoucher/>}>Voucher</MenuItem>
 				    <MenuItem value='/dashboard/system/appbanner' leftIcon={<IconPhone/>}>App Banner</MenuItem>
 				    <MenuItem value='/dashboard/system/feedback' leftIcon={<IconFeedback/>}>User Feedback</MenuItem>
 				    <Subheader>Function</Subheader>

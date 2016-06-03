@@ -28,3 +28,12 @@ export { default as FactoryUpdateMutation } from './FactoryUpdateMutation';
 export { default as FactoryDeleteMutation } from './FactoryDeleteMutation';
 
 export { default as OrderCreateMutation } from './OrderCreateMutation';
+export { default as OrderUpdateMutation } from './OrderUpdateMutation';
+
+export { default as PromoCodeCreateMutation } from './PromoCodeCreateMutation';
+export { default as PromoCodeUpdateMutation } from './PromoCodeUpdateMutation';
+export { default as PromoCodeDeleteMutation } from './PromoCodeDeleteMutation';
+
+export { default as BannerCreateMutation } from './BannerCreateMutation';
+export { default as BannerUpdateMutation } from './BannerUpdateMutation';
+export { default as BannerDeleteMutation } from './BannerDeleteMutation';
