@@ -23,6 +23,7 @@ import IconAdmin from 'material-ui/svg-icons/action/assignment-ind';
 import IconHistory from 'material-ui/svg-icons/action/history';
 import IconDashboard from 'material-ui/svg-icons/action/dashboard';
 import IconFactory from 'material-ui/svg-icons/communication/business';
+import IconCredit from 'material-ui/svg-icons/action/credit-card';
 import { SearchBar } from './widgets';
 
 class Dashboard extends Component {
@@ -53,13 +54,11 @@ class Dashboard extends Component {
 				    <MenuItem value='/dashboard/account/factory' leftIcon={<IconFactory/>}>Factory</MenuItem>
 				    <Subheader>System</Subheader>
 				    <MenuItem value='/dashboard/system/dashboard' leftIcon={<IconDashboard/>}>Dashboard</MenuItem>
+				    <MenuItem value='/dashboard/system/credit' leftIcon={<IconCredit/>}>Credit</MenuItem>
 				    <MenuItem value='/dashboard/system/laundry' leftIcon={<IconStore/>}>Clothe</MenuItem>
 				    <MenuItem value='/dashboard/system/promocode' leftIcon={<IconPromoCode/>}>Promo Code</MenuItem>
 				    <MenuItem value='/dashboard/system/appbanner' leftIcon={<IconPhone/>}>App Banner</MenuItem>
 				    <MenuItem value='/dashboard/system/feedback' leftIcon={<IconFeedback/>}>User Feedback</MenuItem>
-				    <Subheader>Function</Subheader>
-				    <MenuItem value='/dashboard/function/email' leftIcon={<IconEmail/>}>Send Email</MenuItem>
-				    <MenuItem value='/dashboard/function/sms' leftIcon={<IconSMS/>}>Send SMS</MenuItem>
 				 	</Menu>
 				</Drawer>
 			</div>

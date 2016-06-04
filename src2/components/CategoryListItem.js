@@ -10,7 +10,7 @@ import IconFolder from 'material-ui/svg-icons/file/folder';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 const CategoryListItem = ({category, onAction}) => (
-	<Paper className='margin-vertical'>
+	<Paper className='margin-bottom'>
 		<ListItem leftIcon={<IconFolder/>}
 			primaryText={category.nameEn} secondaryText={category.nameCn}
 			rightIconButton={

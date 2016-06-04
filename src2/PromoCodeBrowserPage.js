@@ -3,6 +3,7 @@ import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
 import { PaginationSearchTitle, PromoCodeList, PromoCodeDialog } from './components';
+import { paginationVariables } from './utils';
 
 const queries = {
 	viewer: () => Relay.QL`
@@ -66,20 +67,7 @@ const styles = {
 };
 
 const component = Relay.createContainer(PromoCodeBrowserPage, {
-	initialVariables: {
-		search: null,
-		first: 10,
-		last: 0,
-		after: null,
-		before: null,
-		reverse: false
-	},
-	prepareVariables: (variables) => {
-		return {
-			...variables,
-			reverse: variables.last > 0
-		}
-	},
+	...paginationVariables(),
 	fragments: {
 		viewer: (variables) => {
 			return Relay.QL`

@@ -58,7 +58,7 @@ class CategoryTab extends Component {
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill scroll padding'>
-					<Paper>
+					<Paper className='margin-bottom'>
 						<div className='flex flex-row padding-horizontal'>
 							<SearchBar hintText='search by category name'
 								onSearch={this.onSearch} fullWidth={true}/>

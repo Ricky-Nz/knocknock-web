@@ -7,7 +7,7 @@ import IconButton from 'material-ui/IconButton';
 import IconDelete from 'material-ui/svg-icons/action/delete';
 
 const ClothListItem = ({cloth, onAction}) => (
-	<Paper className='margin-vertical'>
+	<Paper className='margin-bottom'>
 		<ListItem leftAvatar={<Avatar src={cloth.imageUrl}/>}
 			primaryText={`${cloth.nameEn} (${cloth.nameCn})`}
 			secondaryText={`Wash: $${cloth.washPrice}, Iron: $${cloth.ironPrice}, Dry: $${cloth.dryCleanPrice}`}

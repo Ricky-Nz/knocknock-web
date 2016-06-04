@@ -1,17 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
-import FactoryListItem from './FactoryListItem';
+import AdminListItem from './AdminListItem';
 import { List } from 'material-ui/List';
 
-class FactoryList extends Component {
+class AdminList extends Component {
 	render() {
 		return (
 			<List className='scroll' style={styles.scrollBug}>
 				{
 					this.props.connection.edges.map(({node}, index) =>
 						<Paper key={index} className='margin-bottom'>
-							<FactoryListItem factory={node}
+							<AdminListItem admin={node}
 								onClick={this.props.onSelect}/>
 						</Paper>
 					)
@@ -21,7 +21,7 @@ class FactoryList extends Component {
 	}
 }
 
-FactoryList.propTypes = {
+AdminList.propTypes = {
 	onSelect: PropTypes.func.isRequired
 };
 
@@ -31,13 +31,13 @@ const styles = {
 	}
 };
 
-export default Relay.createContainer(FactoryList, {
+export default Relay.createContainer(AdminList, {
 	fragments: {
 		connection: () => Relay.QL`
-			fragment on FactoryConnection {
+			fragment on AdminConnection {
 				edges {
 					node {
-						${FactoryListItem.getFragment('factory')}
+						${AdminListItem.getFragment('admin')}
 					}
 				}
 			}

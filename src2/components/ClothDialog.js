@@ -20,6 +20,8 @@ class ClothDialog extends Component {
 			this.props.relay.setVariables({id: nextProps.clothId||null});
 		} else if (nextProps.defaultCategoryId !== this.props.defaultCategoryId) {
 			this.setState({selectedCategoryId: nextProps.defaultCategoryId});
+		} else if (nextProps.viewer !== this.props.viewer && nextProps.viewer.cloth) {
+			this.setState({selectedCategoryId: nextProps.viewer.cloth.categoryId});
 		}
 	}
 	onComfirm = () => {
@@ -102,8 +104,6 @@ class ClothDialog extends Component {
 	}
 	onFailure = (transaction) => {
 		this.setState({submitting: false});
-	  var error = transaction.getError() || new Error('Mutation failed.');
-	  this.refs.toast.show(JSON.stringify(error));
 	}
 	onSelectCategory = (categoryId) => {
 		this.setState({selectedCategoryId: categoryId});
@@ -115,11 +115,11 @@ class ClothDialog extends Component {
 
 		return (
       <Dialog title={cloth?`${cloth.nameEn} (${cloth.nameCn})`:'New Item'} modal={false} open={open}
-        actions={[
+        actions={submitting?[<CircularProgress size={0.5}/>]:[
 		      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
-		      submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={this.state.submitting} primary={true} onTouchTap={this.onComfirm}/>
-		    ]} onRequestClose={handleClose}>
-			    <div className='flex flex-row scroll'>
+		     	<FlatButton label='Submit' primary={true} onTouchTap={this.onComfirm}/>
+		    ]} onRequestClose={handleClose} autoScrollBodyContent={true}>
+			    <div className='flex flex-row padding-top'>
 				    <div className='flex margin-right'>
 				    	<CategorySelectMenu connection={this.props.viewer.categories}
 				    		selectId={selectedCategoryId} onSelect={this.onSelectCategory}/>
@@ -170,6 +170,7 @@ export default Relay.createContainer(ClothDialog, {
 				}
 				cloth(id: $id) @include(if: $fetchCloth) {
 					id
+					categoryId
 					nameCn
 					nameEn
 					washPrice

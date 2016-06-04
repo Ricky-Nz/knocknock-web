@@ -11,15 +11,8 @@ export default class AdminCreateMutation extends Relay.Mutation {
 	getMutation() {
 		return Relay.QL`mutation{ createAdmin }`;
 	}
-  getFiles() {
-  	if (this.props.file) {
-	    return {
-	      file: this.props.file,
-	    };
-  	}
-  }
 	getVariables() {
-		const { viewer, file, ...variables } = this.props;
+		const { viewer, ...variables } = this.props;
 		return variables;
 	}
 	getFatQuery() {

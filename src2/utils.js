@@ -13,3 +13,22 @@ export const preparePageParams = ({query}) => {
 		};
 	}
 };
+
+export function paginationVariables() {
+	return {
+		initialVariables: {
+			search: null,
+			first: 10,
+			last: 0,
+			after: null,
+			before: null,
+			reverse: false
+		},
+		prepareVariables: (variables) => {
+			return {
+				...variables,
+				reverse: variables.last > 0
+			}
+		}
+	};
+}

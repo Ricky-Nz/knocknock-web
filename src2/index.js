@@ -16,9 +16,13 @@ import OrderBrowserPage from './OrderBrowserPage';
 import OrderCreatePage from './OrderCreatePage';
 import OrderDetailPage from './OrderDetailPage';
 import TimeSlotPage from './TimeSlotPage';
-import FactoryPage from './FactoryPage';
+import AdminBrowserPage from './AdminBrowserPage';
+import FactoryBrowserPage from './FactoryBrowserPage';
 import PromoCodeBrowserPage from './PromoCodeBrowserPage';
 import BannerBrowserPage from './BannerBrowserPage';
+import FeedbackBrowserPage from './FeedbackBrowserPage';
+import CreditBrowserPage from './CreditBrowserPage';
+import AnalyticsPage from './AnalyticsPage';
 
 // Needed for onTouchTap
 // Check this repo:
@@ -56,8 +60,10 @@ ReactROM.render(
 						queries={TimeSlotPage.queries} prepareParams={TimeSlotPage.prepareParams}/>
 				</Route>
 				<Route path='account'>
-					<Route path='factory' component={FactoryPage.component}
-						queries={FactoryPage.queries} prepareParams={FactoryPage.prepareParams}/>
+					<Route path='admin' component={AdminBrowserPage.component}
+						queries={AdminBrowserPage.queries} prepareParams={AdminBrowserPage.prepareParams}/>
+					<Route path='factory' component={FactoryBrowserPage.component}
+						queries={FactoryBrowserPage.queries} prepareParams={FactoryBrowserPage.prepareParams}/>
 					<Route path='client' component={UserBrowserPage.component}
 						queries={UserBrowserPage.queries} prepareParams={UserBrowserPage.prepareParams}/>
 					<Route path='client/:id' component={UserDetailPage.component}
@@ -66,12 +72,18 @@ ReactROM.render(
 						queries={WorkerBrowserPage.queries} prepareParams={WorkerBrowserPage.prepareParams}/>
 				</Route>
 				<Route path='system'>
+					<Route path='dashboard' component={AnalyticsPage.component}
+						queries={AnalyticsPage.queries} prepareParams={AnalyticsPage.prepareParams}/>
+					<Route path='credit' component={CreditBrowserPage.component}
+						queries={CreditBrowserPage.queries} prepareParams={CreditBrowserPage.prepareParams}/>
 					<Route path='laundry' component={ClothBrowserPage.component}
 						queries={ClothBrowserPage.queries} prepareParams={ClothBrowserPage.prepareParams}/>
 					<Route path='promocode' component={PromoCodeBrowserPage.component}
 						queries={PromoCodeBrowserPage.queries} prepareParams={PromoCodeBrowserPage.prepareParams}/>
 					<Route path='appbanner' component={BannerBrowserPage.component}
 						queries={BannerBrowserPage.queries} prepareParams={BannerBrowserPage.prepareParams}/>
+					<Route path='feedback' component={FeedbackBrowserPage.component}
+						queries={FeedbackBrowserPage.queries} prepareParams={FeedbackBrowserPage.prepareParams}/>
 				</Route>
 			</Route>
 		</Route>

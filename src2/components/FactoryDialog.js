@@ -4,9 +4,9 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { FactoryCreateMutation, FactoryUpdateMutation } from '../mutations';
+import { FactoryCreateMutation, FactoryUpdateMutation, FactoryDeleteMutation } from '../mutations';
 
-class FactoryEditDialog extends Component {
+class FactoryDialog extends Component {
 	state = {
 		submitting: false
 	}
@@ -64,6 +64,13 @@ class FactoryEditDialog extends Component {
 			{onSuccess: this.onSuccess, onFailure: this.onFailure});
 		this.setState({submitting: true});
 	}
+	onDelete = () => {
+    this.props.relay.commitUpdate(new FactoryDeleteMutation({
+    	viewer: this.props.viewer,
+    	id: this.props.factory.id
+    }), {onSuccess: this.onSuccess, onFailure: this.onFailure});
+    this.setState({submitting: true});
+	}
 	onSuccess = () => {
 		this.setState({submitting: false});
 		this.props.handleClose();
@@ -76,9 +83,10 @@ class FactoryEditDialog extends Component {
 
 		return (
       <Dialog title={factory?'Edit Factory':'New Factory'} modal={false} open={open}
-        actions={[
+        actions={this.state.submitting?[<CircularProgress size={0.5}/>]:[
+        	<FlatButton label='Delete' secondary={true} onTouchTap={this.onDelete}/>,
 		      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
-		      this.state.submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={this.state.submitting} primary={true} onTouchTap={this.onComfirm}/>
+		      <FlatButton label='Submit' primary={true} onTouchTap={this.onComfirm}/>
 		    ]} onRequestClose={handleClose}>
 		    	<div className='flex'>
 						<InputBox ref='name' value={factory&&factory.name} floatingLabelText='Factory Name'
@@ -97,17 +105,18 @@ class FactoryEditDialog extends Component {
 	}
 }
 
-FactoryEditDialog.propTypes = {
+FactoryDialog.propTypes = {
 	handleClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,
 	factory: PropTypes.object
 };
 
-export default Relay.createContainer(FactoryEditDialog, {
+export default Relay.createContainer(FactoryDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
 				${FactoryCreateMutation.getFragment('viewer')}
+				${FactoryDeleteMutation.getFragment('viewer')}
 			}
 		`
 	}

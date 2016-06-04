@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
-import { PaginationSearchTitle, BannerList, BannerEditDialog } from './components';
+import { PaginationSearchBar, BannerList, BannerEditDialog } from './components';
+import { paginationVariables } from './utils';
 
 const queries = {
 	viewer: () => Relay.QL`
@@ -66,46 +67,31 @@ const styles = {
 };
 
 const component = Relay.createContainer(BannerBrowserPage, {
-	initialVariables: {
-		search: null,
-		first: 10,
-		last: 0,
-		after: null,
-		before: null,
-		reverse: false
-	},
-	prepareVariables: (variables) => {
-		return {
-			...variables,
-			reverse: variables.last > 0
-		}
-	},
+	...paginationVariables(),
 	fragments: {
-		viewer: (variables) => {
-			return Relay.QL`
-				fragment on Viewer {
-					banners(search:$search,first:$first,after:$after) @skip(if: $reverse) {
-						${BannerList.getFragment('connection')}
-						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
-						}
+		viewer: (variables) => Relay.QL`
+			fragment on Viewer {
+				banners(search:$search,first:$first,after:$after) @skip(if: $reverse) {
+					${BannerList.getFragment('connection')}
+					pageInfo {
+		        hasNextPage
+		        hasPreviousPage
+		        endCursor
+		        startCursor
 					}
-					banners(search:$search,last:$last,before:$before) @include(if: $reverse) {
-						${BannerList.getFragment('connection')}
-						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
-						}
-					}
-					${BannerEditDialog.getFragment('viewer')}
 				}
-			`;
-		}
+				banners(search:$search,last:$last,before:$before) @include(if: $reverse) {
+					${BannerList.getFragment('connection')}
+					pageInfo {
+		        hasNextPage
+		        hasPreviousPage
+		        endCursor
+		        startCursor
+					}
+				}
+				${BannerEditDialog.getFragment('viewer')}
+			}
+		`
 	}
 });
 

@@ -69,7 +69,7 @@ class CategoryTab extends Component {
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill scroll padding'>
-					<Paper>
+					<Paper className='margin-bottom'>
 						<div className='flex flex-row flex-space-between padding-horizontal'>
 							<SearchBar hintText='search by cloth name' onSearch={this.onSearch}/>
 							<CategorySelectMenu connection={this.props.viewer.categories}

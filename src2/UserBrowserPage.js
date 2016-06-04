@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
-import { PaginationSearchTitle, UserList, AccountCreateDialog } from './components';
-import { preparePageParams } from './utils';
+import { PaginationSearchBar, UserList, AccountCreateDialog } from './components';
+import { paginationVariables } from './utils';
 
 const queries = {
 	viewer: () => Relay.QL`
@@ -13,21 +13,9 @@ const queries = {
 	`
 };
 
-const prepareParams = (params, {location}) => {
-	return {
-		role: params.role,
-		...preparePageParams(location)
-	};
-};
-
 class UserBrowserPage extends Component {
-	state = {
-		dialogShow: false
-	}
 	onItemClick = (user) => {
-		this.context.router.push({
-			pathname: `/dashboard/account/client/${user.id}`
-		});
+
 	}
 	onNavigate = (pagination) => {
 		this.context.router.push({
@@ -39,10 +27,7 @@ class UserBrowserPage extends Component {
 		this.props.relay.setVariables({search:text});
 	}
 	onAdd = () => {
-		this.setState({dialogShow: true});
-	}
-	handleClose = () => {
-		this.setState({dialogShow: false});
+		
 	}
 	render() {
 		const { role } = this.props.params;
@@ -51,19 +36,14 @@ class UserBrowserPage extends Component {
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill padding'>
-					<div className='padding'>
-						<PaginationSearchTitle pageInfo={this.props.viewer.users.pageInfo}
-							first={first} after={after} last={last} before={before}
-							onSearch={this.onSearch} onNavigate={this.onNavigate}/>
-					</div>
-					<div className='flex flex-fill scroll'>
-						<UserList connection={this.props.viewer.users}
-							onItemClick={this.onItemClick}/>
-					</div>
+					<PaginationSearchBar pageInfo={this.props.viewer.users.pageInfo}
+						first={first} after={after} last={last} before={before}
+						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+					<br/>
+					<UserList connection={this.props.viewer.users}
+						onItemClick={this.onItemClick}/>
 				</div>
-				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
-				<AccountCreateDialog role='client' open={this.state.dialogShow}
-					handleClose={this.handleClose} viewer={this.props.viewer}/>
+				<AddFloatButton className='page-float-button' onClick={this.onAdd}/>
 			</div>
 		);
 	}
@@ -73,29 +53,8 @@ UserBrowserPage.contextTypes = {
 	router: PropTypes.object.isRequired
 };
 
-const styles = {
-	floatButton: {
-		position: 'absolute',
-		right: 48,
-		bottom: 48
-	}
-};
-
 const component = Relay.createContainer(UserBrowserPage, {
-	initialVariables: {
-		search: null,
-		first: 0,
-		last: 0,
-		after: null,
-		before: null,
-		reverse: false
-	},
-	prepareVariables: (variables) => {
-		return {
-			...variables,
-			reverse: variables.last > 0
-		}
-	},
+	...paginationVariables(),
 	fragments: {
 		viewer: (variables) => {
 			return Relay.QL`
@@ -118,7 +77,6 @@ const component = Relay.createContainer(UserBrowserPage, {
 			        startCursor
 						}
 					}
-					${AccountCreateDialog.getFragment('viewer')}
 				}
 			`;
 		}
@@ -127,7 +85,6 @@ const component = Relay.createContainer(UserBrowserPage, {
 
 export default {
 	component,
-	queries,
-	prepareParams
+	queries
 };
 
