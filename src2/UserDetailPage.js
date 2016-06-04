@@ -8,7 +8,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconNavBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { AddFloatButton } from './widgets';
-import { UserDetailTab, UserOrderTab, UserVoucherTab, UserTransactionTab } from './components';
+import { UserDetailTab, UserOrderTab, UserVoucherTab, UserCreditTab } from './components';
 
 const queries = {
 	viewer: () => Relay.QL`
@@ -16,13 +16,6 @@ const queries = {
 			viewer
 		}
 	`
-};
-
-const prepareParams = (params, {location}) => {
-	return {
-		role: params.role,
-		id: params.id
-	};
 };
 
 class UserDetailPage extends Component {
@@ -41,27 +34,27 @@ class UserDetailPage extends Component {
 			case 'detail':
 				contentView = <UserDetailTab user={this.props.viewer.user}/>
 				break;
-			case 'order':
-				contentView = <UserOrderTab user={this.props.viewer.user}/>
-				break;
 			case 'voucher':
 				contentView = <UserVoucherTab user={this.props.viewer.user}/>
 				break;
-			case 'transaction':
-				contentView = <UserTransactionTab user={this.props.viewer.user}/>
+			case 'credit':
+				contentView = <UserCreditTab user={this.props.viewer.user}/>
+				break;
+			case 'order':
+				contentView = <UserOrderTab user={this.props.viewer.user}/>
 				break;
 		}
 
 		return (
 			<div className='flex flex-fill'>
-				<AppBar title={`User: ${this.props.viewer.user.name}`}
+				<AppBar title={this.props.viewer.user.name}
 					iconElementLeft={<IconButton onClick={this.onNavBack}><IconBack/></IconButton>}>
 		      <Tabs onChange={this.tabSelectChange} value={this.state.selectTab}
 		      	style={styles.tabBar}>
 		        <Tab label='Detail' value='detail'/>
-		        <Tab label='Record' value='order'/>
-		        <Tab label='Deposit' value='transaction'/>
+		        <Tab label='Credit' value='credit'/>
 		        <Tab label='Voucher' value='voucher'/>
+		        <Tab label='Order' value='order'/>
 		      </Tabs>
 				</AppBar>
 	      {contentView}
@@ -97,7 +90,7 @@ const component = Relay.createContainer(UserDetailPage, {
 					name
 					${UserDetailTab.getFragment('user')}
 					${UserOrderTab.getFragment('user')}
-					${UserTransactionTab.getFragment('user')}
+					${UserCreditTab.getFragment('user')}
 					${UserVoucherTab.getFragment('user')}
 				}
 			}
@@ -107,7 +100,6 @@ const component = Relay.createContainer(UserDetailPage, {
 
 export default {
 	component,
-	queries,
-	prepareParams
+	queries
 };
 

@@ -9,12 +9,11 @@ export { default as UserList } from './UserList';
 export { default as UserDetailTab } from './UserDetailTab';
 export { default as UserOrderTab } from './UserOrderTab';
 export { default as UserVoucherTab } from './UserVoucherTab';
-export { default as UserTransactionTab } from './UserTransactionTab';
+export { default as UserCreditTab } from './UserCreditTab';
 export { default as UserInputAutoComplete } from './UserInputAutoComplete'; 
 
-export { default as TimeSlotDialog } from './TimeSlotDialog';
-export { default as TimeSlotDeleteDialog } from './TimeSlotDeleteDialog';
-export { default as TimeSlotListItem } from './TimeSlotListItem';
+export { default as TimeSlotTemplateDialog } from './TimeSlotTemplateDialog';
+export { default as TimeSlotTemplateList } from './TimeSlotTemplateList';
 export { default as TimeSlotDropdownMenu } from './TimeSlotDropdownMenu';
 export { default as AddressDropdownMenu } from './AddressDropdownMenu';
 

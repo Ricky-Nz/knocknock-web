@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import Paper from 'material-ui/Paper';
-import { List } from 'material-ui/List';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import { AddFloatButton } from './widgets';
-import { TimeSlotDialog, TimeSlotDeleteDialog, TimeSlotListItem } from './components';
+import { TimeSlotTemplateDialog, TimeSlotTemplateList } from './components';
 import { preparePageParams } from './utils';
 
 const queries = {
@@ -16,73 +15,63 @@ const queries = {
 
 class TimeSlotPage extends Component {
 	state = {
-		deleteDialogShow: false,
+		selectTab: 'default',
 		dialogShow: false,
-		selectSlot: null
+		selectTemplate: null
 	}
-	onItemAction = (timeSlot, action) => {
-		switch(action) {
-			case 'DELETE':
-				this.setState({deleteDialogShow: true, selectSlot: timeSlot});
-				break;
-			case 'EDIT':
-				this.setState({dialogShow: true, selectSlot: timeSlot});
-				break;
-		}
+	onNavBack = () => {
+		this.context.router.goBack();
+	}
+	tabSelectChange = (value) => {
+		this.setState({selectTab: value});
 	}
 	onAdd = () => {
 		this.setState({dialogShow: true});
 	}
 	handleClose = () => {
-		this.setState({dialogShow: false, selectSlot: null});
+		this.setState({dialogShow: false, selectTemplate: null});
 	}
-	handleDeleteClose = () => {
-		this.setState({deleteDialogShow: false, selectSlot: null});
+	onSelectTemplate = (tempalte) => {
+		this.setState({dialogShow: true, selectTemplate: tempalte});
 	}
 	render() {
-		const { deleteDialogShow, dialogShow, selectSlot } = this.state;
+		const { dialogShow, selectTemplate } = this.state;
+
+		let contentView = null;
+		switch(this.state.selectTab) {
+			case 'date':
+				break;
+			case 'default':
+				contentView = <TimeSlotTemplateList connection={this.props.viewer.timeSlotTempaltes}
+					onSelect={this.onSelectTemplate}/>;
+				break;
+		}
 
 		return (
 			<div className='flex flex-fill position-relative'>
-				<div className='flex flex-fill padding margin'>
-					<List>
-						{
-							this.props.viewer.timeSlots.edges.map(({node}, index) =>
-								<TimeSlotListItem key={index} timeSlot={node} onAction={this.onItemAction}/>)
-						}
-					</List>
+				<div className='flex flex-fill'>
+		      <Tabs onChange={this.tabSelectChange} value={this.state.selectTab}>
+		        <Tab label='Date Browser' value='date'/>
+		        <Tab label='Defualt Setting' value='default'/>
+		      </Tabs>
 				</div>
-				<AddFloatButton style={styles.floatButton} onClick={this.onAdd}/>
-				<TimeSlotDialog open={dialogShow} handleClose={this.handleClose}
-					timeSlot={selectSlot} viewer={this.props.viewer}/>
-				<TimeSlotDeleteDialog open={deleteDialogShow} handleClose={this.handleDeleteClose}
-					timeSlot={selectSlot} viewer={this.props.viewer}/>
+				{contentView}
+				<AddFloatButton className='page-float-button' onClick={this.onAdd}/>
+				<TimeSlotTemplateDialog viewer={this.props.viewer} open={dialogShow}
+					handleClose={this.handleClose} template={selectTemplate}/>
 			</div>
 		);
 	}
 }
 
-const styles = {
-	floatButton: {
-		position: 'absolute',
-		right: 24,
-		bottom: 24
-	}
-};
-
 const component = Relay.createContainer(TimeSlotPage, {
 	fragments: {
 		viewer: (variables) => Relay.QL`
 			fragment on Viewer {
-				timeSlots(first: 100) {
-					edges {
-						node {
-							${TimeSlotListItem.getFragment('timeSlot')}
-						}
-					}
+				timeSlotTempaltes(first:100) {
+					${TimeSlotTemplateList.getFragment('connection')}
 				}
-				${TimeSlotDialog.getFragment('viewer')}
-				${TimeSlotDeleteDialog.getFragment('viewer')}
+				${TimeSlotTemplateDialog.getFragment('viewer')}
 			}
 		`
 	}

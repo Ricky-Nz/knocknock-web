@@ -21,9 +21,9 @@ export { default as AdminCreateMutation } from './AdminCreateMutation';
 export { default as AdminUpdateMutation } from './AdminUpdateMutation';
 export { default as AdminDeleteMutation } from './AdminDeleteMutation';
 
-export { default as TimeSlotCreateMutation } from './TimeSlotCreateMutation';
-export { default as TimeSlotUpdateMutation } from './TimeSlotUpdateMutation';
-export { default as TimeSlotDeleteMutation } from './TimeSlotDeleteMutation';
+export { default as TimeSlotTemplateCreateMutation } from './TimeSlotTemplateCreateMutation';
+export { default as TimeSlotTemplateUpdateMutation } from './TimeSlotTemplateUpdateMutation';
+export { default as TimeSlotTemplateDeleteMutation } from './TimeSlotTemplateDeleteMutation';
 
 export { default as FactoryCreateMutation } from './FactoryCreateMutation';
 export { default as FactoryUpdateMutation } from './FactoryUpdateMutation';

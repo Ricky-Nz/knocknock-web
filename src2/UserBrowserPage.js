@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
-import { PaginationSearchBar, UserList, AccountCreateDialog } from './components';
+import { PaginationSearchBar, UserList, AccountDialog } from './components';
 import { paginationVariables } from './utils';
 
 const queries = {
@@ -14,8 +14,8 @@ const queries = {
 };
 
 class UserBrowserPage extends Component {
-	onItemClick = (user) => {
-
+	state = {
+		dialogShow: false
 	}
 	onNavigate = (pagination) => {
 		this.context.router.push({
@@ -27,7 +27,13 @@ class UserBrowserPage extends Component {
 		this.props.relay.setVariables({search:text});
 	}
 	onAdd = () => {
-		
+		this.setState({dialogShow: true});
+	}
+	onSelect = (user) => {
+		this.context.router.push(`/dashboard/account/client/${user.id}`);
+	}
+	handleClose = () => {
+		this.setState({dialogShow: false});
 	}
 	render() {
 		const { role } = this.props.params;
@@ -41,9 +47,11 @@ class UserBrowserPage extends Component {
 						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
 					<br/>
 					<UserList connection={this.props.viewer.users}
-						onItemClick={this.onItemClick}/>
+						onSelect={this.onSelect}/>
 				</div>
 				<AddFloatButton className='page-float-button' onClick={this.onAdd}/>
+				<AccountDialog role='client' open={this.state.dialogShow}
+					handleClose={this.handleClose} viewer={this.props.viewer}/>
 			</div>
 		);
 	}
@@ -77,6 +85,7 @@ const component = Relay.createContainer(UserBrowserPage, {
 			        startCursor
 						}
 					}
+					${AccountDialog.getFragment('viewer')}
 				}
 			`;
 		}

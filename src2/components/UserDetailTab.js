@@ -14,14 +14,12 @@ import AddressList from './AddressList';
 import AddressDialog from './AddressDialog';
 import CircularProgress from 'material-ui/CircularProgress';
 import { UserUpdateMutation } from '../mutations';
-import AddressDeleteDialog from './AddressDeleteDialog';
 
 class UserDetailTab extends Component {
 	state = {
 		submitting: false,
 		editMode: false,
 		showDialog: false,
-		showDeleteDialog: false,
 		selectAddress: null
 	}
 	onEdit = () => {
@@ -57,33 +55,23 @@ class UserDetailTab extends Component {
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		this.setState({submitting: true});
 	}
-	onNewAddress = () => {
-		this.setState({
-			selectAddress: null,
-			showDialog: true
-		});
-	}
 	onSuccess = () => {
 		this.setState({submitting: false, editMode: false});
 	}
 	onFailure = (transaction) => {
 		this.setState({submitting: false});
 	}
-	onAddressAction = (address, action) => {
-		switch(action) {
-			case 'EDIT':
-				this.setState({
-					selectAddress: address,
-					showDialog: true
-				});
-				break;
-			case 'DELETE':
-				this.setState({
-					selectAddress: address,
-					showDeleteDialog: true
-				});
-				break;
-		}
+	onNewAddress = () => {
+		this.setState({
+			selectAddress: null,
+			showDialog: true
+		});
+	}
+	onSelectAddress = (address) => {
+		this.setState({
+			selectAddress: address,
+			showDialog: true
+		});
 	}
 	handleDialogClose = () => {
 		this.setState({showDialog: false});
@@ -92,53 +80,49 @@ class UserDetailTab extends Component {
 		this.setState({showDeleteDialog: false});	
 	}
 	render() {
-		const { submitting, editMode, showDialog, showDeleteDialog, selectAddress } = this.state;
+		const { submitting, editMode, showDialog, selectAddress } = this.state;
 		const { email, name, contact, emailVerified, contactVerified, avatarUrl } = this.props.user;
 
 		return (
-			<div className='flex flex-fill'>
-				<div className='flex scroll padding'>
-					<Paper>
-						<div className='position-relative'>
-							<div className='flex flex-row padding'>
-								<div className='padding'>
-									<AvatarEditor ref='avatar' src={avatarUrl} enable={editMode}/>
-								</div>
-								<div className='flex flex-fill margin-left'>
-					        <InputBox value={email} disabled={true} floatingLabelText='Email'
-					        	verify='email' errorText='please enter a valid email address'/>
-					        <InputBox ref='name' value={name} disabled={!editMode} floatingLabelText='Name'
-					        	verify='notempty' errorText='name can not be empty'/>
-					        <InputBox ref='contact' value={contact} disabled={!editMode} floatingLabelText='Contact'
-					        	verify='phonenumber' errorText='pleaese enter a valid phone number'/>
-								</div>
+			<div className='flex flex-fill scroll padding'>
+				<Paper>
+					<div className='position-relative'>
+						<div className='flex flex-row padding'>
+							<div className='padding'>
+								<AvatarEditor ref='avatar' src={avatarUrl} enable={editMode}/>
 							</div>
-							{editMode? (
-									submitting ? <CircularProgress style={styles.floatBottomRight} size={0.5}/> :
-										<div className='flex flex-row' style={styles.floatBottomRight}>
-											<IconButton onClick={this.onExitEdit}>
-											  <IconClear/>
-											</IconButton>
-											<IconButton onClick={this.onSubmit} style={styles.marginLeft}>
-											  <IconDone/>
-											</IconButton>
-										</div>
-								) :
-								<IconButton style={styles.floatBottomRight} onClick={this.onEdit}>
-								  <IconEditor/>
-								</IconButton>
-							}
+							<div className='flex flex-fill margin-left'>
+				        <InputBox value={email} disabled={true} floatingLabelText='Email'
+				        	verify='email' errorText='please enter a valid email address'/>
+				        <InputBox ref='name' value={name} disabled={!editMode} floatingLabelText='Name'
+				        	verify='notempty' errorText='name can not be empty'/>
+				        <InputBox ref='contact' value={contact} disabled={!editMode} floatingLabelText='Contact'
+				        	verify='phonenumber' errorText='pleaese enter a valid phone number'/>
+							</div>
 						</div>
-					</Paper>
-					<div className='flex flex-row flex-space-between flex-align-center padding-top'>
-						<Subheader>ADDRESSES</Subheader>
-						<RaisedButton label='Add' onClick={this.onNewAddress}/>
+						{editMode? (
+								submitting ? <CircularProgress style={styles.floatBottomRight} size={0.5}/> :
+									<div className='flex flex-row' style={styles.floatBottomRight}>
+										<IconButton onClick={this.onExitEdit}>
+										  <IconClear/>
+										</IconButton>
+										<IconButton onClick={this.onSubmit} style={styles.marginLeft}>
+										  <IconDone/>
+										</IconButton>
+									</div>
+							) :
+							<IconButton style={styles.floatBottomRight} onClick={this.onEdit}>
+							  <IconEditor/>
+							</IconButton>
+						}
 					</div>
-					<AddressList connection={this.props.user.addresses}
-						onAction={this.onAddressAction}/>
+				</Paper>
+				<div className='flex flex-row flex-space-between flex-align-center padding-top'>
+					<Subheader>ADDRESSES</Subheader>
+					<RaisedButton label='Add' onClick={this.onNewAddress}/>
 				</div>
-				<AddressDeleteDialog user={this.props.user}
-					onRequestClose={this.handleDeleteDialogClose} open={showDeleteDialog} address={selectAddress}/>
+				<AddressList connection={this.props.user.addresses}
+					onSelect={this.onSelectAddress}/>
 				<AddressDialog open={showDialog} user={this.props.user}
 					address={selectAddress} handleClose={this.handleDialogClose}/>
 			</div>
@@ -173,7 +157,6 @@ export default Relay.createContainer(UserDetailTab, {
 				}
 				${AddressDialog.getFragment('user')}
 				${UserUpdateMutation.getFragment('user')}
-				${AddressDeleteDialog.getFragment('user')}
 			}
 		`
 	}

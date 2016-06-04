@@ -2,21 +2,21 @@ import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import { List } from 'material-ui/List';
 import Paper from 'material-ui/Paper';
-import UserListItem from './UserListItem';
+import TimeSlotTemplateListItem from './TimeSlotTemplateListItem';
 
-const UserList = ({connection, onSelect}) => (
+const TimeSlotTemplateList= ({connection, onSelect}) => (
 	<List className='scroll' style={styles.scrollBug}>
 		{
 			connection.edges.map(({node}, index) =>
 				<Paper key={index} className='margin-bottom'>
-					<UserListItem user={node} onClick={onSelect}/>
+					<TimeSlotTemplateListItem user={node} onClick={onSelect}/>
 				</Paper>
 			)
 		}
 	</List>
 );
 
-UserList.propTypes = {
+TimeSlotTemplateList.propTypes = {
 	onSelect: PropTypes.func.isRequired
 };
 
@@ -26,13 +26,13 @@ const styles = {
 	}
 };
 
-export default Relay.createContainer(UserList, {
+export default Relay.createContainer(TimeSlotTemplateList, {
 	fragments: {
 		connection: () => Relay.QL`
-			fragment on UserConnection {
+			fragment on TimeSlotTemplateConnection {
 				edges {
 					node {
-						${UserListItem.getFragment('user')}
+						${TimeSlotTemplateListItem.getFragment('template')}
 					}
 				}
 			}

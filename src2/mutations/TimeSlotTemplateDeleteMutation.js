@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class DeleteTimeSlotMutation extends Relay.Mutation {
+export default class DeleteTimeSlotTempalteMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
       fragment on Viewer {
@@ -9,7 +9,7 @@ export default class DeleteTimeSlotMutation extends Relay.Mutation {
     `,
   }
 	getMutation() {
-		return Relay.QL`mutation{ deleteTimeSlot }`;
+		return Relay.QL`mutation{ deleteTimeSlotTemplate }`;
 	}
 	getVariables() {
 		const {viewer, ...variables} = this.props;
@@ -17,7 +17,7 @@ export default class DeleteTimeSlotMutation extends Relay.Mutation {
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on DeleteTimeSlotPayload @relay(pattern: true) {
+			fragment on DeleteTimeSlotTemplatePayload @relay(pattern: true) {
 				deletedId
 				viewer
 			}
@@ -28,7 +28,7 @@ export default class DeleteTimeSlotMutation extends Relay.Mutation {
       type: 'NODE_DELETE',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'timeSlots',
+      connectionName: 'timeSlotTemplates',
       deletedIDFieldName: 'deletedId'
     }];
 	}

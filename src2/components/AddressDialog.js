@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { AddressCreateMutation, AddressUpdateMutation } from '../mutations';
+import { AddressCreateMutation, AddressUpdateMutation, AddressDeleteMutation } from '../mutations';
 
 class AddressDialog extends Component {
 	state = {
@@ -54,31 +54,41 @@ class AddressDialog extends Component {
 			{onSuccess: this.onSuccess, onFailure: this.onFailure});
 		this.setState({submitting: true});
 	}
+	onDelete = () => {
+    this.props.relay.commitUpdate(new AddressDeleteMutation({
+    	user: this.props.user,
+    	id: this.props.address.id
+    }), {onSuccess: this.onSuccess, onFailure: this.onFailure});
+    this.setState({submitting: true});
+	}
 	onSuccess = () => {
 		this.setState({submitting: false});
 		this.props.handleClose();
 	}
 	onFailure = (transaction) => {
 		this.setState({submitting: false});
-	  var error = transaction.getError() || new Error('Mutation failed.');
-		console.log(error);
 	}
 	render() {
 		const { handleClose, open, address } = this.props;
 
+		let actions = [
+      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
+      <FlatButton label='Submit' primary={true} onTouchTap={this.onComfirm}/>
+		];
+		
+		if (address) {
+			actions.splice(0, 0, <FlatButton label='Delete' secondary={true} onTouchTap={this.onDelete}/>);
+		}
+
 		return (
       <Dialog title={address?'Edit Address':'New Address'} modal={false} open={open}
-        actions={[
-		      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
-		      this.state.submitting?<CircularProgress size={0.5}/>:<FlatButton label='Submit' disabled={this.state.submitting} primary={true} onTouchTap={this.onComfirm}/>
-		    ]} onRequestClose={handleClose}>
+        actions={this.state.submitting?[<CircularProgress size={0.5}/>]:actions}
+        onRequestClose={handleClose} autoScrollBodyContent={true}>
 			    <div className='flex'>
-			    	<div className='flex flex-row'>
-							<InputBox ref='postalCode' value={address&&address.postalCode} floatingLabelText='Postal Code'
-								verify='postalcode' errorText='please enter a valid postal code'/>
-							<InputBox ref='contact' value={address&&address.contact} floatingLabelText='Contact'
-								verify='phonenumber' errorText='please enter a valid phone number'/>
-			    	</div>
+						<InputBox ref='contact' value={address&&address.contact} floatingLabelText='Contact'
+							verify='phonenumber' errorText='please enter a valid phone number'/>
+						<InputBox ref='postalCode' value={address&&address.postalCode} floatingLabelText='Postal Code'
+							verify='postalcode' errorText='please enter a valid postal code'/>
 						<InputBox ref='address' value={address&&address.address} floatingLabelText='Address'
 							verify='notempty' errorText='address description can not be empty' fullWidth={true}/>
 	        </div>
@@ -99,6 +109,7 @@ export default Relay.createContainer(AddressDialog, {
 			fragment on User {
 				id
 				${AddressCreateMutation.getFragment('user')}
+				${AddressDeleteMutation.getFragment('user')}
 			}
 		`
 	}

@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class CreateTimeSlotMutation extends Relay.Mutation {
+export default class CreateTimeSlotTemplateMutation extends Relay.Mutation {
 	static fragments = {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
@@ -9,7 +9,7 @@ export default class CreateTimeSlotMutation extends Relay.Mutation {
 		`
 	}
 	getMutation() {
-		return Relay.QL`mutation{ createTimeSlot }`;
+		return Relay.QL`mutation{ createTimeSlotTemplate }`;
 	}
 	getVariables() {
 		const { viewer, ...variables } = this.props;
@@ -17,10 +17,10 @@ export default class CreateTimeSlotMutation extends Relay.Mutation {
 	}
 	getFatQuery() {
 		return Relay.QL`
-			fragment on CreateTimeSlotPayload @relay(pattern: true) {
-				timeSlotEdge
+			fragment on CreateTimeSlotTemplatePayload @relay(pattern: true) {
+				timeSlotTemplateEdge
 				viewer {
-					timeSlots
+					timeSlotTemplates
 				}
 			}
 		`;
@@ -30,8 +30,8 @@ export default class CreateTimeSlotMutation extends Relay.Mutation {
       type: 'RANGE_ADD',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'timeSlots',
-      edgeName: 'timeSlotEdge',
+      connectionName: 'timeSlotTemplates',
+      edgeName: 'timeSlotTemplateEdge',
       rangeBehaviors: {
         '': 'append'
       }

@@ -54,20 +54,22 @@ ReactROM.render(
 						queries={OrderBrowserPage.queries} prepareParams={OrderBrowserPage.prepareParams}/>
 					<Route path='new' component={OrderCreatePage.component}
 						queries={OrderCreatePage.queries} prepareParams={OrderCreatePage.prepareParams}/>
+					<Route path='new/:userId' component={OrderCreatePage.component}
+						queries={OrderCreatePage.queries} prepareParams={OrderCreatePage.prepareParams}/>
 					<Route path=':userId/:orderId' component={OrderDetailPage.component}
 						queries={OrderDetailPage.queries} prepareParams={OrderDetailPage.prepareParams}/>
 					<Route path='timeslots' component={TimeSlotPage.component}
 						queries={TimeSlotPage.queries} prepareParams={TimeSlotPage.prepareParams}/>
 				</Route>
 				<Route path='account'>
-					<Route path='admin' component={AdminBrowserPage.component}
-						queries={AdminBrowserPage.queries} prepareParams={AdminBrowserPage.prepareParams}/>
-					<Route path='factory' component={FactoryBrowserPage.component}
-						queries={FactoryBrowserPage.queries} prepareParams={FactoryBrowserPage.prepareParams}/>
 					<Route path='client' component={UserBrowserPage.component}
 						queries={UserBrowserPage.queries} prepareParams={UserBrowserPage.prepareParams}/>
 					<Route path='client/:id' component={UserDetailPage.component}
 						queries={UserDetailPage.queries} prepareParams={UserDetailPage.prepareParams}/>
+					<Route path='admin' component={AdminBrowserPage.component}
+						queries={AdminBrowserPage.queries} prepareParams={AdminBrowserPage.prepareParams}/>
+					<Route path='factory' component={FactoryBrowserPage.component}
+						queries={FactoryBrowserPage.queries} prepareParams={FactoryBrowserPage.prepareParams}/>
 					<Route path='worker' component={WorkerBrowserPage.component}
 						queries={WorkerBrowserPage.queries} prepareParams={WorkerBrowserPage.prepareParams}/>
 				</Route>
