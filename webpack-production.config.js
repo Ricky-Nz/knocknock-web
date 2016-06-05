@@ -1,11 +1,25 @@
 var path = require('path');
+var webpack =  require('webpack');
 
 module.exports = {
-	entry: './src2/index.js',
+	entry: './src/index.js',
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js'
 	},
+  plugins: [
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
+    })
+  ],
 	module: {
 		loaders: [
 			{
@@ -14,7 +28,9 @@ module.exports = {
 				loader: 'babel',
 				query: {
 					presets: ['react', 'es2015', 'stage-0'],
-					plugins: ['./babelRelayPlugin']
+					plugins: [
+						path.join(__dirname, 'babelRelayPlugin')
+					]
 				}
 			}
 		]

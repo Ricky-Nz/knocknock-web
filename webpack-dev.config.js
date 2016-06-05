@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
 	entry: [
 		'webpack-dev-server/client?http://0.0.0.0:8080',
-		'./src2/index.js'
+		'./src/index.js'
 	],
 	output: {
 		publicPath: '/',
