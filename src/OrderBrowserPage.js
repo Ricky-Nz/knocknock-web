@@ -34,10 +34,7 @@ class OrderBrowserPage extends Component {
 		}
 	}
 	onNavigate = (pagination) => {
-		this.context.router.push({
-			pathname: this.props.location.pathname,
-			query: pagination
-		});
+		this.props.relay.setVariables(pagination);
 	}
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});

@@ -13,7 +13,7 @@ class BannerEditDialog extends Component {
 		this.state = this.onPropUpdate(props);
 	}
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.promoCode !== this.props.promoCode) {
+		if (nextProps.banner !== this.props.banner) {
 			this.setState(this.onPropUpdate(nextProps));
 		}
 	}

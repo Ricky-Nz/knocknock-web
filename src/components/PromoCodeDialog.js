@@ -50,7 +50,6 @@ class PromoCodeDialog extends Component {
 		const perUserLimit = this.refs.perUserLimit.getValue();
 		const limit = this.refs.limit.getValue();
 		const promoValue = this.refs.promoValue.getValue();
-		const amount = this.refs.amount.getValue();
 		const { enabled, promoType, multipleUse, mobileOnly, firstTimeUser, startDate, endDate } = this.state;
 
 		if (!startDate || !endDate) {
@@ -158,8 +157,7 @@ class PromoCodeDialog extends Component {
 	        	<PromoTypeDropdownMenu select={promoType} onSelect={this.onSelectPromoType}/>
 	        	<InputBox ref='promoValue' type='number' value={promoCode&&(promoType==1?promoCode.flatDiscount:promoCode.discountPercent)}
 	        		floatingLabelText={promoType==1?'Flat Discount Value':'Discount Percent'}/>
-	        	<InputBox ref='amount' type='number' value={promoCode&&promoCode.amount}
-							floatingLabelText='Total No. of Promo'/>
+						<br/>
 						<Checkbox label='Multiple Use' checked={multipleUse} onCheck={this.onMultipleUseChange}/>
 						<Checkbox label='Mobile App Only' checked={mobileOnly} onCheck={this.onMobileAppOnlyChange}/>
 						<Checkbox label='First Time User' checked={firstTimeUser} onCheck={this.onFisrtTimeUserChange}/>
