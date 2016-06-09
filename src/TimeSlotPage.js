@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import DatePicker from 'material-ui/DatePicker';
-import SubHeader from 'material-ui/SubHeader';
+import Subheader from 'material-ui/Subheader';
 import { TimeSlotDialog, TimeSlotList } from './components';
 
 class TimeSlotPage extends Component {
@@ -30,7 +30,7 @@ class TimeSlotPage extends Component {
 					<DatePicker hintText='pick date' container='inline'
 						onChange={this.onPickDate}/>
 					<div className='flex flex-fill padding-left'>
-						<SubHeader>Time Slots</SubHeader>
+						<Subheader>Time Slots</Subheader>
 						{this.props.viewer.timeSlots&&
 							<TimeSlotList connection={this.props.viewer.timeSlots}
 								onSelect={this.onSelectSlot}/>

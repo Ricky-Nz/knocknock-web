@@ -35,7 +35,7 @@ class PromoCodeDialog extends Component {
 		} else {
 			return {
 				enabled: true,
-				promoType: 'flat',
+				promoType: '1',
 				multipleUse: false,
 				mobileOnly: false,
 				firstTimeUser: false,
@@ -46,8 +46,6 @@ class PromoCodeDialog extends Component {
 	}
 	onComfirm = () => {
 		const promoCode = this.props.promoCode;
-		const code = this.refs.code.getValue();
-		const name = this.refs.name.getValue();
 		const description = this.refs.description.getValue();
 		const perUserLimit = this.refs.perUserLimit.getValue();
 		const limit = this.refs.limit.getValue();
@@ -55,22 +53,24 @@ class PromoCodeDialog extends Component {
 		const amount = this.refs.amount.getValue();
 		const { enabled, promoType, multipleUse, mobileOnly, firstTimeUser, startDate, endDate } = this.state;
 
-		if (!name || !perUserLimit || !limit
-			|| !promoValue || !amount || !promoType || !startDate || !endDate) {
+		if (!startDate || !endDate) {
 			return;
 		}
 
 		const updates = {
 			enabled,
-			name,
 			description,
 			start: startDate,
 			end: endDate,
 			perUserLimit,
 			limit,
 			promoType,
-			promoValue,
-			amount,
+			...(promoType=='1')&&{
+				flatDiscount: promoValue
+			},
+			...(promoType=='0')&&{
+				discountPercent: promoValue
+			},
 			multipleUse,
 			mobileOnly,
 			firstTimeUser
@@ -78,6 +78,8 @@ class PromoCodeDialog extends Component {
 
 		let mutation;
 		if (!promoCode) {
+			const code = this.refs.code.getValue();
+
 			mutation = new PromoCodeCreateMutation({
 				viewer: this.props.viewer,
 				code,
@@ -133,7 +135,7 @@ class PromoCodeDialog extends Component {
 		const { enabled, promoType, multipleUse, mobileOnly, firstTimeUser, startDate, endDate } = this.state;
 
 		return (
-      <Dialog title={promoCode?`Edit Promo Code ${promoCode.code}`:'New Promo Code'} modal={false} open={open}
+      <Dialog title={promoCode?`Edit Promo Code ${promoCode.name}`:'New Promo Code'} modal={false} open={open}
         actions={this.state.submitting?[<CircularProgress size={0.5}/>]:[
         	<FlatButton label='Delete' secondary={true} onTouchTap={this.onDelete}/>,
 		      <FlatButton label='Cancel' primary={true} onTouchTap={handleClose}/>,
@@ -141,10 +143,8 @@ class PromoCodeDialog extends Component {
 		    ]} onRequestClose={handleClose} autoScrollBodyContent={true}>
 			    <div className='flex padding-top'>
 			    	<Toggle label='Enabled' toggled={enabled} onToggle={this.onEnableToggle}/>
-						<InputBox ref='code' disabled={promoCode!==null} value={promoCode&&promoCode.code}
+						<InputBox ref='code' disabled={promoCode!==null} value={promoCode&&promoCode.name}
 							floatingLabelText='Live empty to use autogenerate'/>
-						<InputBox ref='name' value={promoCode&&promoCode.name} floatingLabelText='Name'
-							verify='notempty' errorText='code name can not be empty'/>
 						<InputBox ref='description' value={promoCode&&promoCode.description}
 							floatingLabelText='Description'/>
 						<DatePicker hintText='Start from' mode='landscape' defaultDate={startDate}
@@ -156,8 +156,8 @@ class PromoCodeDialog extends Component {
 						<InputBox ref='limit' type='number' value={promoCode&&promoCode.limit}
 							floatingLabelText='User limit'/>
 	        	<PromoTypeDropdownMenu select={promoType} onSelect={this.onSelectPromoType}/>
-	        	<InputBox ref='promoValue' type='number' value={promoCode&&promoCode.promoValue}
-	        		floatingLabelText={promoType==='flat'?'Promo Value':'Discount Percentage'}/>
+	        	<InputBox ref='promoValue' type='number' value={promoCode&&(promoType==1?promoCode.flatDiscount:promoCode.discountPercent)}
+	        		floatingLabelText={promoType==1?'Flat Discount Value':'Discount Percent'}/>
 	        	<InputBox ref='amount' type='number' value={promoCode&&promoCode.amount}
 							floatingLabelText='Total No. of Promo'/>
 						<Checkbox label='Multiple Use' checked={multipleUse} onCheck={this.onMultipleUseChange}/>

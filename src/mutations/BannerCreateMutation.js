@@ -37,9 +37,7 @@ export default class CreateBannerMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'banners',
       edgeName: 'bannerEdge',
-      rangeBehaviors: {
-        '': 'append'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

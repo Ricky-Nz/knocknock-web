@@ -15,11 +15,11 @@ class SearchBar extends Component {
 			}
 
 			this.pennding = setTimeout(() => {
-				this.props.onSearch(value);
+				this.props.onSearch(value||'');
 				this.pennding = null;
 			}, 500);
 		} else {
-			this.props.onSearch(value);
+			this.props.onSearch(value||'');
 		}
 
 		this.setState({value})
@@ -39,7 +39,7 @@ SearchBar.propTypes = {
 };
 
 SearchBar.defaultProps = {
-	delay: 0
+	delay: 300
 };
 
 export default SearchBar;

@@ -35,9 +35,7 @@ export default class CreateAddressMutation extends Relay.Mutation {
       parentID: this.props.user.id,
       connectionName: 'addresses',
       edgeName: 'addressEdge',
-      rangeBehaviors: {
-        '': 'append'
-      }
+      rangeBehaviors: () => 'append'
     }];
 	}
 }

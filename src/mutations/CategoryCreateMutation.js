@@ -32,9 +32,7 @@ export default class CreateCategoryMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'categories',
       edgeName: 'categoryEdge',
-      rangeBehaviors: {
-        '': 'append'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

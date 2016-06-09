@@ -37,9 +37,7 @@ export default class CreateClothMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'clothes',
       edgeName: 'clothEdge',
-      rangeBehaviors: {
-        '': 'append'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

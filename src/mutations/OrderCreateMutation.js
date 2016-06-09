@@ -39,9 +39,7 @@ export default class OrderCreateMutation extends Relay.Mutation {
       parentID: this.props.user.id,
       connectionName: 'orders',
       edgeName: 'orderEdge',
-      rangeBehaviors: {
-        '': 'prepend'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

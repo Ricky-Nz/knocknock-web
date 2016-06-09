@@ -19,7 +19,7 @@ export const preparePageParams = ({query}) => {
 export function paginationVariables(additionalParams, prepareParams) {
 	return {
 		initialVariables: {
-			search: null,
+			search: '',
 			first: 10,
 			last: 0,
 			after: null,

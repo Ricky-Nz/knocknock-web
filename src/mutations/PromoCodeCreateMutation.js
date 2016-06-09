@@ -34,9 +34,7 @@ export default class CreatePromoCodeMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'promoCodes',
       edgeName: 'promoCodeEdge',
-      rangeBehaviors: {
-        '': 'append'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

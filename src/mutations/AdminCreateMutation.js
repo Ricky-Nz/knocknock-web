@@ -32,9 +32,7 @@ export default class AdminCreateMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'admins',
       edgeName: 'adminEdge',
-      rangeBehaviors: {
-        '': 'prepend'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

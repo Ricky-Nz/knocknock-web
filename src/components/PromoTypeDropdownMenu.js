@@ -5,8 +5,8 @@ import MenuItem from 'material-ui/MenuItem';
 const PromoTypeDropdownMenu = ({select, onSelect}) => (
 	<SelectField floatingLabelText='Select Promo Type' value={select}
 		onChange={(event, index, value) => onSelect(value)}>
-		<MenuItem value='flat' primaryText='Flat'/>
-		<MenuItem value='discount' primaryText='Discount'/>
+		<MenuItem value={1} primaryText='Flat'/>
+		<MenuItem value={0} primaryText='Percent'/>
   </SelectField>
 );
 

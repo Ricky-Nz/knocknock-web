@@ -8,10 +8,15 @@ import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
 class BannerList extends Component {
 	render() {
 		return (
-			<GridList cols={1} cellHeight={150} padding={16}>
+			<GridList className='scroll' cols={1} cellHeight={150} padding={16}>
 				{
 					this.props.connection.edges.map(({node}, index) =>
-						<GridTile key={index} title={node.title} titlePosition='bottom'
+						<GridTile key={index} title={
+							<div>
+								<div>{node.title}</div>
+								{node.link&&<a href={node.link} target='_blank' style={styles.a}>{node.link}</a>}
+							</div>
+						} titlePosition='bottom'
 							cols={1} rows={1} actionIcon={<IconButton onClick={() => this.props.onSelect(node)}><IconEditor color='white'/></IconButton>}>
 							<img src={node.imageUrl}/>
 						</GridTile>
@@ -24,6 +29,12 @@ class BannerList extends Component {
 
 BannerList.propTypes = {
 	onSelect: PropTypes.func.isRequired
+};
+
+const styles = {
+	a: {
+		color: 'white'
+	}
 };
 
 export default Relay.createContainer(BannerList, {

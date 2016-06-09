@@ -39,9 +39,7 @@ export default class WorkerCreateMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'workers',
       edgeName: 'workerEdge',
-      rangeBehaviors: {
-        '': 'prepend'
-      }
+      rangeBehaviors: ({search}) => 'append'
     }];
 	}
 }

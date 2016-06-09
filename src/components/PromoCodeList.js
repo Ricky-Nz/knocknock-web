@@ -15,9 +15,6 @@ const PromoCodeList = ({connection, onSelect}) => (
         <TableHeaderColumn>Type</TableHeaderColumn>
         <TableHeaderColumn>Flat Discount</TableHeaderColumn>
         <TableHeaderColumn>Percent Discount</TableHeaderColumn>
-        <TableHeaderColumn>Mutiple Use</TableHeaderColumn>
-        <TableHeaderColumn>Mobile Only</TableHeaderColumn>
-        <TableHeaderColumn>First Time User</TableHeaderColumn>
       </TableRow>
     </TableHeader>
     <TableBody showRowHover={true} stripedRows={true}
@@ -29,12 +26,9 @@ const PromoCodeList = ({connection, onSelect}) => (
 						<TableRowColumn>{node.name}</TableRowColumn>
 						<TableRowColumn>{node.start}</TableRowColumn>
 						<TableRowColumn>{node.end}</TableRowColumn>
-						<TableRowColumn>{node.promoType}</TableRowColumn>
+						<TableRowColumn>{node.promoType==1?'Flat':'Percent'}</TableRowColumn>
 						<TableRowColumn>{node.flatDiscount}</TableRowColumn>
 						<TableRowColumn>{node.discountPercent}</TableRowColumn>
-						<TableRowColumn><Checkbox checked={node.multipleUse}/></TableRowColumn>
-						<TableRowColumn><Checkbox checked={node.mobileOnly}/></TableRowColumn>
-						<TableRowColumn><Checkbox checked={node.firstTimeUser}/></TableRowColumn>
 					</TableRow>
   			)
 			}
