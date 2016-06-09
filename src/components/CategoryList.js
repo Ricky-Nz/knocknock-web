@@ -5,7 +5,7 @@ import CategoryListItem from './CategoryListItem';
 import { List } from 'material-ui/List';
 
 const CategoryList = ({connection, onAction}) => (
-	<List>
+	<List className='scroll' style={styles.scrollBug}>
 		{
 			connection.edges.map(({node}, index) =>
 				<Paper key={index} className='margin-bottom'>
@@ -21,10 +21,16 @@ CategoryList.propTypes = {
 	onAction: PropTypes.func.isRequired
 };
 
+const styles = {
+	scrollBug: {
+		padding: '0 2'
+	}
+};
+
 export default Relay.createContainer(CategoryList, {
 	fragments: {
 		connection: () => Relay.QL`
-			fragment on ClothCategoryConnection {
+			fragment on CategoryConnection {
 				edges {
 					node {
 						${CategoryListItem.getFragment('category')}

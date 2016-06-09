@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
 import { PaginationSearchBar, PromoCodeList, PromoCodeDialog } from './components';
-import { paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class PromoCodeBrowserPage extends Component {
 	state = {
@@ -54,19 +54,13 @@ export default Relay.createContainer(PromoCodeBrowserPage, {
 					promoCodes(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 						${PromoCodeList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 					promoCodes(search:$search,last:$last,before:$before) @include(if: $reverse) {
 						${PromoCodeList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 					${PromoCodeDialog.getFragment('viewer')}

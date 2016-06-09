@@ -21,7 +21,7 @@ export { default as AddressDropdownMenu } from './AddressDropdownMenu';
 
 export { default as OrderList } from './OrderList';
 export { default as OrderItemListItem } from './OrderItemListItem';
-export { default as OrderMultiSelectMenu } from './OrderMultiSelectMenu';
+export { default as OrderStatusMultiSelectMenu } from './OrderStatusMultiSelectMenu';
 export { default as OrderStatusDropdownMenu } from './OrderStatusDropdownMenu';
 export { default as OrderDateRangeSelector } from './OrderDateRangeSelector';
 export { default as OrderBulkUpdateDialog } from './OrderBulkUpdateDialog';

@@ -6,8 +6,8 @@ import MenuItem from 'material-ui/MenuItem';
 const OrderStatusDropdownMenu = ({viewer, select, onSelect, disabled}) => (
 	<SelectField floatingLabelText='Order Status' disabled={disabled} value={select} onChange={onSelect}>
 		{
-			viewer.orderStatus.map((status, index) =>
-					<MenuItem key={index} value={status} primaryText={status}/>)
+			viewer.orderStatus.map(({status, id}, index) =>
+					<MenuItem key={index} value={id} primaryText={status}/>)
 		}
   </SelectField>
 );
@@ -21,7 +21,10 @@ export default Relay.createContainer(OrderStatusDropdownMenu, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				orderStatus
+				orderStatus {
+					id
+					status
+				}
 			}
 		`
 	}

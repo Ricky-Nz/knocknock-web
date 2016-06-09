@@ -6,7 +6,7 @@ import ClothDialog from './ClothDialog';
 import PaginationSearchBar from './PaginationSearchBar';
 import CategorySelectMenu from './CategorySelectMenu';
 import { AddFloatButton } from '../widgets';
-import { paginationVariables } from '../utils';
+import { paginationVariables, pageInfoFragment } from '../utils';
 
 class CategoryTab extends Component {
 	constructor(props) {
@@ -55,16 +55,13 @@ class CategoryTab extends Component {
 		return (
 			<div className='flex flex-fill position-relative'>
 				<div className='flex flex-fill padding'>
-					<div className='flex flex-row'>
-						<div className='flex flex-fill'>
-							<PaginationSearchBar pageInfo={this.props.viewer.clothes.pageInfo}
-								first={first} after={after} last={last} before={before}
-								onSearch={this.onSearch} onNavigate={this.onNavigate}/>
-						</div>
-						<Paper className='padding-horizontal margin-left'>
-							<CategorySelectMenu connection={this.props.viewer.categories}
-								selectId={categoryId} onSelect={this.onSelectCategory} defaultAll={true}/>
-						</Paper>
+					<PaginationSearchBar pageInfo={this.props.viewer.clothes.pageInfo}
+						first={first} after={after} last={last} before={before}
+						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+					<br/>
+					<div className='flex flex-align-end'>
+						<CategorySelectMenu connection={this.props.viewer.categories}
+							selectId={categoryId} onSelect={this.onSelectCategory} defaultAll={true}/>
 					</div>
 					<br/>
 					<ClothList connection={this.props.viewer.clothes} onSelect={this.onSelectCloth}/>
@@ -83,40 +80,20 @@ CategoryTab.propTypes = {
 };
 
 export default Relay.createContainer(CategoryTab, {
-	initialVariables: {
-		search: null,
-		first: 10,
-		last: 0,
-		after: null,
-		before: null,
-		reverse: false,
-		categoryId: null
-	},
-	prepareVariables: (variables) => {
-		return {
-			...variables,
-			reverse: variables.last > 0
-		}
-	},
+	...paginationVariables({categoryId: null}),
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
 				clothes(search:$search,categoryId:$categoryId,first:$first,after:$after) @skip(if: $reverse) {
 					${ClothList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+						${pageInfoFragment}
 					}
 				}
 				clothes(search:$search,categoryId:$categoryId,last:$last,before:$before) @include(if: $reverse) {
 					${ClothList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+						${pageInfoFragment}
 					}
 				}
 				categories(first: 1000) {

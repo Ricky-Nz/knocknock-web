@@ -10,7 +10,7 @@ import { OrderUpdateMutation } from '../mutations';
 
 const OrderListItem = ({order, selectMode, select, onAction}) => (
 	<ListItem leftAvatar={<Avatar src={order.userAvatar}/>} secondaryTextLines={2}
-		primaryText={`${order.serialNumber} [${order.status}]`}
+		primaryText={`${order.id} [${order.status.status}]`}
 		secondaryText={
 			<div>
 				<div>{`Pickup address: ${order.pickupAddress}`}</div>
@@ -36,9 +36,10 @@ export default Relay.createContainer(OrderListItem, {
 			fragment on Order {
 				id
 				userId
-        serialNumber
         userAvatar
-        status
+        status {
+        	status
+        }
         pickupDate
         pickupTime
         pickupAddress

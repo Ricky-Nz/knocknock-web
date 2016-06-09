@@ -27,7 +27,7 @@ CategorySelectMenu.propTypes = {
 export default Relay.createContainer(CategorySelectMenu, {
 	fragments: {
 		connection: () => Relay.QL`
-			fragment on ClothCategoryConnection {
+			fragment on CategoryConnection {
 				edges {
 					node {
 						id

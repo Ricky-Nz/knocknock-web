@@ -38,9 +38,6 @@ class Dashboard extends Component {
 	render() {
 		return (
 			<div className='flex flex-fill'>
-				<div className='flex flex-fill' style={styles.mainContainer}>
-					{this.props.children}
-				</div>
 				<Drawer open={true}>
 				  <Menu onChange={this.onNavitage} value={this.props.location.pathname}>
 				  	<Subheader>Orders</Subheader>
@@ -61,6 +58,9 @@ class Dashboard extends Component {
 				    <MenuItem value='/dashboard/system/feedback' leftIcon={<IconFeedback/>}>User Feedback</MenuItem>
 				 	</Menu>
 				</Drawer>
+				<div className='flex flex-fill' style={styles.mainContainer}>
+					{this.props.children}
+				</div>
 			</div>
 		);
 	}

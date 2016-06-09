@@ -3,17 +3,14 @@ import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
 import { PaginationSearchBar, UserList, AccountDialog } from './components';
-import { paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class UserBrowserPage extends Component {
 	state = {
 		dialogShow: false
 	}
 	onNavigate = (pagination) => {
-		this.context.router.push({
-			pathname: this.props.location.pathname,
-			query: pagination
-		});
+		this.props.relay.setVariables(pagination);
 	}
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
@@ -62,19 +59,13 @@ export default Relay.createContainer(UserBrowserPage, {
 					users(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 						${UserList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 					users(search:$search,last:$last,before:$before) @include(if: $reverse) {
 						${UserList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 					${AccountDialog.getFragment('viewer')}

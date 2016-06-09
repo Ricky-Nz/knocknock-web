@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { PaginationSearchBar, FeedbackList } from './components';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class FeedbackBrowserPage extends Component {
 	onNavigate = (pagination) => {
@@ -29,20 +30,7 @@ class FeedbackBrowserPage extends Component {
 }
 
 export default Relay.createContainer(FeedbackBrowserPage, {
-	initialVariables: {
-		search: null,
-		first: 10,
-		last: 0,
-		after: null,
-		before: null,
-		reverse: false
-	},
-	prepareVariables: (variables) => {
-		return {
-			...variables,
-			reverse: variables.last > 0
-		}
-	},
+	...paginationVariables(),
 	fragments: {
 		viewer: (variables) => {
 			return Relay.QL`
@@ -50,19 +38,13 @@ export default Relay.createContainer(FeedbackBrowserPage, {
 					feedbacks(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 						${FeedbackList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 					feedbacks(search:$search,last:$last,before:$before) @include(if: $reverse) {
 						${FeedbackList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 				}

@@ -5,7 +5,14 @@ import Avatar from 'material-ui/Avatar';
 
 const UserListItem = ({user, onClick}) => (
 	<ListItem leftAvatar={<Avatar src={user.avatarUrl}/>}
-		primaryText={user.email} secondaryText={user.contact} onClick={() => onClick(user)}/>
+		primaryText={`${user.firstName||''} ${user.lastName||''}`}
+		secondaryTextLines={2}
+		secondaryText={
+			<div>
+				<div>{`Email: ${user.email||''}`}</div>
+				<div>{`Tel: ${user.contact||''}`}</div>
+			</div>
+		} onTouchTap={() => onClick(user)}/>
 );
 
 export default Relay.createContainer(UserListItem, {
@@ -16,6 +23,8 @@ export default Relay.createContainer(UserListItem, {
 				email
 				contact
 				avatarUrl
+				firstName
+				lastName
 			}
 		`
 	}

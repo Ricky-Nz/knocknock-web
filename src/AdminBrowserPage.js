@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import { List } from 'material-ui/List';
 import { AddFloatButton } from './widgets';
 import { AdminList, AdminDialog, PaginationSearchBar } from './components';
-import { pageFloatBtnStyle, paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class AdminBrowserPage extends Component {
 	state = {
@@ -56,19 +56,13 @@ export default Relay.createContainer(AdminBrowserPage, {
 				admins(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${AdminList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				admins(search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${AdminList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				${AdminDialog.getFragment('viewer')}

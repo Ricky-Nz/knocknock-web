@@ -1,3 +1,5 @@
+import Relay from 'react-relay';
+
 export const preparePageParams = ({query}) => {
 	if (query.first) {
 		return {
@@ -14,7 +16,7 @@ export const preparePageParams = ({query}) => {
 	}
 };
 
-export function paginationVariables() {
+export function paginationVariables(additionalParams, prepareParams) {
 	return {
 		initialVariables: {
 			search: null,
@@ -22,13 +24,24 @@ export function paginationVariables() {
 			last: 0,
 			after: null,
 			before: null,
-			reverse: false
+			reverse: false,
+			...additionalParams
 		},
 		prepareVariables: (variables) => {
 			return {
 				...variables,
-				reverse: variables.last > 0
+				reverse: variables.last > 0,
+				...prepareParams&&prepareParams(variables)
 			}
 		}
 	};
 }
+
+export const pageInfoFragment = Relay.QL`
+  fragment on PageInfo {
+		hasNextPage
+		hasPreviousPage
+		endCursor
+		startCursor
+  }
+`;

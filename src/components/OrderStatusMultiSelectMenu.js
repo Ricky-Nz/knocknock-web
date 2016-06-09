@@ -6,11 +6,11 @@ import Checkbox from 'material-ui/Checkbox';
 import IconChecked from 'material-ui/svg-icons/toggle/check-box';
 import IconUnCheck from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 
-class OrderMultiSelectMenu extends Component {
+class OrderStatusMultiSelectMenu extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selects: props.viewer.orderStatus
+			selects: props.viewer.orderStatus.map(status => status.id)
 		};
 	}
 	onCheck = (event, checked) => {
@@ -18,7 +18,7 @@ class OrderMultiSelectMenu extends Component {
 		if (this.props.viewer.orderStatus.length === this.state.selects) {
 			newSelect = [];
 		} else {
-			newSelect = this.props.viewer.orderStatus;
+			newSelect = this.props.viewer.orderStatus.map(status => status.id);
 		}
 
 		this.setState({selects: newSelect});
@@ -48,24 +48,27 @@ class OrderMultiSelectMenu extends Component {
 		    		onCheck={this.onCheck}/>
 		    </div>
 				{
-					this.props.viewer.orderStatus.map((status, index) =>
-						<MenuItem key={index} value={status} primaryText={status}
-							rightIcon={(selects&&selects.indexOf(status)>=0)?<IconChecked/>:<IconUnCheck/>}/>)
+					this.props.viewer.orderStatus.map(({status, id}, index) =>
+						<MenuItem key={index} value={id} primaryText={status}
+							rightIcon={(selects&&selects.indexOf(id)>=0)?<IconChecked/>:<IconUnCheck/>}/>)
 				}
 		  </Menu>
 		);
 	}
 }
 
-OrderMultiSelectMenu.propTypes = {
+OrderStatusMultiSelectMenu.propTypes = {
 	onSelect: PropTypes.func.isRequired
 };
 
-export default Relay.createContainer(OrderMultiSelectMenu, {
+export default Relay.createContainer(OrderStatusMultiSelectMenu, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				orderStatus
+				orderStatus {
+					id
+					status
+				}
 			}
 		`
 	}

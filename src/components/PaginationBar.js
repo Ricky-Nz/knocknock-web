@@ -10,30 +10,46 @@ import IconRight from 'material-ui/svg-icons/navigation/chevron-right';
 
 class PaginationBar extends Component {
 	onPageSizeChange = (event, key, value) => {
-		this.props.onNavigate({
-			first: value
+		if (this.props.first) {
+			this.props.onNavigate({
+				first: value
 		});
+		} else {
+			this.props.onNavigate({
+				last: value
+			});
+		}
 	}
 	onNext = () => {
 		this.props.onNavigate({
 			first: this.props.first||this.props.last,
-			after: this.props.endCursor
+			after: this.props.endCursor,
+			last: 0,
+			before: null
 		});
 	}
 	onPrevious = () => {
 		this.props.onNavigate({
 			last: this.props.first||this.props.last,
-			before: this.props.startCursor
+			before: this.props.startCursor,
+			first: 0,
+			after: null
 		});
 	}
 	onLast = () => {
 		this.props.onNavigate({
-			last: this.props.first||this.props.last
+			last: this.props.first||this.props.last,
+			first: 0,
+			after: null,
+			before: null
 		});
 	}
 	onFist = () => {
 		this.props.onNavigate({
-			first: this.props.first||this.props.last
+			first: this.props.first||this.props.last,
+			last: 0,
+			after: null,
+			before: null
 		});
 	}
 	render() {

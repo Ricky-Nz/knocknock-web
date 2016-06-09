@@ -5,8 +5,9 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
 import { AddFloatButton } from './widgets';
 import { OrderList, PaginationSearchBar, OrderStatusDropdownMenu,
-	OrderMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete,
+	OrderStatusMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete,
 	OrderBulkUpdateDialog } from './components';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class OrderBrowserPage extends Component {
 	state = {
@@ -41,8 +42,8 @@ class OrderBrowserPage extends Component {
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
 	}
-	onSelectStatus = (status) => {
-		this.props.relay.setVariables({status});
+	onSelectStatus = (statusIds) => {
+		this.props.relay.setVariables({statusIds});
 	}
 	onDataSelectChange = (after, before) => {
 		this.props.relay.setVariables({afterDate: after, beforeDate: before});
@@ -72,7 +73,7 @@ class OrderBrowserPage extends Component {
 							</div>
 						</Paper>
 						<Paper className='flex scroll margin-top'>
-							<OrderMultiSelectMenu viewer={this.props.viewer}
+							<OrderStatusMultiSelectMenu viewer={this.props.viewer}
 								onSelect={this.onSelectStatus}/>
 						</Paper>
 					</div>
@@ -103,47 +104,29 @@ OrderBrowserPage.contextTypes = {
 };
 
 export default Relay.createContainer(OrderBrowserPage, {
-	initialVariables: {
+	...paginationVariables({
 		userId: null,
-		search: null,
-		status: null,
+		statusIds: null,
 		afterDate: null,
-		beforeDate: null,
-		first: 10,
-		last: 0,
-		after: null,
-		before: null,
-		reverse: false
-	},
-	prepareVariables: (variables) => {
-		return {
-			...variables,
-			reverse: variables.last > 0
-		}
-	},
+		beforeDate: null
+	}),
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				orders(userId:$userId,status:$status,afterDate:$afterDate,beforeDate:$beforeDate,search:$search,first:$first,after:$after) @skip(if: $reverse) {
+				orders(userId:$userId,statusIds:$statusIds,afterDate:$afterDate,beforeDate:$beforeDate,search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${OrderList.getFragment('connection')}
 					pageInfo {
-					  hasNextPage
-					  hasPreviousPage
-					  endCursor
-					  startCursor
+					  ${pageInfoFragment}
 					}
 				}
-				orders(userId:$userId,status:$status,afterDate:$afterDate,beforeDate:$beforeDate,search:$search,last:$last,before:$before) @include(if: $reverse) {
+				orders(userId:$userId,statusIds:$statusIds,afterDate:$afterDate,beforeDate:$beforeDate,search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${OrderList.getFragment('connection')}
 					pageInfo {
-					  hasNextPage
-					  hasPreviousPage
-					  endCursor
-					  startCursor
+					  ${pageInfoFragment}
 					}
 				}
 				${OrderStatusDropdownMenu.getFragment('viewer')}
-				${OrderMultiSelectMenu.getFragment('viewer')}
+				${OrderStatusMultiSelectMenu.getFragment('viewer')}
 				${UserInputAutoComplete.getFragment('viewer')}
 				${OrderBulkUpdateDialog.getFragment('viewer')}
 			}

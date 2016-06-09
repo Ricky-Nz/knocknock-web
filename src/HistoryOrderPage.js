@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import { PaginationSearchBar, OrderList } from './components';
-import { paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class HistoryOrderPage extends Component {
 	onNavigate = (pagination) => {
@@ -37,19 +37,13 @@ export default Relay.createContainer(HistoryOrderPage, {
 				histories(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${OrderList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				histories(search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${OrderList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 			}

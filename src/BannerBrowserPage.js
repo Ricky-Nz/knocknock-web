@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
 import { PaginationSearchBar, BannerList, BannerEditDialog } from './components';
-import { paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class BannerBrowserPage extends Component {
 	state = {
@@ -53,19 +53,13 @@ export default Relay.createContainer(BannerBrowserPage, {
 				banners(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${BannerList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				banners(search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${BannerList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				${BannerEditDialog.getFragment('viewer')}

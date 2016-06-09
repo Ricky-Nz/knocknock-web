@@ -5,7 +5,7 @@ import CategoryList from './CategoryList';
 import CategoryDialog from './CategoryDialog';
 import PaginationSearchBar from './PaginationSearchBar';
 import { AddFloatButton, SearchBar } from '../widgets';
-import { paginationVariables } from '../utils';
+import { paginationVariables, pageInfoFragment } from '../utils';
 
 class CategoryTab extends Component {
 	state = {
@@ -76,19 +76,13 @@ export default Relay.createContainer(CategoryTab, {
 				categories(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${CategoryList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				categories(search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${CategoryList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				${CategoryDialog.getFragment('viewer')}

@@ -12,8 +12,8 @@ class TimeSlotListItem extends Component {
 	render() {
 		const { slot } = this.props;
 		return (
-			<ListItem primaryText={`${slot.start} ~ ${slot.end}`}
-				secondaryText={`Limit: ${slot.limit}`} onClick={this.onClick}
+			<ListItem primaryText={`${slot.time}`}
+				secondaryText={`Quntity: ${slot.quantity}`} onClick={this.onClick}
 				rightToggle={<Toggle toggled={slot.enabled}/>}/>
 		);
 	}
@@ -28,9 +28,8 @@ export default Relay.createContainer(TimeSlotListItem, {
 		slot: () => Relay.QL`
 			fragment on TimeSlot {
 				id
-				start
-				end
-				limit
+				time
+				quantity
 				enabled
 				${TimeSlotUpdateMutation.getFragment('slot')}
 			}

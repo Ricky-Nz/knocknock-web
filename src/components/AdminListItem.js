@@ -5,7 +5,7 @@ import IconEdit from 'material-ui/svg-icons/editor/mode-edit';
 import { AdminUpdateMutation } from '../mutations';
 
 const FactoryListItem = ({admin, onClick}) => (
-	<ListItem primaryText={admin.name}
+	<ListItem primaryText={`${admin.firstName} ${admin.lastName}`}
 		secondaryText={`${admin.email}, ${admin.contact}`}
 		rightIcon={<IconEdit/>} onTouchTap={() => onClick(admin)}/>
 );
@@ -20,7 +20,8 @@ export default Relay.createContainer(FactoryListItem, {
 			fragment on Admin {
 				id
 				email
-				name
+				firstName
+				lastName
 				contact
 				${AdminUpdateMutation.getFragment('admin')}
 			}

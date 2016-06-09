@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { AddFloatButton } from './widgets';
 import { PaginationSearchBar, WorkerList, AccountDialog } from './components';
-import { pageFloatBtnStyle, paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class WorkerBrowserPage extends Component {
 	state = {
@@ -13,10 +13,7 @@ class WorkerBrowserPage extends Component {
 
 	}
 	onNavigate = (pagination) => {
-		this.context.router.push({
-			pathname: this.props.location.pathname,
-			query: pagination
-		});
+		this.props.relay.setVariables(pagination);
 	}
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
@@ -60,19 +57,13 @@ export default Relay.createContainer(WorkerBrowserPage, {
 				workers(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${WorkerList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				workers(search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${WorkerList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				${AccountDialog.getFragment('viewer')}

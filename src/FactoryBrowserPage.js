@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import { List } from 'material-ui/List';
 import { AddFloatButton } from './widgets';
 import { FactoryList, PaginationSearchBar, FactoryDialog } from './components';
-import { pageFloatBtnStyle, paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class FactoryBrowserPage extends Component {
 	state = {
@@ -56,19 +56,13 @@ export default Relay.createContainer(FactoryBrowserPage, {
 				factories(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 					${FactoryList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				factories(search:$search,last:$last,before:$before) @include(if: $reverse) {
 					${FactoryList.getFragment('connection')}
 					pageInfo {
-		        hasNextPage
-		        hasPreviousPage
-		        endCursor
-		        startCursor
+		        ${pageInfoFragment}
 					}
 				}
 				${FactoryDialog.getFragment('viewer')}

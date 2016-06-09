@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import Toggle from 'material-ui/Toggle';
+import Checkbox from 'material-ui/Checkbox';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 const PromoCodeList = ({connection, onSelect}) => (
@@ -9,12 +10,14 @@ const PromoCodeList = ({connection, onSelect}) => (
       <TableRow>
       	<TableHeaderColumn>Enabled</TableHeaderColumn>
         <TableHeaderColumn>Code</TableHeaderColumn>
-        <TableHeaderColumn>Name</TableHeaderColumn>
         <TableHeaderColumn>Start</TableHeaderColumn>
         <TableHeaderColumn>End</TableHeaderColumn>
         <TableHeaderColumn>Type</TableHeaderColumn>
-        <TableHeaderColumn>Value</TableHeaderColumn>
-        <TableHeaderColumn>Amount</TableHeaderColumn>
+        <TableHeaderColumn>Flat Discount</TableHeaderColumn>
+        <TableHeaderColumn>Percent Discount</TableHeaderColumn>
+        <TableHeaderColumn>Mutiple Use</TableHeaderColumn>
+        <TableHeaderColumn>Mobile Only</TableHeaderColumn>
+        <TableHeaderColumn>First Time User</TableHeaderColumn>
       </TableRow>
     </TableHeader>
     <TableBody showRowHover={true} stripedRows={true}
@@ -23,13 +26,15 @@ const PromoCodeList = ({connection, onSelect}) => (
 				connection.edges.map(({node}, index) =>
 					<TableRow key={index}>
 						<TableRowColumn><Toggle toggled={node.enabled}/></TableRowColumn>
-						<TableRowColumn>{node.code}</TableRowColumn>
 						<TableRowColumn>{node.name}</TableRowColumn>
 						<TableRowColumn>{node.start}</TableRowColumn>
 						<TableRowColumn>{node.end}</TableRowColumn>
 						<TableRowColumn>{node.promoType}</TableRowColumn>
-						<TableRowColumn>{node.promoValue}</TableRowColumn>
-						<TableRowColumn>{node.amount}</TableRowColumn>
+						<TableRowColumn>{node.flatDiscount}</TableRowColumn>
+						<TableRowColumn>{node.discountPercent}</TableRowColumn>
+						<TableRowColumn><Checkbox checked={node.multipleUse}/></TableRowColumn>
+						<TableRowColumn><Checkbox checked={node.mobileOnly}/></TableRowColumn>
+						<TableRowColumn><Checkbox checked={node.firstTimeUser}/></TableRowColumn>
 					</TableRow>
   			)
 			}
@@ -49,7 +54,6 @@ export default Relay.createContainer(PromoCodeList, {
 					node {
 						id
 						enabled
-						code
 						name
 						description
 						start
@@ -57,8 +61,8 @@ export default Relay.createContainer(PromoCodeList, {
 						perUserLimit
 						limit
 						promoType
-						promoValue
-						amount
+						flatDiscount
+						discountPercent
 						multipleUse
 						mobileOnly
 						firstTimeUser

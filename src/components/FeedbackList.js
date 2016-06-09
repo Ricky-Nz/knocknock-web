@@ -1,35 +1,26 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import Avatar from 'material-ui/Avatar';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
+import { List } from 'material-ui/List';
+import FeedbackListItem from './FeedbackListItem';
 
 const FeedbackList = ({connection}) => (
-  <Table fixedHeader={true}>
-    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-      <TableRow>
-      	<TableHeaderColumn>User</TableHeaderColumn>
-        <TableHeaderColumn>Rate</TableHeaderColumn>
-        <TableHeaderColumn>Comment</TableHeaderColumn>
-        <TableHeaderColumn>Source</TableHeaderColumn>
-        <TableHeaderColumn>Date</TableHeaderColumn>
-      </TableRow>
-    </TableHeader>
-    <TableBody showRowHover={true} stripedRows={true}
-    	displayRowCheckbox={false}>
-			{
-				connection.edges.map(({node}, index) =>
-					<TableRow key={index}>
-						<TableRowColumn><Avatar src={node.user.avatarUrl}/></TableRowColumn>
-						<TableRowColumn>{node.rating}</TableRowColumn>
-						<TableRowColumn>{node.comment}</TableRowColumn>
-						<TableRowColumn>{node.source}</TableRowColumn>
-						<TableRowColumn>{node.createdAt}</TableRowColumn>
-					</TableRow>
-  			)
-			}
-    </TableBody>
-  </Table>
+	<List className='scroll' style={styles.scrollBug}>
+		{
+			connection.edges.map(({node}, index) =>
+				<Paper key={index} className='margin-bottom'>
+					<FeedbackListItem feedback={node}/>
+				</Paper>
+			)
+		}
+	</List>
 );
+
+const styles = {
+	scrollBug: {
+		padding: '0 2'
+	}
+};
 
 export default Relay.createContainer(FeedbackList, {
 	fragments: {
@@ -37,15 +28,7 @@ export default Relay.createContainer(FeedbackList, {
 			fragment on FeedbackConnection {
 				edges {
 					node {
-						userId
-						rating
-						comment
-						source
-						createdAt
-						user {
-							avatarUrl
-							name
-						}
+						${FeedbackListItem.getFragment('feedback')}
 					}
 				}
 			}

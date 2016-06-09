@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { PaginationSearchBar, CreditList } from './components';
-import { paginationVariables } from './utils';
+import { pageInfoFragment, paginationVariables } from './utils';
 
 class CreditBrowserPage extends Component {
 	onNavigate = (pagination) => {
@@ -19,11 +19,11 @@ class CreditBrowserPage extends Component {
 
 		return (
 			<div className='flex flex-fill padding'>
-				<PaginationSearchBar pageInfo={this.props.viewer.transactions.pageInfo}
+				<PaginationSearchBar pageInfo={this.props.viewer.creditRecords.pageInfo}
 					first={first} after={after} last={last} before={before}
 					onSearch={this.onSearch} onNavigate={this.onNavigate}/>
 				<br/>
-				<CreditList connection={this.props.viewer.transactions} onSelect={this.onSelect}/>
+				<CreditList connection={this.props.viewer.creditRecords} onSelect={this.onSelect}/>
 			</div>
 		);
 	}
@@ -35,22 +35,16 @@ export default Relay.createContainer(CreditBrowserPage, {
 		viewer: (variables) => {
 			return Relay.QL`
 				fragment on Viewer {
-					transactions(search:$search,first:$first,after:$after) @skip(if: $reverse) {
+					creditRecords(search:$search,first:$first,after:$after) @skip(if: $reverse) {
 						${CreditList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
-					transactions(search:$search,last:$last,before:$before) @include(if: $reverse) {
+					creditRecords(search:$search,last:$last,before:$before) @include(if: $reverse) {
 						${CreditList.getFragment('connection')}
 						pageInfo {
-			        hasNextPage
-			        hasPreviousPage
-			        endCursor
-			        startCursor
+			        ${pageInfoFragment}
 						}
 					}
 				}

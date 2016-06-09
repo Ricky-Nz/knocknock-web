@@ -19,11 +19,10 @@ CategoryListItem.propTypes = {
 export default Relay.createContainer(CategoryListItem, {
 	fragments: {
 		category: () => Relay.QL`
-			fragment on ClothCategory {
+			fragment on Category {
 				id
 				nameCn
 				nameEn
-				count
 			}
 		`
 	}

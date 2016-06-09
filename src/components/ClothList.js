@@ -5,7 +5,7 @@ import ClothListItem from './ClothListItem';
 import { List } from 'material-ui/List';
 
 const ClothList = ({connection, onSelect}) => (
-	<List>
+	<List className='scroll' style={styles.scrollBug}>
 		{
 			connection.edges.map(({node}, index) =>
 				<Paper key={index} className='margin-bottom'>
@@ -18,6 +18,12 @@ const ClothList = ({connection, onSelect}) => (
 
 ClothList.propTypes = {
 	onSelect: PropTypes.func.isRequired
+};
+
+const styles = {
+	scrollBug: {
+		padding: '0 2'
+	}
 };
 
 export default Relay.createContainer(ClothList, {
