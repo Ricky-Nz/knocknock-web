@@ -109,7 +109,7 @@ export default Relay.createContainer(OrderBrowserPage, {
 		status: null,
 		afterDate: null,
 		beforeDate: null,
-		first: 0,
+		first: 10,
 		last: 0,
 		after: null,
 		before: null,

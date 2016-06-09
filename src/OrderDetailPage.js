@@ -43,7 +43,7 @@ class OrderDetailPage extends Component {
 	}
 }
 
-OrderDetailPage.contextProps = {
+OrderDetailPage.contextTypes = {
 	router: PropTypes.object.isRequired
 };
 

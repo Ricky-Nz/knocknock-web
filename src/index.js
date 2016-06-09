@@ -31,7 +31,7 @@ import { Loading } from './widgets';
 injectTapEventPlugin();
 
 Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer('/graphql')
+  new Relay.DefaultNetworkLayer('http://localhost:3000/graphql')
 );
 
 const App = ({children}) => (
