@@ -81,7 +81,7 @@ class CategoryDialog extends Component {
 			    <div className='flex'>
 		        <InputBox ref='nameEn' value={category&&category.nameEn} floatingLabelText='English Name'
 		        	verify='notempty' errorText='english name can not be empty'/>
-		        <InputBox ref='nameCn' value={category&&category.nameEn} floatingLabelText='Chinese Name'
+		        <InputBox ref='nameCn' value={category&&category.nameCn} floatingLabelText='Chinese Name'
 		        	verify='notempty' errorText='chinese name can not be empty'/>
 	        </div>
       </Dialog>

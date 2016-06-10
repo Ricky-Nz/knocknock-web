@@ -100,6 +100,7 @@ class PromoCodeDialog extends Component {
 			viewer: this.props.viewer,
 			id: this.props.promoCode.id
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
+		this.setState({submitting: true});
 	}
 	onSuccess = () => {
 		this.setState({submitting: false});
