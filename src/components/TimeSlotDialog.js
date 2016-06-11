@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import Toggle from 'material-ui/Toggle';
 import { InputBox } from '../widgets';
-import { TimeSlotUpdateMutation } from '../mutations';
+import { UpdateTimeSlotMutation } from '../mutations';
 
 class TimeSlotDialog extends Component {
 	constructor(props) {
@@ -23,13 +23,10 @@ class TimeSlotDialog extends Component {
 		}
 	}
 	onComfirm = () => {
-		const limit = this.refs.limit.getValue();
-
-		if (!limit) return;
-
-		Relay.Store.commitUpdate(new TimeSlotUpdateMutation({
+		Relay.Store.commitUpdate(new UpdateTimeSlotMutation({
 			slot: this.props.slot,
-			limit,
+			date: this.props.date,
+			quantity: this.refs.quantity.getValue(),
 			enabled: this.state.enabled
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		this.setState({submitting: true});
@@ -40,9 +37,6 @@ class TimeSlotDialog extends Component {
 	}
 	onFailure = (transaction) => {
 		this.setState({submitting: false});
-	}
-	onEnableToggle = () => {
-		this.setState({enabled: !this.state.enabled});
 	}
 	render() {
 		const { handleClose, open, slot } = this.props;
@@ -55,14 +49,9 @@ class TimeSlotDialog extends Component {
         ]}
         onRequestClose={handleClose} autoScrollBodyContent={true}>
 	    	<div className='flex'>
-					<InputBox ref='start' value={slot&&slot.start} disabled={true} floatingLabelText='From'
-						type='number' verify='time' errorText='time must between 0 ~ 23'/>						
-					<InputBox ref='end' value={slot&&slot.end} disabled={true} floatingLabelText='To'
-						type='number' verify='time' errorText='time must between 0 ~ 23'/>
-					<InputBox ref='limit' value={slot&&slot.limit} floatingLabelText='Limit'
+					<InputBox ref='time' value={slot?slot.time:''} disabled={true} floatingLabelText='Time'/>
+					<InputBox ref='quantity' value={slot?slot.quantity:0} floatingLabelText='Quantity'
 						type='number'/>
-					<br/>
-					<Toggle label='Enabled' toggled={this.state.enabled} onToggle={this.onEnableToggle}/>
 	    	</div>
       </Dialog>
 		);
@@ -72,6 +61,7 @@ class TimeSlotDialog extends Component {
 TimeSlotDialog.propTypes = {
 	handleClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,
+	date: PropTypes.any,
 	slot: PropTypes.object
 };
 

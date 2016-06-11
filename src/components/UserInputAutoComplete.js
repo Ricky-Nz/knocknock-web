@@ -10,13 +10,19 @@ class UserInputAutoComplete extends Component {
 	onNewRequest = (select, index) => {
 		this.props.onSelect(this.props.viewer.users.edges[index].node);
 	}
+	onUpdateInput = (search) => {
+		if (!search) {
+			this.props.onSelect();
+		}
+	}
 	render() {
 		const dataSource = this.props.viewer.users.edges.map(({node}, index) =>
 				({text: node.email, value: <UserMenuItem index={index} user={node}/>}));
 
 		return (
 	    <AutoComplete hintText='enter user ID or email' floatingLabelText='Select User'
-	      dataSource={dataSource} onUpdateInput={this.onUpdateInput} onNewRequest={this.onNewRequest}/>
+	      dataSource={dataSource} onUpdateInput={this.onUpdateInput}
+	      onNewRequest={this.onNewRequest} onUpdateInput={this.onUpdateInput}/>
 		);
 	}
 }

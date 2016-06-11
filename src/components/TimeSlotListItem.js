@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import { ListItem } from 'material-ui/List';
 import Toggle from 'material-ui/Toggle';
 import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
-import { TimeSlotUpdateMutation } from '../mutations';
+import { UpdateTimeSlotMutation } from '../mutations';
 
 class TimeSlotListItem extends Component {
 	onClick = () => {
@@ -13,8 +13,7 @@ class TimeSlotListItem extends Component {
 		const { slot } = this.props;
 		return (
 			<ListItem primaryText={`${slot.time}`}
-				secondaryText={`Quntity: ${slot.quantity}`} onClick={this.onClick}
-				rightToggle={<Toggle toggled={slot.enabled}/>}/>
+				secondaryText={`Quntity: ${slot.quantity}`} onClick={this.onClick}/>
 		);
 	}
 }
@@ -30,8 +29,7 @@ export default Relay.createContainer(TimeSlotListItem, {
 				id
 				time
 				quantity
-				enabled
-				${TimeSlotUpdateMutation.getFragment('slot')}
+				${UpdateTimeSlotMutation.getFragment('slot')}
 			}
 		`
 	}

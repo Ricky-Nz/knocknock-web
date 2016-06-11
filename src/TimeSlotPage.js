@@ -1,13 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import DatePicker from 'material-ui/DatePicker';
 import Subheader from 'material-ui/Subheader';
+import CircularProgress from 'material-ui/CircularProgress';
 import { TimeSlotDialog, TimeSlotList } from './components';
+import InfiniteCalendar from 'react-infinite-calendar';
 
 class TimeSlotPage extends Component {
 	state = {
 		dialogShow: false,
-		selectSlot: null
+		selectSlot: null,
+		loading: false
 	}
 	onAdd = () => {
 		this.setState({dialogShow: true, selectSlot: null});
@@ -18,26 +20,33 @@ class TimeSlotPage extends Component {
 	onSelectSlot = (slot) => {
 		this.setState({dialogShow: true, selectSlot: slot});
 	}
-	onPickDate = (_, date) => {
-		this.props.relay.setVariables({date});
+	onSelectDate = (date) => {
+		this.props.relay.setVariables({date: date.toDate()}, this.onReadyStateChange);
+	}
+	onReadyStateChange = ({done}) => {
+		this.setState({loading: !done});
 	}
 	render() {
-		const { dialogShow, selectSlot } = this.state;
+		const { dialogShow, selectSlot, loading } = this.state;
 
 		return (
 			<div className='flex flex-fill'>
 	      <div className='flex flex-row flex-fill padding'>
-					<DatePicker hintText='pick date' container='inline'
-						onChange={this.onPickDate}/>
+					<InfiniteCalendar onSelect={this.onSelectDate}/>
 					<div className='flex flex-fill padding-left'>
 						<Subheader>Time Slots</Subheader>
-						{this.props.viewer.timeSlots&&
+						{loading&&
+							<div className='flex flex-align-center padding'>
+								<CircularProgress size={0.5}/>
+							</div>
+						}
+						{!loading&&this.props.viewer.timeSlots&&
 							<TimeSlotList connection={this.props.viewer.timeSlots}
 								onSelect={this.onSelectSlot}/>
 						}
 					</div>
 	      </div>
-				<TimeSlotDialog open={dialogShow}
+				<TimeSlotDialog open={dialogShow} date={this.props.relay.variables.date}
 					handleClose={this.handleClose} slot={selectSlot}/>
 			</div>
 		);

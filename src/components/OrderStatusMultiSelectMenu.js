@@ -9,13 +9,14 @@ import IconUnCheck from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 class OrderStatusMultiSelectMenu extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			selects: props.viewer.orderStatus.map(status => status.id)
-		};
+		const selects = props.viewer.orderStatus.map(status => status.id);
+		this.state = { selects };
+		props.onSelect(selects);
 	}
 	onCheck = (event, checked) => {
 		let newSelect;
-		if (this.props.viewer.orderStatus.length === this.state.selects) {
+		
+		if (this.props.viewer.orderStatus.length === this.state.selects.length) {
 			newSelect = [];
 		} else {
 			newSelect = this.props.viewer.orderStatus.map(status => status.id);
@@ -25,6 +26,8 @@ class OrderStatusMultiSelectMenu extends Component {
 		this.props.onSelect(newSelect);
 	}
 	onChange = (event, value) => {
+		if (!value) return;
+
 		let newSelect;
 		const selects = this.state.selects;
 		const index = selects.indexOf(value);

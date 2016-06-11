@@ -12,8 +12,6 @@ export { default as UserCreditTab } from './UserCreditTab';
 export { default as UserInputAutoComplete } from './UserInputAutoComplete'; 
 
 export { default as TimeSlotDialog } from './TimeSlotDialog';
-export { default as TimeSlotTemplateDialog } from './TimeSlotTemplateDialog';
-export { default as TimeSlotTemplateList } from './TimeSlotTemplateList';
 export { default as TimeSlotList } from './TimeSlotList';
 export { default as TimeSlotDropdownMenu } from './TimeSlotDropdownMenu';
 export { default as AddressDropdownMenu } from './AddressDropdownMenu';
@@ -25,6 +23,7 @@ export { default as OrderStatusDropdownMenu } from './OrderStatusDropdownMenu';
 export { default as OrderDateRangeSelector } from './OrderDateRangeSelector';
 export { default as OrderBulkUpdateDialog } from './OrderBulkUpdateDialog';
 export { default as OrderCreateDialog } from './OrderCreateDialog';
+export { default as OrderActionbar } from './OrderActionbar';
 
 export { default as OrderOverviewTab } from './OrderOverviewTab';
 export { default as OrderItemTab } from './OrderItemTab';

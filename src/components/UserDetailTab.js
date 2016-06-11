@@ -13,7 +13,7 @@ import { InputBox, AvatarEditor } from '../widgets';
 import AddressList from './AddressList';
 import AddressDialog from './AddressDialog';
 import CircularProgress from 'material-ui/CircularProgress';
-import { UserUpdateMutation } from '../mutations';
+import { UpdateUserMutation } from '../mutations';
 
 class UserDetailTab extends Component {
 	state = {
@@ -48,7 +48,7 @@ class UserDetailTab extends Component {
 			return this.setState({editMode: false});
 		}
 
-		Relay.Store.commitUpdate(new UserUpdateMutation({
+		Relay.Store.commitUpdate(new UpdateUserMutation({
 			user: this.props.user,
 			file,
 			...update
@@ -81,21 +81,23 @@ class UserDetailTab extends Component {
 	}
 	render() {
 		const { submitting, editMode, showDialog, selectAddress } = this.state;
-		const { email, name, contact, emailVerified, contactVerified, avatarUrl } = this.props.user;
+		const { email, firstName, lastName, contact, credit, points, avatarUrl } = this.props.user;
 
 		return (
 			<div className='flex flex-fill scroll padding'>
 				<Paper>
 					<div className='position-relative'>
 						<div className='flex flex-row padding'>
-							<div className='padding'>
+							<div className='flex flex-align-center padding'>
 								<AvatarEditor ref='avatar' src={avatarUrl} enable={editMode}/>
+								<Subheader>{`Credits: S$${credit}`}</Subheader>
+								<Subheader>{`Points: ${points}`}</Subheader>
 							</div>
 							<div className='flex flex-fill margin-left'>
 				        <InputBox value={email} disabled={true} floatingLabelText='Email'
 				        	verify='email' errorText='please enter a valid email address'/>
-				        <InputBox ref='name' value={name} disabled={!editMode} floatingLabelText='Name'
-				        	verify='notempty' errorText='name can not be empty'/>
+				        <InputBox ref='firstName' value={firstName} disabled={!editMode} floatingLabelText='First Name'/>
+				        <InputBox ref='lastName' value={lastName} disabled={!editMode} floatingLabelText='Last Name'/>
 				        <InputBox ref='contact' value={contact} disabled={!editMode} floatingLabelText='Contact'
 				        	verify='phonenumber' errorText='pleaese enter a valid phone number'/>
 							</div>
@@ -147,16 +149,17 @@ export default Relay.createContainer(UserDetailTab, {
 			fragment on User {
 				id
 				email
-				name
+				firstName
+				lastName
 				contact
+				credit
+				points
 				avatarUrl
-				emailVerified
-				contactVerified
 				addresses(first:100) {
 					${AddressList.getFragment('connection')}
 				}
 				${AddressDialog.getFragment('user')}
-				${UserUpdateMutation.getFragment('user')}
+				${UpdateUserMutation.getFragment('user')}
 			}
 		`
 	}

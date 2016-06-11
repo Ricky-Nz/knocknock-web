@@ -8,7 +8,7 @@ import { lightGreen500, amber500 } from 'material-ui/styles/colors';
 const CreditListItem = ({credit, onClick}) => (
 	<ListItem leftAvatar={<Avatar src={credit.user&&credit.user.avatarUrl}/>}
 		primaryText={<div>{`S$${credit.amount}`} <span style={credit.status==1?styles.approved:styles.pennding}>
-			{credit.status==1?'Approved':'Pennding'}</span></div>}
+			{credit.status==1?'Approved':(credit.status==0?'Pending':'')}</span></div>}
 		secondaryTextLines={2}
 		secondaryText={
 			<div>
@@ -19,7 +19,7 @@ const CreditListItem = ({credit, onClick}) => (
 					<div className='flex flex-fill'>Created At</div>
 				</div>
 				<div className='flex flex-row'>
-					<div className='flex flex-fill'>{credit.paymentMode}</div>
+					<div className='flex flex-fill'>{credit.paymentMode||'n/a'}</div>
 					<div className='flex flex-fill'>{credit.approvedAt||'n/a'}</div>
 					<div className='flex flex-fill'>{credit.approvedBy||'n/a'}</div>
 					<div className='flex flex-fill'>{credit.createdAt}</div>

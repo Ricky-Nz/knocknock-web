@@ -16,7 +16,7 @@ class TimeSlotDropdownMenu extends Component {
 			<SelectField floatingLabelText='Select Pickup Time' value={select} onChange={onSelect}>
 				{
 					viewer.timeSlots&&viewer.timeSlots.edges.map(({node}, index) =>
-							<MenuItem key={index} value={node} disabled={!node.enabled} primaryText={`${node.start} ~ ${node.end}`}/>)
+							<MenuItem key={index} value={node} disabled={!node.enabled} primaryText={`${node.time}`}/>)
 				}
 		  </SelectField>
 		);
@@ -46,8 +46,7 @@ export default Relay.createContainer(TimeSlotDropdownMenu, {
 				timeSlots(date:$date,first:100) @skip(if: $skipLoad) {
 					edges {
 						node {
-							start
-							end
+							time
 							enabled
 						}
 					}

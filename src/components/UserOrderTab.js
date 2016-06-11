@@ -13,7 +13,7 @@ class UserOrderTab extends Component {
 		this.props.relay.setVariables({search:text});
 	}
 	onSelectOrder = (order) => {
-		this.context.router.push(`/dashboard/order/${this.props.user.id}/${order.serialNumber}`)
+		this.context.router.push(`/dashboard/order/${this.props.user.id}/${order.id}`)
 	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;

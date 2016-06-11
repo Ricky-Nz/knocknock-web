@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
+import Checkbox from 'material-ui/Checkbox';
+import FlatButton from 'material-ui/FlatButton';
 import { AddFloatButton } from './widgets';
 import { OrderList, PaginationSearchBar, OrderStatusDropdownMenu,
 	OrderStatusMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete,
@@ -12,25 +12,17 @@ import { pageInfoFragment, paginationVariables } from './utils';
 class OrderBrowserPage extends Component {
 	state = {
 		editDialogOpen: false,
-		selectOrders: []
+		selectMode: false,
+		toggleAll: false
 	}
 	onBack = () => {
 		this.context.router.goBack();
 	}
-	onOrderAction = (order, action) => {
-		switch(action) {
-			case 'VIEW':
-				this.context.router.push(`/dashboard/order/${order.userId}/${order.serialNumber}`);
-				break;
-			case 'SELECT':
-				const index = this.state.selectOrders.indexOf(order);
-				if (index >= 0) {
-					this.setState({selectOrders: [...this.state.selectOrders.slice(0, index),
-						...this.state.selectOrders.slice(index + 1)]});
-				} else {
-					this.setState({selectOrders: [...this.state.selectOrders, order]});
-				}
-				break;
+	onSelectOrder = (order) => {
+		if (this.state.selectMode) {
+			console.log(order);
+		} else {
+			this.context.router.push(`/dashboard/order/${order.userId}/${order.serialNumber}`);
 		}
 	}
 	onNavigate = (pagination) => {
@@ -46,20 +38,26 @@ class OrderBrowserPage extends Component {
 		this.props.relay.setVariables({afterDate: after, beforeDate: before});
 	}
 	onSelectUser = (user) => {
-		this.props.relay.setVariables({userId: user.id});
+		this.props.relay.setVariables({userId: user?user.id:null});
 	}
 	onHandleEditorClose = () => {
 		this.setState({editDialogOpen: false});
 	}
 	onEdit = () => {
-		this.setState({editDialogOpen: true});	
+		this.setState({selectMode: true});	
+	}
+	onCancelEdit = () => {
+		this.setState({selectMode: false});		
+	}
+	onCheckAll = () => {
+		this.setState({toggleAll: !this.state.toggleAll});
 	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;
-		const { selectOrders, editDialogOpen } = this.state;
+		const { toggleAll, selectMode, editDialogOpen } = this.state;
 
 		return (
-			<div className='flex flex-fill position-relative'>
+			<div className='flex flex-fill'>
 				<div className='flex flex-fill flex-row padding'>
 					<div className='flex'>
 						<Paper>
@@ -79,18 +77,28 @@ class OrderBrowserPage extends Component {
 							first={first} after={after} last={last} before={before}
 							onSearch={this.onSearch} onNavigate={this.onNavigate}/>
 						<br/>
-						<OrderList connection={this.props.viewer.orders}
-							onAction={this.onOrderAction} selectMode={true}
-							selects={selectOrders}/>
+						<div className='flex flex-fill'>
+							<OrderList connection={this.props.viewer.orders}
+								onSelect={this.onSelectOrder} selectMode={selectMode}
+								toggleAll={toggleAll}/>
+						</div>
+						<br/>
+						<Paper className='flex flex-row flex-align-center flex-space-between'>
+							{!selectMode&&
+								<FlatButton label='Edit' primary={true} onClick={this.onEdit}/>
+							}
+							{selectMode&&
+								<div className='flex flex-row'>
+									<FlatButton label='Cancel' secondary={true} onClick={this.onCancelEdit}/>
+									<FlatButton label='Submit' primary={true}/>
+								</div>
+							}
+							{selectMode&&
+								<Checkbox labelPosition='left' style={styles.checkAll} onCheck={this.onCheckAll}/>
+							}
+						</Paper>
 					</div>
 				</div>
-				{(selectOrders.length>0)&&
-					<FloatingActionButton className='page-float-button' onClick={this.onEdit}>
-						<IconEditor/>
-					</FloatingActionButton>
-				}
-				<OrderBulkUpdateDialog viewer={this.props.viewer} open={editDialogOpen}
-					handleClose={this.onHandleEditorClose} selectOrders={selectOrders}/>
 			</div>
 		);
 	}
@@ -98,6 +106,12 @@ class OrderBrowserPage extends Component {
 
 OrderBrowserPage.contextTypes = {
 	router: PropTypes.object.isRequired
+};
+
+const styles = {
+	checkAll: {
+		width: 60
+	}
 };
 
 export default Relay.createContainer(OrderBrowserPage, {

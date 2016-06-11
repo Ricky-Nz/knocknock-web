@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class UpdateTimeSlotMutation extends Relay.Mutation {
+export class UpdateTimeSlotMutation extends Relay.Mutation {
   static fragments = {
     slot: () => Relay.QL`
       fragment on TimeSlot {

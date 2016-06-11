@@ -6,8 +6,13 @@ import { ListItem } from 'material-ui/List';
 
 const AddressListItem = ({address, onClick}) => (
 	<ListItem leftIcon={<IconBuilding/>} onTouchTap={() => onClick(address)}
-		primaryText={`${address.address}, ${address.postalCode}`}
-		secondaryText={`Tel: ${address.contact}`} rightIcon={<IconEditor/>}/>
+		primaryText={address.address} secondaryTextLines={2}
+		secondaryText={
+			<div>
+				<div>{`Postal Code: ${address.postalCode||'n/a'}`}</div>
+				<div>{`Tel: ${address.contact||'n/a'}`}</div>
+			</div>
+		} rightIcon={<IconEditor/>}/>
 );
 
 AddressListItem.propTypes = {
