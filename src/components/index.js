@@ -3,7 +3,6 @@ export { default as DeleteConfirmDialog } from './DeleteConfirmDialog';
 
 export { default as AccountDialog } from './AccountDialog';
 export { default as AdminList } from './AdminList';
-export { default as AdminDialog } from './AdminDialog';
 
 export { default as UserList } from './UserList';
 export { default as UserDetailTab } from './UserDetailTab';
@@ -49,6 +48,9 @@ export { default as BannerEditDialog } from './BannerEditDialog';
 
 export { default as FeedbackList } from './FeedbackList';
 export { default as CreditList } from './CreditList';
+
+export { default as VoucherDialog } from './VoucherDialog';
+export { default as VoucherList } from './VoucherList';
 
 
 

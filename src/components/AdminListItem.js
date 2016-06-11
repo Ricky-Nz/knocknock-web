@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import { ListItem } from 'material-ui/List';
 import IconEdit from 'material-ui/svg-icons/editor/mode-edit';
-import { AdminUpdateMutation } from '../mutations';
+import { UpdateAdminMutation, DeleteAdminMutation } from '../mutations';
 
 const FactoryListItem = ({admin, onClick}) => (
 	<ListItem primaryText={`${admin.firstName} ${admin.lastName}`}
@@ -18,12 +18,12 @@ export default Relay.createContainer(FactoryListItem, {
 	fragments: {
 		admin: () => Relay.QL`
 			fragment on Admin {
-				id
 				email
 				firstName
 				lastName
 				contact
-				${AdminUpdateMutation.getFragment('admin')}
+				${UpdateAdminMutation.getFragment('admin')}
+				${DeleteAdminMutation.getFragment('admin')}
 			}
 		`
 	}

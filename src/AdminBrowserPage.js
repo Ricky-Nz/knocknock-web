@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import { List } from 'material-ui/List';
 import { AddFloatButton } from './widgets';
-import { AdminList, AdminDialog, PaginationSearchBar } from './components';
+import { AdminList, AccountDialog, PaginationSearchBar } from './components';
 import { pageInfoFragment, paginationVariables } from './utils';
 
 class AdminBrowserPage extends Component {
@@ -41,8 +41,8 @@ class AdminBrowserPage extends Component {
 						onSelect={this.onSelect}/>
 				</div>
 				<AddFloatButton className='page-float-button' onClick={this.onAdd}/>
-				<AdminDialog open={dialogShow} handleClose={this.handleClose}
-					admin={select} viewer={this.props.viewer}/>
+				<AccountDialog role='admin' open={dialogShow} handleClose={this.handleClose}
+					account={select} viewer={this.props.viewer}/>
 			</div>
 		);
 	}
@@ -65,7 +65,7 @@ export default Relay.createContainer(AdminBrowserPage, {
 		        ${pageInfoFragment}
 					}
 				}
-				${AdminDialog.getFragment('viewer')}
+				${AccountDialog.getFragment('viewer')}
 			}
 		`
 	}

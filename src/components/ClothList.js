@@ -22,7 +22,7 @@ ClothList.propTypes = {
 
 const styles = {
 	scrollBug: {
-		padding: '0 2'
+		padding: 2
 	}
 };
 

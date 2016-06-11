@@ -23,6 +23,7 @@ import FeedbackBrowserPage from './FeedbackBrowserPage';
 import CreditBrowserPage from './CreditBrowserPage';
 import AnalyticsPage from './AnalyticsPage';
 import HistoryOrderPage from './HistoryOrderPage';
+import VoucherBrowserPage from './VoucherBrowserPage';
 import { Loading } from './widgets';
 
 // Needed for onTouchTap
@@ -88,6 +89,8 @@ ReactROM.render(
 						render={({props}) => props ? <CreditBrowserPage {...props}/> : <Loading/>}/>
 					<Route path='laundry' component={ClothBrowserPage} queries={queries}
 						render={({props}) => props ? <ClothBrowserPage {...props}/> : <Loading/>}/>
+					<Route path='voucher' component={VoucherBrowserPage} queries={queries}
+						render={({props}) => props ? <VoucherBrowserPage {...props}/> : <Loading/>}/>
 					<Route path='promocode' component={PromoCodeBrowserPage} queries={queries}
 						render={({props}) => props ? <PromoCodeBrowserPage {...props}/> : <Loading/>}/>
 					<Route path='appbanner' component={BannerBrowserPage} queries={queries}

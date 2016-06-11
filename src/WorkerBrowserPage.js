@@ -7,10 +7,11 @@ import { pageInfoFragment, paginationVariables } from './utils';
 
 class WorkerBrowserPage extends Component {
 	state = {
-		dialogShow: false
+		dialogShow: false,
+		select: null
 	}
 	onSelect = (worker) => {
-
+		this.setState({dialogShow: true, select: worker});
 	}
 	onNavigate = (pagination) => {
 		this.props.relay.setVariables(pagination);
@@ -19,13 +20,14 @@ class WorkerBrowserPage extends Component {
 		this.props.relay.setVariables({search:text});
 	}
 	onAdd = () => {
-		this.setState({dialogShow: true});
+		this.setState({dialogShow: true, select: null});
 	}
 	handleClose = () => {
 		this.setState({dialogShow: false});
 	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;
+		const { dialogShow, select } = this.state;
 
 		return (
 			<div className='flex flex-fill position-relative'>
@@ -38,8 +40,8 @@ class WorkerBrowserPage extends Component {
 						onSelect={this.onSelect}/>
 				</div>
 				<AddFloatButton className='page-float-button' onClick={this.onAdd}/>
-				<AccountDialog role='worker' open={this.state.dialogShow}
-					handleClose={this.handleClose} viewer={this.props.viewer}/>
+				<AccountDialog role='worker' open={dialogShow} handleClose={this.handleClose}
+					account={select} viewer={this.props.viewer}/>
 			</div>
 		);
 	}

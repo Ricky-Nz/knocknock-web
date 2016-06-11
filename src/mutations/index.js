@@ -1,3 +1,8 @@
+export * from './VoucherMutation';
+export * from './AdminMutation';
+export * from './UserMutation';
+export * from './WorkerMutation';
+
 export { default as ClothCreateMutation } from './ClothCreateMutation';
 export { default as ClothDeleteMutation } from './ClothDeleteMutation';
 export { default as ClothUpdateMutation } from './ClothUpdateMutation';
@@ -9,17 +14,6 @@ export { default as CategoryDeleteMutation } from './CategoryDeleteMutation';
 export { default as AddressCreateMutation } from './AddressCreateMutation';
 export { default as AddressUpdateMutation } from './AddressUpdateMutation';
 export { default as AddressDeleteMutation } from './AddressDeleteMutation';
-
-export { default as UserCreateMutation } from './UserCreateMutation';
-export { default as UserUpdateMutation } from './UserUpdateMutation';
-
-export { default as WorkerCreateMutation } from './WorkerCreateMutation';
-export { default as WorkerUpdateMutation } from './WorkerUpdateMutation';
-export { default as WorkerDeleteMutation } from './WorkerDeleteMutation';
-
-export { default as AdminCreateMutation } from './AdminCreateMutation';
-export { default as AdminUpdateMutation } from './AdminUpdateMutation';
-export { default as AdminDeleteMutation } from './AdminDeleteMutation';
 
 export { default as TimeSlotTemplateCreateMutation } from './TimeSlotTemplateCreateMutation';
 export { default as TimeSlotTemplateUpdateMutation } from './TimeSlotTemplateUpdateMutation';

@@ -2,13 +2,18 @@ import React from 'react';
 import Relay from 'react-relay';
 import { ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
+import Toggle from 'material-ui/Toggle';
 import Paper from 'material-ui/Paper';
-import IconVoucher from 'material-ui/svg-icons/action/card-giftcard';
 
-const VoucherListItem = ({voucher}) => (
-	<Paper className='margin-vertical'>
-		<ListItem leftIcon={<IconVoucher/>}
-			primaryText={`${voucher.title} $${voucher.value}`} secondaryText={voucher.expireOn}/>
+const VoucherListItem = ({voucher, onClick}) => (
+	<Paper className='margin-bottom'>
+		<ListItem primaryText={voucher.title} onClick={() => onClick(voucher)}
+			secondaryTextLines={2} secondaryText={
+				<div>
+					<div>{`Value: S$${voucher.value}`}</div>
+					<div>{`Expired on: ${voucher.displayExpireOn}`}</div>
+				</div>
+			} rightToggle={<Toggle toggled={voucher.enabled}/>}/>
 	</Paper>
 );
 
@@ -16,10 +21,11 @@ export default Relay.createContainer(VoucherListItem, {
 	fragments: {
 		voucher: () => Relay.QL`
 			fragment on Voucher {
-        used
-        value
+				id
         title
-        expireOn
+        value
+        displayExpireOn
+        enabled
 			}
 		`
 	}

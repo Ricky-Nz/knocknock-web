@@ -32,7 +32,7 @@ export default class CreateFactoryMutation extends Relay.Mutation {
       parentID: this.props.viewer.id,
       connectionName: 'factories',
       edgeName: 'factoryEdge',
-      rangeBehaviors: ({search}) => 'append'
+      rangeBehaviors: ({search}) => 'prepend'
     }];
 	}
 }

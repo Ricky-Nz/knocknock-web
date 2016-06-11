@@ -80,7 +80,9 @@ CategoryTab.propTypes = {
 };
 
 export default Relay.createContainer(CategoryTab, {
-	...paginationVariables({categoryId: null}),
+	...paginationVariables({categoryId: null}, variables => ({
+		categoryId: variables.categoryId||''
+	})),
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {

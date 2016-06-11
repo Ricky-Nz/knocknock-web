@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import { ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
+import { UpdateWorkerMutation, DeleteWorkerMutation } from '../mutations';
 
 const WorkerListItem = ({worker, onClick}) => (
 	<ListItem leftAvatar={<Avatar src={worker.avatarUrl}/>}
@@ -19,12 +20,13 @@ export default Relay.createContainer(WorkerListItem, {
 	fragments: {
 		worker: () => Relay.QL`
 			fragment on Worker {
-				id
 				email
 				contact
 				firstName
 				lastName
 				avatarUrl
+				${UpdateWorkerMutation.getFragment('worker')}
+				${DeleteWorkerMutation.getFragment('worker')}
 			}
 		`
 	}
