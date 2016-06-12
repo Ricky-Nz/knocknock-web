@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import { AddFloatButton } from './widgets';
-import { OrderList, PaginationSearchBar, OrderStatusDropdownMenu,
+import { OrderList, PaginationSearchBar,
 	OrderStatusMultiSelectMenu, OrderDateRangeSelector, UserInputAutoComplete,
 	OrderBulkUpdateDialog } from './components';
 import { pageInfoFragment, paginationVariables } from './utils';
@@ -13,6 +13,7 @@ class OrderBrowserPage extends Component {
 	state = {
 		editDialogOpen: false,
 		selectMode: false,
+		selectOrders: null,
 		toggleAll: false
 	}
 	onBack = () => {
@@ -20,9 +21,9 @@ class OrderBrowserPage extends Component {
 	}
 	onSelectOrder = (order) => {
 		if (this.state.selectMode) {
-			console.log(order);
+			this.setState({selectOrders: order});
 		} else {
-			this.context.router.push(`/dashboard/order/${order.userId}/${order.serialNumber}`);
+			this.context.router.push(`/dashboard/order/${order.userId}/${order.id}`);
 		}
 	}
 	onNavigate = (pagination) => {
@@ -31,14 +32,14 @@ class OrderBrowserPage extends Component {
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
 	}
-	onSelectStatus = (statusIds) => {
-		this.props.relay.setVariables({statusIds});
-	}
 	onDataSelectChange = (after, before) => {
 		this.props.relay.setVariables({afterDate: after, beforeDate: before});
 	}
 	onSelectUser = (user) => {
 		this.props.relay.setVariables({userId: user?user.id:null});
+	}
+	onSelectStatus = (statusIds) => {
+		this.props.relay.setVariables({statusIds});
 	}
 	onHandleEditorClose = () => {
 		this.setState({editDialogOpen: false});
@@ -52,53 +53,53 @@ class OrderBrowserPage extends Component {
 	onCheckAll = () => {
 		this.setState({toggleAll: !this.state.toggleAll});
 	}
+	onSubmit = () => {
+		this.setState({editDialogOpen: true});
+	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;
-		const { toggleAll, selectMode, editDialogOpen } = this.state;
+		const { toggleAll, selectMode, selectOrders, editDialogOpen } = this.state;
 
 		return (
-			<div className='flex flex-fill'>
-				<div className='flex flex-fill flex-row padding'>
-					<div className='flex'>
-						<Paper>
-							<OrderDateRangeSelector onSelect={this.onDataSelectChange}/>
-							<div className='padding-left'>
-								<UserInputAutoComplete viewer={this.props.viewer}
-									onSelect={this.onSelectUser}/>
-							</div>
-						</Paper>
-						<Paper className='flex scroll margin-top'>
-							<OrderStatusMultiSelectMenu viewer={this.props.viewer}
-								onSelect={this.onSelectStatus}/>
-						</Paper>
-					</div>
-					<div className='flex flex-fill margin-left'>
-						<PaginationSearchBar pageInfo={this.props.viewer.orders.pageInfo}
-							first={first} after={after} last={last} before={before}
-							onSearch={this.onSearch} onNavigate={this.onNavigate}/>
-						<br/>
-						<div className='flex flex-fill'>
-							<OrderList connection={this.props.viewer.orders}
-								onSelect={this.onSelectOrder} selectMode={selectMode}
-								toggleAll={toggleAll}/>
+			<div className='flex flex-fill flex-row padding'>
+				<div className='flex'>
+					<Paper>
+						<OrderDateRangeSelector onSelect={this.onDataSelectChange}/>
+						<div className='padding-left'>
+							<UserInputAutoComplete viewer={this.props.viewer}
+								onSelect={this.onSelectUser}/>
 						</div>
-						<br/>
-						<Paper className='flex flex-row flex-align-center flex-space-between'>
-							{!selectMode&&
-								<FlatButton label='Edit' primary={true} onClick={this.onEdit}/>
-							}
-							{selectMode&&
-								<div className='flex flex-row'>
-									<FlatButton label='Cancel' secondary={true} onClick={this.onCancelEdit}/>
-									<FlatButton label='Submit' primary={true}/>
-								</div>
-							}
-							{selectMode&&
-								<Checkbox labelPosition='left' style={styles.checkAll} onCheck={this.onCheckAll}/>
-							}
-						</Paper>
-					</div>
+					</Paper>
+					<Paper className='flex scroll margin-top'>
+						<OrderStatusMultiSelectMenu viewer={this.props.viewer}
+							onSelect={this.onSelectStatus}/>
+					</Paper>
 				</div>
+				<div className='flex flex-fill margin-left'>
+					<PaginationSearchBar pageInfo={this.props.viewer.orders.pageInfo}
+						first={first} after={after} last={last} before={before}
+						onSearch={this.onSearch} onNavigate={this.onNavigate}/>
+					<br/>
+					<div className='flex flex-fill'>
+						<OrderList connection={this.props.viewer.orders}
+							onSelect={this.onSelectOrder} selectMode={selectMode}
+							toggleAll={toggleAll}/>
+					</div>
+					<br/>
+					<Paper className='flex flex-row flex-end flex-align-center'>
+						{selectMode?
+							<div className='flex flex-row flex-end padding-horizontal flex-align-center'>
+								<FlatButton label='Cancel' secondary={true} onClick={this.onCancelEdit}/>
+								<FlatButton label='Next' primary={true}
+									disabled={!selectOrders||selectOrders.length==0} onClick={this.onSubmit}/>
+								<Checkbox labelPosition='left' style={styles.checkAll} onCheck={this.onCheckAll}/>
+							</div>:
+							<FlatButton label='Edit' primary={true} onClick={this.onEdit}/>
+						}
+					</Paper>
+				</div>
+				<OrderBulkUpdateDialog viewer={this.props.viewer} handleClose={this.onHandleEditorClose}
+					open={editDialogOpen} selectOrders={selectOrders}/>
 			</div>
 		);
 	}
@@ -110,7 +111,7 @@ OrderBrowserPage.contextTypes = {
 
 const styles = {
 	checkAll: {
-		width: 60
+		width: 40
 	}
 };
 
@@ -136,7 +137,6 @@ export default Relay.createContainer(OrderBrowserPage, {
 					  ${pageInfoFragment}
 					}
 				}
-				${OrderStatusDropdownMenu.getFragment('viewer')}
 				${OrderStatusMultiSelectMenu.getFragment('viewer')}
 				${UserInputAutoComplete.getFragment('viewer')}
 				${OrderBulkUpdateDialog.getFragment('viewer')}

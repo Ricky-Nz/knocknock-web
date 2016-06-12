@@ -6,7 +6,6 @@ import IconButton from 'material-ui/IconButton';
 import IconOrder from 'material-ui/svg-icons/maps/local-offer';
 import IconChecked from 'material-ui/svg-icons/toggle/check-box';
 import IconUnCheck from 'material-ui/svg-icons/toggle/check-box-outline-blank';
-import { OrderUpdateMutation } from '../mutations';
 
 const OrderListItem = ({order, selectMode, select, onClick}) => (
 	<ListItem leftAvatar={<Avatar src={order.userAvatar}/>} secondaryTextLines={2}
@@ -41,7 +40,6 @@ export default Relay.createContainer(OrderListItem, {
         displayPickupDate
         pickupTime
         pickupAddress
-        ${OrderUpdateMutation.getFragment('order')}
 			}
 		`
 	}

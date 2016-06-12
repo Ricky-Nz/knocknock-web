@@ -6,6 +6,7 @@ import Toggle from 'material-ui/Toggle';
 import TextField from 'material-ui/TextField';
 import Subheader from 'material-ui/Subheader';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import CircularProgress from 'material-ui/CircularProgress';
 import IconButton from 'material-ui/IconButton';
 import IconEditor from 'material-ui/svg-icons/editor/mode-edit';
 import IconDone from 'material-ui/svg-icons/action/done';
@@ -13,23 +14,29 @@ import IconCancel from 'material-ui/svg-icons/content/clear';
 import IconBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { InputBox } from '../widgets';
+import OrderItemDisplayItem from './OrderItemDisplayItem';
 import OrderStatusDropdownMenu from './OrderStatusDropdownMenu';
 import FactoryInputAutoComplete from './FactoryInputAutoComplete';
+import OrderItemEditor from './OrderItemEditor';
+import WorkerInputAutoComplete from './WorkerInputAutoComplete';
+import { UpdateOrderMutation } from '../mutations';
 
 class OrderOverViewTab extends Component {
 	constructor(props) {
 		super(props);
 		const { status, pickupWorkerId, express, note } = this.props.order;
 		this.state = {
+			submitting: false,
 			editMode: false,
-			status,
+			statusId: status.id,
 			pickupWorkerId,
 			express,
-			note
+			note,
+			orderItems: props.order.orderItems&&props.order.orderItems.edges.map(({node}) => node)
 		};
 	}
-	onSelectStatus = (event, index, status) => {
-		this.setState({status});
+	onSelectStatus = (event, index, statusId) => {
+		this.setState({statusId});
 	}
 	onSelectFactory = (factory) => {
 
@@ -46,46 +53,85 @@ class OrderOverViewTab extends Component {
 	onNoteChange = (event) => {
 		this.setState({note: event.target.value});
 	}
+	onOrderItemChange = (newItems) => {
+		this.setState({orderItems: newItems});
+	}
+	onSelectWorker = (work) => {
+		this.setState({pickupWorkerId: work.id});
+	}
 	onSubmit = () => {
+		const {express, orderItems} = this.state;
 
+		this.props.relay.commitUpdate(new UpdateOrderMutation({
+			order: this.props.order,
+			express,
+			orderItems: orderItems&&orderItems.map(item => ({
+				productId: item.productId,
+				quantity: item.quantity,
+				washType: item.washType
+			}))
+		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
+		this.setState({submitting: true});
+	}
+	onSuccess = () => {
+		this.setState({submitting: false, editMode: false});
+		this.props.handleClose();
+	}
+	onFailure = (transaction) => {
+		this.setState({submitting: false});
 	}
 	render() {
-		const { editMode, status, pickupWorkerId, express, note } = this.state;
+		const { submitting, orderItems, editMode, statusId, pickupWorkerId, express, note } = this.state;
 		const { order, user } = this.props;
 
 		return (
-			<div className='flex flex-fill position-relative'>
-				<div className='flex flex-row flex-fill padding margin-horizontal'>
-					<div className='flex flex-fill'>
+			<div className='flex flex-fill padding margin'>
+				<div className='flex flex-fill'>
+					<div className='flex scroll'>
+						<Avatar src={user.avatarUrl}/>
+						<div className='padding-top'>Name: {`${user.firstName} ${user.lastName}`}</div>
+						<div>Contact: {user.contact}</div>
+						<div>Email: {user.email}</div>
 						<OrderStatusDropdownMenu viewer={this.props.viewer} disabled={!editMode}
-							select={status} onSelect={this.onSelectStatus}/>
+							select={statusId} onSelect={this.onSelectStatus}/>
+						<WorkerInputAutoComplete viewer={this.props.viewer} selectId={pickupWorkerId}
+							onSelect={this.onSelectWorker}/>
 						<FactoryInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectFactory}/>
 						<TextField floatingLabelText='Note' multiLine={true} rows={2}
 							value={note} disabled={!editMode} onChange={this.onNoteChange}/>
 						<br/>
 						<Toggle label='Express Order' disabled={!editMode} toggle={express} onToggle={this.onToggleExpress}/>
-					</div>
-					<div className='flex flex-fill flex-align-center'>
-						<Avatar src={user.avatarUrl} size={100}/>
-						<div className='padding'>
-							<p>{`Name: ${user.name}`}</p>
-							<p>{`Email: ${user.email}`}</p>
-							<p>{`Contact: ${user.contact}`}</p>
-						</div>
+						{editMode?
+							<OrderItemEditor viewer={this.props.viewer} orderItems={orderItems}
+								onChange={this.onOrderItemChange}/>:
+							<div>
+								{
+									this.props.order.orderItems.edges.map(({node}, index) =>
+										<OrderItemDisplayItem key={index} item={node}/>)
+								}
+							</div>
+						}
 					</div>
 				</div>
-				{editMode?
-					<div className='flex flex-row page-float-button'>
-						<FloatingActionButton onClick={this.onCancel}>
-							<IconCancel/>
-						</FloatingActionButton>
-						<FloatingActionButton className='margin-left' onClick={this.onSubmit}>
-							<IconDone/>
-						</FloatingActionButton>
+				{submitting?
+					<div className='flex flex-row flex-end'>
+						<CircularProgress size={0.5}/>
 					</div>:
-					<FloatingActionButton className='page-float-button' onClick={this.onEdit}>
-						<IconEditor/>
-					</FloatingActionButton>
+					(editMode?
+						<div className='flex flex-row flex-end'>
+							<FloatingActionButton onClick={this.onCancel}>
+								<IconCancel/>
+							</FloatingActionButton>
+							<FloatingActionButton className='margin-left' onClick={this.onSubmit}>
+								<IconDone/>
+							</FloatingActionButton>
+						</div>:
+						<div className='flex flex-row flex-end'>
+							<FloatingActionButton className='page-float-button' onClick={this.onEdit}>
+								<IconEditor/>
+							</FloatingActionButton>
+						</div>
+					)
 				}
 			</div>
 		);
@@ -96,20 +142,43 @@ export default Relay.createContainer(OrderOverViewTab, {
 	fragments: {
 		order: () => Relay.QL`
 			fragment on Order {
+				id
+				displayId
 				express
 				note
-				status
+				status {
+					id
+					status
+				}
 				pickupDate
 				pickupTime
 				pickupAddress
 				pickupWorkerId
-				serialNumber
 				totalPrice
+				orderItems(first: 1000) {
+					edges {
+						node {
+							id
+							washType
+							quantity
+							price
+							productId
+							cloth {
+								imageUrl
+								nameEn
+								nameCn
+							}
+							${OrderItemDisplayItem.getFragment('item')}
+						}
+					}
+				}
+				${UpdateOrderMutation.getFragment('order')}
 			}
 		`,
 		user: () => Relay.QL`
 			fragment on User {
-				name
+				firstName
+				lastName
 				email
 				contact
 				avatarUrl
@@ -119,6 +188,8 @@ export default Relay.createContainer(OrderOverViewTab, {
 			fragment on Viewer {
 				${OrderStatusDropdownMenu.getFragment('viewer')}
 				${FactoryInputAutoComplete.getFragment('viewer')}
+				${OrderItemEditor.getFragment('viewer')}
+				${WorkerInputAutoComplete.getFragment('viewer')}
 			}
 		`
 	}

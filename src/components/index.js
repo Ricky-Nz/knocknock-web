@@ -17,7 +17,6 @@ export { default as TimeSlotDropdownMenu } from './TimeSlotDropdownMenu';
 export { default as AddressDropdownMenu } from './AddressDropdownMenu';
 
 export { default as OrderList } from './OrderList';
-export { default as OrderItemListItem } from './OrderItemListItem';
 export { default as OrderStatusMultiSelectMenu } from './OrderStatusMultiSelectMenu';
 export { default as OrderStatusDropdownMenu } from './OrderStatusDropdownMenu';
 export { default as OrderDateRangeSelector } from './OrderDateRangeSelector';
@@ -26,7 +25,6 @@ export { default as OrderCreateDialog } from './OrderCreateDialog';
 export { default as OrderActionbar } from './OrderActionbar';
 
 export { default as OrderOverviewTab } from './OrderOverviewTab';
-export { default as OrderItemTab } from './OrderItemTab';
 
 export { default as ClothTab } from './ClothTab';
 export { default as CategoryTab } from './CategoryTab';

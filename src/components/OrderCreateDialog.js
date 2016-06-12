@@ -9,13 +9,12 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import Toggle from 'material-ui/Toggle';
 import AddressDropdownMenu from './AddressDropdownMenu';
-import ClothInputAutoComplete from './ClothInputAutoComplete';
 import OrderStatusDropdownMenu from './OrderStatusDropdownMenu';
 import TimeSlotDropdownMenu from './TimeSlotDropdownMenu';
 import WorkerInputAutoComplete from './WorkerInputAutoComplete';
-import OrderItemListItem from './OrderItemListItem';
 import IconDone from 'material-ui/svg-icons/action/done';
 import IconBack from 'material-ui/svg-icons/navigation/arrow-back';
+import OrderItemEditor from './OrderItemEditor';
 import { OrderCreateMutation } from '../mutations';
 
 class OrderCreateDialog extends Component {
@@ -27,8 +26,7 @@ class OrderCreateDialog extends Component {
 		status: null,
 		pickupTime: null,
 		pickupWorkerId: null,
-		note: '',
-		orderItems: []
+		note: ''
 	}
 	onSelectWorker = (worker) => {
 		this.setState({pickupWorkerId: worker.id});	
@@ -45,41 +43,11 @@ class OrderCreateDialog extends Component {
 	onSelectStatus = (event, index, value) => {
 		this.setState({status: value});
 	}
-	onSelectProduct = (value) => {
-		const index = this.state.orderItems.findIndex(cloth => cloth.id === value.id);
-		if (index < 0) {
-			this.setState({orderItems: [{...value, quantity: 1, washType: 'Wash&Iron'}, ...this.state.orderItems]});
-		} else {
-			this.onUpdateOrderItem(index, 'ADD');
-		}
-	}
 	onToggleExpress = () => {
 		this.setState({express: !this.state.express});
 	}
 	onNoteChange = (event) => {
 		this.setState({note: event.target.value});
-	}
-	onUpdateOrderItem = (index, action, args) => {
-		const orderItems = this.state.orderItems;
-		let quantity = orderItems[index].quantity;
-		let washType = orderItems[index].washType;
-
-		switch(action) {
-			case 'ADD':
-				quantity += 1;
-				break;
-			case 'REMOVE':
-				quantity -= 1;
-				break;
-			case 'WASH_TYPE':
-				washType = args;
-				break;
-		}
-
-		if (quantity > 100 || quantity <= 0) return;
-
-		this.setState({orderItems: [...orderItems.slice(0, index),
-			{...orderItems[index], quantity, washType}, ...orderItems.slice(index + 1)]});
 	}
 	onSubmit = () => {
 		const { express, note, status, pickupDate, pickupTime,
@@ -109,6 +77,9 @@ class OrderCreateDialog extends Component {
 	onFailure = (transaction) => {
 		this.setState({submitting: false});
 	}
+	onOrderItemChange = (orderItems) => {
+		this.setState({orderItems});
+	}
 	render() {
 		const { express, note, submitting, address, status, pickupDate, pickupTime, orderItems } = this.state;
 		const { open, handleClose } = this.props;
@@ -135,13 +106,8 @@ class OrderCreateDialog extends Component {
 						<Toggle label='Express' toggled={express} onToggle={this.onToggleExpress}/>
 					</div>
 					<div className='flex flex-fill padding-left'>
-						<ClothInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectProduct}/>
-						{
-							orderItems.map((item, index) =>
-								<OrderItemListItem key={index} index={index} itemImageUrl={item.imageUrl}
-									itemNameCn={item.nameCn} itemNameEn={item.nameEn} quantity={item.quantity}
-									washType={item.washType} onAction={this.onUpdateOrderItem}/>)
-						}
+						<OrderItemEditor viewer={this.props.viewer}
+							onChange={this.onOrderItemChange}/>
 					</div>
 				</div>
       </Dialog>
@@ -161,7 +127,7 @@ export default Relay.createContainer(OrderCreateDialog, {
 				${OrderStatusDropdownMenu.getFragment('viewer')}
 				${TimeSlotDropdownMenu.getFragment('viewer')}
 				${WorkerInputAutoComplete.getFragment('viewer')}
-				${ClothInputAutoComplete.getFragment('viewer')}
+				${OrderItemEditor.getFragment('viewer')}
 			}
 		`,
 		user: () => Relay.QL`

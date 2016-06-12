@@ -4,7 +4,7 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import IconBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { OrderOverviewTab, OrderItemTab } from './components';
+import { OrderOverviewTab } from './components';
 
 class OrderDetailPage extends Component {
 	state = {
@@ -23,18 +23,14 @@ class OrderDetailPage extends Component {
 				contentView = <OrderOverviewTab user={this.props.viewer.user}
 					viewer={this.props.viewer} order={this.props.viewer.user.order}/>;
 				break;
-			case 'items':
-				contentView = <OrderItemTab order={this.props.viewer.user.order}/>;
-				break;
 		}
 
 		return (
 			<div className='flex flex-fill'>
-				<AppBar title={`Order: ${this.props.params.orderId}`} zDepth={0}
+				<AppBar title={`Order: ${this.props.viewer.user.order.displayId}`} zDepth={0}
 					iconElementLeft={<IconButton onClick={this.onNavBack}><IconBack/></IconButton>}/>
 	      <Tabs onChange={this.onTabSelectChange} value={this.state.selectTab}>
 	        <Tab label='Overview' value='overview'/>
-	        <Tab label='Order Items' value='items'/>
 	        <Tab label='Change Record' value='record'/>
 	      </Tabs>
 	      {contentView}
@@ -57,9 +53,9 @@ export default Relay.createContainer(OrderDetailPage, {
 			fragment on Viewer {
 				user(id:$userId) {
 					${OrderOverviewTab.getFragment('user')}
-					order(serialNumber:$orderId) {
+					order(id:$orderId) {
+						displayId
 						${OrderOverviewTab.getFragment('order')}
-						${OrderItemTab.getFragment('order')}
 					}
 				}
 				${OrderOverviewTab.getFragment('viewer')}

@@ -5,7 +5,15 @@ import ClothMenuItem from './ClothMenuItem';
 
 class ClothInputAutoComplete extends Component {
 	onNewRequest = (select, index) => {
-		this.props.onSelect(this.props.viewer.clothes.edges[index].node);
+		const node = this.props.viewer.clothes.edges[index].node;
+		this.props.onSelect({
+			productId: node.id,
+			cloth: {
+				imageUrl: node.imageUrl,
+				nameCn: node.nameCn,
+				nameEn: node.nameEn
+			}
+		});
 	}
 	render() {
 		const dataSource = this.props.viewer.clothes.edges.map(({node}, index) =>
@@ -27,7 +35,7 @@ export default Relay.createContainer(ClothInputAutoComplete, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				clothes(first:500) {
+				clothes(first:10) {
 					edges {
 						node {
 							id
