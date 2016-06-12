@@ -11,17 +11,25 @@ class FactoryInputAutoComplete extends Component {
 		this.props.onSelect(this.props.viewer.factories.edges[index].node);
 	}
 	render() {
-		const dataSource = this.props.viewer.factories.edges.map(({node}, index) =>
-				({text: node.name, value: <FactoryMenuItem index={index} factory={node}/>}));
+		let initialSeletText;
+		const dataSource = this.props.viewer.factories.edges.map(({node}, index) => {
+			if (node.id === this.props.selectId) {
+				initialSeletText = node.name;
+			}
+
+			return {text: node.name, value: <FactoryMenuItem index={index} factory={node}/>};
+		});
 
 		return (
-	    <AutoComplete hintText='enter factory name' floatingLabelText='Factory'
-	      dataSource={dataSource} onUpdateInput={this.onUpdateInput} onNewRequest={this.onNewRequest}/>
+	    <AutoComplete hintText='enter factory name' floatingLabelText='Factory' searchText={initialSeletText}
+	      dataSource={dataSource} onUpdateInput={this.onUpdateInput} onNewRequest={this.onNewRequest}
+	      disabled={this.props.disabled}/>
 		);
 	}
 }
 
 FactoryInputAutoComplete.propTypes = {
+	selectId: PropTypes.string,
 	onSelect: PropTypes.func.isRequired
 };
 

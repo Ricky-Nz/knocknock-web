@@ -22,7 +22,7 @@ class ClothInputAutoComplete extends Component {
 		return (
 	    <AutoComplete hintText='search' floatingLabelText='Select Product'
 	      dataSource={dataSource} filter={AutoComplete.caseInsensitiveFilter}
-	      onNewRequest={this.onNewRequest} searchText=''/>
+	      onNewRequest={this.onNewRequest} fullWidth={this.props.fullWidth}/>
 		);
 	}
 }

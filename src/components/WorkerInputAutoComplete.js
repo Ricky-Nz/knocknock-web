@@ -21,7 +21,7 @@ class WorkerInputAutoComplete extends Component {
 
 		return (
 	    <AutoComplete hintText='enter worker email' floatingLabelText='Select Worker' searchText={initialSeletText}
-	    	anchorOrigin={this.props.anchorOrigin} openOnFocus={this.props.openOnFocus}
+	    	anchorOrigin={this.props.anchorOrigin} openOnFocus={this.props.openOnFocus} disabled={this.props.disabled}
 	      dataSource={dataSource} onUpdateInput={this.onUpdateInput} onNewRequest={this.onNewRequest}/>
 		);
 	}

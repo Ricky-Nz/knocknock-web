@@ -24,12 +24,13 @@ import { UpdateOrderMutation } from '../mutations';
 class OrderOverViewTab extends Component {
 	constructor(props) {
 		super(props);
-		const { status, pickupWorkerId, express, note } = this.props.order;
+		const { status, pickupWorkerId, factoryId, express, note } = this.props.order;
 		this.state = {
 			submitting: false,
 			editMode: false,
 			statusId: status.id,
 			pickupWorkerId,
+			factoryId,
 			express,
 			note,
 			orderItems: props.order.orderItems&&props.order.orderItems.edges.map(({node}) => node)
@@ -39,7 +40,7 @@ class OrderOverViewTab extends Component {
 		this.setState({statusId});
 	}
 	onSelectFactory = (factory) => {
-
+		this.setState({factoryId: factory.id});
 	}
 	onToggleExpress = () => {
 		this.setState({express: !this.state.express});
@@ -60,11 +61,17 @@ class OrderOverViewTab extends Component {
 		this.setState({pickupWorkerId: work.id});
 	}
 	onSubmit = () => {
-		const {express, orderItems} = this.state;
+		const {express, pickupWorkerId, note, statusId, factoryId, orderItems} = this.state;
+		const toPayPrice = this.refs.toPayPrice.getValue();
 
 		this.props.relay.commitUpdate(new UpdateOrderMutation({
 			order: this.props.order,
 			express,
+			pickupWorkerId,
+			factoryId,
+			note,
+			statusId,
+			toPayPrice,
 			orderItems: orderItems&&orderItems.map(item => ({
 				productId: item.productId,
 				quantity: item.quantity,
@@ -81,7 +88,7 @@ class OrderOverViewTab extends Component {
 		this.setState({submitting: false});
 	}
 	render() {
-		const { submitting, orderItems, editMode, statusId, pickupWorkerId, express, note } = this.state;
+		const { submitting, orderItems, editMode, statusId, pickupWorkerId, factoryId, express, note } = this.state;
 		const { order, user } = this.props;
 
 		return (
@@ -92,11 +99,15 @@ class OrderOverViewTab extends Component {
 						<div className='padding-top'>Name: {`${user.firstName} ${user.lastName}`}</div>
 						<div>Contact: {user.contact}</div>
 						<div>Email: {user.email}</div>
+		        <InputBox floatingLabelText='Total Price' value={order&&order.totalPrice} disabled={true}/>
+		        <InputBox ref='toPayPrice' floatingLabelText='Payable Price'
+		        	value={order&&order.toPayPrice} disabled={!editMode}/>
 						<OrderStatusDropdownMenu viewer={this.props.viewer} disabled={!editMode}
 							select={statusId} onSelect={this.onSelectStatus}/>
 						<WorkerInputAutoComplete viewer={this.props.viewer} selectId={pickupWorkerId}
-							onSelect={this.onSelectWorker}/>
-						<FactoryInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectFactory}/>
+							disabled={!editMode} onSelect={this.onSelectWorker}/>
+						<FactoryInputAutoComplete viewer={this.props.viewer} selectId={factoryId}
+							disabled={!editMode} onSelect={this.onSelectFactory}/>
 						<TextField floatingLabelText='Note' multiLine={true} rows={2}
 							value={note} disabled={!editMode} onChange={this.onNoteChange}/>
 						<br/>
@@ -144,6 +155,8 @@ export default Relay.createContainer(OrderOverViewTab, {
 			fragment on Order {
 				id
 				displayId
+				totalPrice
+				toPayPrice
 				express
 				note
 				status {
@@ -154,7 +167,7 @@ export default Relay.createContainer(OrderOverViewTab, {
 				pickupTime
 				pickupAddress
 				pickupWorkerId
-				totalPrice
+				factoryId
 				orderItems(first: 1000) {
 					edges {
 						node {

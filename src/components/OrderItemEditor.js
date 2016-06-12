@@ -57,7 +57,8 @@ class OrderItemEditor extends Component {
 	render() {
 		return (
 			<div>
-				<ClothInputAutoComplete viewer={this.props.viewer} onSelect={this.onSelectCloth}/>
+				<ClothInputAutoComplete viewer={this.props.viewer}
+					onSelect={this.onSelectCloth} fullWidth={true}/>
 				{
 					this.state.orderItems.map((item, index) =>
 						<div key={index} className='flex flex-row flex-align-center padding-horizontal'>
