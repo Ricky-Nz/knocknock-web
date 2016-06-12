@@ -8,7 +8,7 @@ import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import CategorySelectMenu from './CategorySelectMenu';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { ClothCreateMutation, ClothUpdateMutation, ClothDeleteMutation } from '../mutations';
+import { CreateClothMutation, UpdateClothMutation, DeleteClothMutation } from '../mutations';
 
 class ClothDialog extends Component {
 	constructor(props) {
@@ -72,12 +72,12 @@ class ClothDialog extends Component {
 		};
 
 		if (!cloth) {
-			Relay.Store.commitUpdate(new ClothCreateMutation({
+			Relay.Store.commitUpdate(new CreateClothMutation({
 				viewer: this.props.viewer,
 				...updates
 			}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
 		} else {
-			Relay.Store.commitUpdate(new ClothUpdateMutation({
+			Relay.Store.commitUpdate(new UpdateClothMutation({
 				id: cloth.id,
 				...updates
 			}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -86,7 +86,7 @@ class ClothDialog extends Component {
 		this.setState({submitting: true});
 	}
 	onDelete = () => {
-		this.props.relay.commitUpdate(new ClothDeleteMutation({
+		this.props.relay.commitUpdate(new DeleteClothMutation({
 			viewer: this.props.viewer,
 			id: this.props.clothId
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -211,8 +211,8 @@ export default Relay.createContainer(ClothDialog, {
 					enabled
 					imageUrl
 				}
-				${ClothCreateMutation.getFragment('viewer')}
-				${ClothDeleteMutation.getFragment('viewer')}
+				${CreateClothMutation.getFragment('viewer')}
+				${DeleteClothMutation.getFragment('viewer')}
 			}
 		`
 	}

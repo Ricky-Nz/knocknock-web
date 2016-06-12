@@ -10,8 +10,8 @@ class HistoryOrderPage extends Component {
 	onSearch = (text) => {
 		this.props.relay.setVariables({search:text});
 	}
-	onOrderAction = (order, action) => {
-		
+	onSelectOrder = (order) => {
+		this.context.router.push(`/dashboard/order/${order.userId}/${order.id}`);
 	}
 	render() {
 		const { first, after, last, before } = this.props.relay.variables;
@@ -23,11 +23,15 @@ class HistoryOrderPage extends Component {
 					onSearch={this.onSearch} onNavigate={this.onNavigate}/>
 				<br/>
 				<OrderList connection={this.props.viewer.histories}
-					onAction={this.onOrderAction}/>
+					onSelect={this.onSelectOrder}/>
 			</div>
 		);
 	}
 }
+
+HistoryOrderPage.contextTypes = {
+	router: PropTypes.object.isRequired
+};
 
 export default Relay.createContainer(HistoryOrderPage, {
 	...paginationVariables(),

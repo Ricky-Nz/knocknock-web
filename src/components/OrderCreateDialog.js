@@ -15,7 +15,7 @@ import WorkerInputAutoComplete from './WorkerInputAutoComplete';
 import IconDone from 'material-ui/svg-icons/action/done';
 import IconBack from 'material-ui/svg-icons/navigation/arrow-back';
 import OrderItemEditor from './OrderItemEditor';
-import { OrderCreateMutation } from '../mutations';
+import { CreateOrderMutation } from '../mutations';
 
 class OrderCreateDialog extends Component {
 	state = {
@@ -53,7 +53,7 @@ class OrderCreateDialog extends Component {
 		const { express, note, status, pickupDate, pickupTime,
 			address, pickupWorkerId, orderItems } = this.state;
 
-		Relay.Store.commitUpdate(new OrderCreateMutation({
+		Relay.Store.commitUpdate(new CreateOrderMutation({
 			user: this.props.user,
 			express,
 			note,
@@ -133,7 +133,7 @@ export default Relay.createContainer(OrderCreateDialog, {
 		user: () => Relay.QL`
 			fragment on User {
 				${AddressDropdownMenu.getFragment('user')}
-				${OrderCreateMutation.getFragment('user')}
+				${CreateOrderMutation.getFragment('user')}
 			}
 		`
 	}

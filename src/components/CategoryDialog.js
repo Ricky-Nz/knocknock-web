@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { CategoryCreateMutation, CategoryUpdateMutation, CategoryDeleteMutation } from '../mutations';
+import { CreateCategoryMutation, UpdateCategoryMutation, DeleteCategoryMutation } from '../mutations';
 
 class CategoryDialog extends Component {
 	state = {
@@ -21,7 +21,7 @@ class CategoryDialog extends Component {
 
 		let mutation;
 		if (!category) {
-			mutation = new CategoryCreateMutation({
+			mutation = new CreateCategoryMutation({
 				viewer: this.props.viewer,
 				nameEn,
 				nameCn
@@ -39,7 +39,7 @@ class CategoryDialog extends Component {
 				return this.props.handleClose();
 			}
 
-			mutation = new CategoryUpdateMutation({
+			mutation = new UpdateCategoryMutation({
 				id: category.id,
 				...update
 			});
@@ -50,7 +50,7 @@ class CategoryDialog extends Component {
 		this.setState({submitting: true});
 	}
 	onDelete = () => {
-		this.props.relay.commitUpdate(new CategoryDeleteMutation({
+		this.props.relay.commitUpdate(new DeleteCategoryMutation({
 			viewer: this.props.viewer,
 			id: this.props.category.id
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -99,8 +99,8 @@ export default Relay.createContainer(CategoryDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				${CategoryCreateMutation.getFragment('viewer')}
-				${CategoryDeleteMutation.getFragment('viewer')}
+				${CreateCategoryMutation.getFragment('viewer')}
+				${DeleteCategoryMutation.getFragment('viewer')}
 			}
 		`
 	}

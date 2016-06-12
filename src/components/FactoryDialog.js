@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { FactoryCreateMutation, FactoryUpdateMutation, FactoryDeleteMutation } from '../mutations';
+import { CreateFactoryMutation, UpdateFactoryMutation, DeleteFactoryMutation } from '../mutations';
 
 class FactoryDialog extends Component {
 	state = {
@@ -24,7 +24,7 @@ class FactoryDialog extends Component {
 
 		let mutation;
 		if (!factory) {
-			mutation = new FactoryCreateMutation({
+			mutation = new CreateFactoryMutation({
 				viewer: this.props.viewer,
 				name,
 				address,
@@ -54,7 +54,7 @@ class FactoryDialog extends Component {
 				return this.props.handleClose();
 			}
 
-			mutation = new FactoryUpdateMutation({
+			mutation = new UpdateFactoryMutation({
 				id: factory.id,
 				...update
 			});
@@ -65,7 +65,7 @@ class FactoryDialog extends Component {
 		this.setState({submitting: true});
 	}
 	onDelete = () => {
-    this.props.relay.commitUpdate(new FactoryDeleteMutation({
+    this.props.relay.commitUpdate(new DeleteFactoryMutation({
     	viewer: this.props.viewer,
     	id: this.props.factory.id
     }), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -115,8 +115,8 @@ export default Relay.createContainer(FactoryDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				${FactoryCreateMutation.getFragment('viewer')}
-				${FactoryDeleteMutation.getFragment('viewer')}
+				${CreateFactoryMutation.getFragment('viewer')}
+				${DeleteFactoryMutation.getFragment('viewer')}
 			}
 		`
 	}

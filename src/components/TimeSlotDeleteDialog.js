@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import { AlertDialog } from '../widgets';
-import { TimeSlotDeleteMutation } from '../mutations';
+import { DeleteTimeSlotMutation } from '../mutations';
 
 class TimeSlotDeleteDialog extends Component {
   state = {
     submitting: false
   }
   onSubmit = () => {
-    Relay.Store.commitUpdate(new TimeSlotDeleteMutation({viewer: this.props.viewer, id: this.props.timeSlot.id}),
+    Relay.Store.commitUpdate(new DeleteTimeSlotMutation({viewer: this.props.viewer, id: this.props.timeSlot.id}),
       {onSuccess: this.onSuccess, onFailure: this.onFailure});
     this.setState({submitting: true});
   }
@@ -41,7 +41,7 @@ export default Relay.createContainer(TimeSlotDeleteDialog, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        ${TimeSlotDeleteMutation.getFragment('viewer')}
+        ${DeleteTimeSlotMutation.getFragment('viewer')}
       }
     `
   } 

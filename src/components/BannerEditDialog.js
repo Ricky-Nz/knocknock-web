@@ -5,7 +5,7 @@ import Toggle from 'material-ui/Toggle';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { BannerCreateMutation, BannerUpdateMutation, BannerDeleteMutation } from '../mutations';
+import { CreateBannerMutation, UpdateBannerMutation, DeleteBannerMutation } from '../mutations';
 
 class BannerEditDialog extends Component {
 	constructor(props) {
@@ -55,12 +55,12 @@ class BannerEditDialog extends Component {
 				return;
 			}
 
-			mutation = new BannerCreateMutation({
+			mutation = new CreateBannerMutation({
 				viewer: this.props.viewer,
 				...updates
 			});
 		} else {
-			mutation = new BannerUpdateMutation({
+			mutation = new UpdateBannerMutation({
 				id: banner.id,
 				...updates
 			});
@@ -71,7 +71,7 @@ class BannerEditDialog extends Component {
 		this.setState({submitting: true});
 	}
 	onDelete = () => {
-		this.props.relay.commitUpdate(new BannerDeleteMutation({
+		this.props.relay.commitUpdate(new DeleteBannerMutation({
 			viewer: this.props.viewer,
 			id: this.props.banner.id
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -129,8 +129,8 @@ export default Relay.createContainer(BannerEditDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				${BannerCreateMutation.getFragment('viewer')}
-				${BannerDeleteMutation.getFragment('viewer')}
+				${CreateBannerMutation.getFragment('viewer')}
+				${DeleteBannerMutation.getFragment('viewer')}
 			}
 		`
 	}

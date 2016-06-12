@@ -8,7 +8,7 @@ import Toggle from 'material-ui/Toggle';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox } from '../widgets';
 import { PromoTypeDropdownMenu } from '../components';
-import { PromoCodeCreateMutation, PromoCodeUpdateMutation, PromoCodeDeleteMutation } from '../mutations';
+import { CreatePromoCodeMutation, UpdatePromoCodeMutation, DeletePromoCodeMutation } from '../mutations';
 
 class PromoCodeDialog extends Component {
 	constructor(props) {
@@ -79,13 +79,13 @@ class PromoCodeDialog extends Component {
 		if (!promoCode) {
 			const code = this.refs.code.getValue();
 
-			mutation = new PromoCodeCreateMutation({
+			mutation = new CreatePromoCodeMutation({
 				viewer: this.props.viewer,
 				code,
 				...updates
 			});
 		} else {
-			mutation = new PromoCodeUpdateMutation({
+			mutation = new UpdatePromoCodeMutation({
 				id: promoCode.id,
 				...updates
 			});
@@ -96,7 +96,7 @@ class PromoCodeDialog extends Component {
 		this.setState({submitting: true});
 	}
 	onDelete = () => {
-		this.props.relay.commitUpdate(new PromoCodeDeleteMutation({
+		this.props.relay.commitUpdate(new DeletePromoCodeMutation({
 			viewer: this.props.viewer,
 			id: this.props.promoCode.id
 		}), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -178,8 +178,8 @@ export default Relay.createContainer(PromoCodeDialog, {
 	fragments: {
 		viewer: () => Relay.QL`
 			fragment on Viewer {
-				${PromoCodeCreateMutation.getFragment('viewer')}
-				${PromoCodeDeleteMutation.getFragment('viewer')}
+				${CreatePromoCodeMutation.getFragment('viewer')}
+				${DeletePromoCodeMutation.getFragment('viewer')}
 			}
 		`
 	}

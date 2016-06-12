@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
-import { ClothDeleteMutation, CategoryDeleteMutation } from '../mutations';
+import { DeleteClothMutation, DeleteCategoryMutation } from '../mutations';
 
 class DeleteConfigmDialog extends Component {
   state = {
@@ -11,12 +11,12 @@ class DeleteConfigmDialog extends Component {
   }
   onSubmit = () => {
     if (this.props.category) {
-      Relay.Store.commitUpdate(new CategoryDeleteMutation({
+      Relay.Store.commitUpdate(new DeleteCategoryMutation({
         id: this.props.category.id,
         viewer: this.props.viewer
       }), {onSuccess: this.onSuccess, onFailure: this.onFailure});
     } else if (this.props.cloth) {
-      Relay.Store.commitUpdate(new ClothDeleteMutation({
+      Relay.Store.commitUpdate(new DeleteClothMutation({
         id: this.props.cloth.id,
         viewer: this.props.viewer
       }), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -60,8 +60,8 @@ export default Relay.createContainer(DeleteConfigmDialog, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        ${CategoryDeleteMutation.getFragment('viewer')}
-        ${ClothDeleteMutation.getFragment('viewer')}
+        ${DeleteCategoryMutation.getFragment('viewer')}
+        ${DeleteClothMutation.getFragment('viewer')}
       }
     `
   }

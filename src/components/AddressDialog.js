@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import { InputBox, DropZone, Toast } from '../widgets';
-import { AddressCreateMutation, AddressUpdateMutation, AddressDeleteMutation } from '../mutations';
+import { CreateAddressMutation, UpdateAddressMutation, DeleteAddressMutation } from '../mutations';
 
 class AddressDialog extends Component {
 	state = {
@@ -22,7 +22,7 @@ class AddressDialog extends Component {
 
 		let mutation;
 		if (!selectAddress) {
-			mutation = new AddressCreateMutation({
+			mutation = new CreateAddressMutation({
 				user: this.props.user,
 				postalCode,
 				contact,
@@ -44,7 +44,7 @@ class AddressDialog extends Component {
 				return this.props.handleClose();
 			}
 
-			mutation = new AddressUpdateMutation({
+			mutation = new UpdateAddressMutation({
 				id: selectAddress.id,
 				...update
 			});
@@ -55,7 +55,7 @@ class AddressDialog extends Component {
 		this.setState({submitting: true});
 	}
 	onDelete = () => {
-    this.props.relay.commitUpdate(new AddressDeleteMutation({
+    this.props.relay.commitUpdate(new DeleteAddressMutation({
     	user: this.props.user,
     	id: this.props.address.id
     }), {onSuccess: this.onSuccess, onFailure: this.onFailure});
@@ -108,8 +108,8 @@ export default Relay.createContainer(AddressDialog, {
 		user: () => Relay.QL`
 			fragment on User {
 				id
-				${AddressCreateMutation.getFragment('user')}
-				${AddressDeleteMutation.getFragment('user')}
+				${CreateAddressMutation.getFragment('user')}
+				${DeleteAddressMutation.getFragment('user')}
 			}
 		`
 	}
